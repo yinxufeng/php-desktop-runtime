@@ -171,9 +171,9 @@ ZEND_FUNCTION(pdr_dhtml_el_collection_item);
 
 // Tray Icon 函数
 // ------------------------
-ZEND_FUNCTION(dhtml_tray_create);
-ZEND_FUNCTION(dhtml_tray_modify);
-ZEND_FUNCTION(dhtml_tray_delete);
+ZEND_FUNCTION(pdr_tray_create);
+ZEND_FUNCTION(pdr_tray_modify);
+ZEND_FUNCTION(pdr_tray_delete);
 
 // 菜单 函数
 ZEND_FUNCTION(dhtml_menu_create) ;
@@ -276,9 +276,9 @@ zend_function_entry pdr_dhtml_functions[] = {
 
 	// Tray Icon 函数
 	// ------------------------
-    ZEND_FE(dhtml_tray_create, NULL)
-    ZEND_FE(dhtml_tray_modify, NULL)
-    ZEND_FE(dhtml_tray_delete, NULL)
+    ZEND_FE(pdr_tray_create, NULL)
+    ZEND_FE(pdr_tray_modify, NULL)
+    ZEND_FE(pdr_tray_delete, NULL)
 
 
 	// 菜单 函数
