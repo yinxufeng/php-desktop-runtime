@@ -463,6 +463,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\define_const.h"
+				>
+			</File>
+			<File
+				RelativePath=".\define_const_vkey.h"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_dhtml.h"
 				>
 			</File>
