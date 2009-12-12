@@ -311,3 +311,33 @@ ZEND_FUNCTION(pdr_close_handle)
 
 	RETURN_BOOL(::CloseHandle((HANDLE)nHandle)) ;
 }
+
+
+ZEND_FUNCTION(pdr_register_hot_key)
+{
+	long nHwnd, nId, nModifyKey, nVK ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llll", &nHwnd, &nId, &nModifyKey, &nVK) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HWND hHWnd = (HWND)nHwnd ;
+	if(!::IsWindow(hHWnd))
+	{
+		zend_error(E_WARNING, "PDR: first param is not a valid window handle." );
+		RETURN_FALSE;
+	}
+
+	RETURN_BOOL( ::RegisterHotKey(hHWnd,nId,nModifyKey,nVK) ) ;
+}
+ZEND_FUNCTION(pdr_unregister_hot_key)
+{
+	long nHwnd, nId ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &nHwnd, &nId) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL( ::UnregisterHotKey((HWND)nHwnd,nId) ) ;
+}
+
