@@ -352,6 +352,8 @@ ZEND_FUNCTION(pdr_close_handle) ;
 ZEND_FUNCTION(pdr_create_mutex) ;
 ZEND_FUNCTION(pdr_open_mutex) ;
 ZEND_FUNCTION(pdr_release_mutex) ;
+ZEND_FUNCTION(pdr_register_hot_key) ;
+ZEND_FUNCTION(pdr_unregister_hot_key) ;
 
 
 // 线程函数
@@ -456,6 +458,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_create_mutex, NULL)
     ZEND_FE(pdr_open_mutex, NULL)
     ZEND_FE(pdr_release_mutex, NULL)
+    ZEND_FE(pdr_register_hot_key, NULL)
+    ZEND_FE(pdr_unregister_hot_key, NULL)
 
 
 	// 线程函数
