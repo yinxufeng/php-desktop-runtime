@@ -381,10 +381,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\dhtml_tray.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\pdr_dhtml.cpp"
 				>
 			</File>
@@ -398,6 +394,10 @@
 			</File>
 			<File
 				RelativePath=".\pdr_thread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_tray.cpp"
 				>
 			</File>
 			<File

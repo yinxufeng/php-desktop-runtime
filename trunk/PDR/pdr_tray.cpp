@@ -27,20 +27,20 @@
 	strncpy_s(tray.szTip, psTip, 63);\
 	tray.szTip[63]= 0;
 
-ZEND_FUNCTION(dhtml_tray_create)
+ZEND_FUNCTION(pdr_tray_create)
 {
 	_tray_icon_set
 	RETURN_BOOL(Shell_NotifyIcon(NIM_ADD, &tray)) ;
 }
 
 
-ZEND_FUNCTION(dhtml_tray_modify)
+ZEND_FUNCTION(pdr_tray_modify)
 {
 	_tray_icon_set
 	RETURN_BOOL(Shell_NotifyIcon(NIM_MODIFY, &tray)) ;
 }
 
-ZEND_FUNCTION(dhtml_tray_delete)
+ZEND_FUNCTION(pdr_tray_delete)
 {
 	long nHwnd, nTrayId ;
 
