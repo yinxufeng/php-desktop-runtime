@@ -341,3 +341,26 @@ ZEND_FUNCTION(pdr_unregister_hot_key)
 	RETURN_BOOL( ::UnregisterHotKey((HWND)nHwnd,nId) ) ;
 }
 
+
+
+ZEND_FUNCTION(pdr_get_system_path)
+{
+	long nFolder ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nFolder) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	char pPath[MAX_PATH] ;
+
+	if( ::SHGetSpecialFolderPath(0,(LPSTR)pPath,nFolder,0) )
+	{
+		RETURN_STRING(pPath,1)
+	}
+
+	else
+	{
+		RETURN_FALSE
+	}
+
+}
