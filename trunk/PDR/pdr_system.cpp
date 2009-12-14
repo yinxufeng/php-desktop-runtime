@@ -425,3 +425,86 @@ ZEND_FUNCTION(pdr_browse_file)
 	}
 
 }
+
+LPITEMIDLIST GetIDListFromPath(LPCTSTR lpszPath)  
+{  
+	LPITEMIDLIST pidl = NULL;  
+	LPSHELLFOLDER pDesktopFolder;  
+	OLECHAR szOleChar[MAX_PATH];    
+	ULONG chEaten;    
+	ULONG dwAttributes;    
+	HRESULT hr;  
+
+	//   Get   a   pointer   to   the   Desktop's   IShellFolder   interface.    
+	if( SUCCEEDED( ::SHGetDesktopFolder( &pDesktopFolder ) ) )    
+	{    
+		//   IShellFolder::ParseDisplayName   requires   the   file   name   be   in    
+		//   Unicode.    
+		#if   !defined( _UNICODE )  
+			::MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, lpszPath, -1, szOleChar, MAX_PATH );  
+		#else  
+			::_tcscpy(   szOleChar,   lpszPath   );  
+		#endif  
+
+		//   Convert   the   path   to   an   ITEMIDLIST.    
+		hr = pDesktopFolder->ParseDisplayName( NULL,NULL,szOleChar, &chEaten,&pidl,&dwAttributes) ;    
+
+		pDesktopFolder->Release();  
+		if (SUCCEEDED( hr ))
+		{
+			return   pidl;  
+		}
+	}  
+
+	return   NULL;  
+}
+ZEND_FUNCTION(pdr_browse_folder)
+{
+	char *psRoot, * psTitle ;
+	long nRootLen=0, nTitleLen=0 ;
+	long nFlags = BIF_DONTGOBELOWDOMAIN|BIF_RETURNONLYFSDIRS, nParentWnd=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|ssll",
+				&psRoot, &nRootLen
+				, &psTitle, &nTitleLen
+				, &nFlags
+				, &nParentWnd) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HWND hParentWnd = (HWND)nParentWnd ;
+	if( hParentWnd )
+	{
+		if( !::IsWindow(hParentWnd) )
+		{
+			zend_error(E_WARNING, "PDR: first param is not a valid window handle." );
+			RETURN_FALSE;
+		}
+	}
+
+	BROWSEINFO struInfo ;
+	TCHAR pszPath[MAX_PATH] ;
+
+	struInfo.hwndOwner = hParentWnd ;
+	struInfo.pszDisplayName = pszPath ;
+	struInfo.pidlRoot = nRootLen? GetIDListFromPath(psRoot): NULL ;  
+	struInfo.ulFlags = nFlags ;  
+	struInfo.lpfn=NULL ; 
+	struInfo.lpszTitle = nTitleLen? psTitle: NULL ;
+	struInfo.iImage=0 ;
+
+	LPCITEMIDLIST pidl = SHBrowseForFolder(&struInfo) ;
+	if(pidl==NULL)  
+	{
+		RETURN_NULL()
+	}
+
+	if(SHGetPathFromIDList(pidl,pszPath)==FALSE)
+	{
+		RETURN_NULL()
+	}
+
+	RETURN_STRING(pszPath,1) ;
+}
+
+
