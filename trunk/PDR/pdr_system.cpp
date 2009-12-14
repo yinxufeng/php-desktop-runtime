@@ -364,3 +364,64 @@ ZEND_FUNCTION(pdr_get_system_path)
 	}
 
 }
+
+
+
+ZEND_FUNCTION(pdr_browse_file)
+{
+	bool bOpenFileDialog = true ;
+	char * psDefExt, * psFileName, * psFilter ;
+	long nDefExtLen=0, nFileNameLen=0, nFilterLen=0, nFlags = OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT, nParentWnd=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bsslsl",
+				&bOpenFileDialog 
+				, &psDefExt, &nDefExtLen
+				, &psFileName, &nFileNameLen
+				, &nFlags
+				, &psFilter, &nFilterLen
+				, &nParentWnd) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+
+	CWnd * pParentWnd = NULL ;
+	if( nParentWnd )
+	{
+		if( !::IsWindow((HWND)nParentWnd) )
+		{
+			zend_error(E_WARNING, "PDR: first param is not a valid window handle." );
+			RETURN_FALSE;
+		}
+
+		pParentWnd = new CWnd() ;
+		pParentWnd->Attach((HWND)nParentWnd) ;
+	}
+
+	CFileDialog aDlg(
+		bOpenFileDialog
+		, nDefExtLen? psDefExt: NULL
+		, nFileNameLen? psFileName: NULL
+		, nFlags
+		, nFilterLen? psFilter: NULL
+		, pParentWnd
+		, 0
+	) ;
+
+	if(pParentWnd)
+	{
+		pParentWnd->Detach() ;
+		delete pParentWnd ;
+	}
+
+	if( aDlg.DoModal()==IDOK )
+	{
+		CString strPath = aDlg.GetPathName() ;
+		RETURN_STRING((char *)(LPCTSTR)strPath,1)
+	}
+
+	else
+	{
+		RETURN_NULL()
+	}
+
+}
