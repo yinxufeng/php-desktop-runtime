@@ -105,6 +105,7 @@ ZEND_FUNCTION(pdr_register_hot_key) ;
 ZEND_FUNCTION(pdr_unregister_hot_key) ;
 ZEND_FUNCTION(pdr_get_system_path) ;
 ZEND_FUNCTION(pdr_browse_file) ;
+ZEND_FUNCTION(pdr_browse_folder) ;
 
 
 // 线程函数
@@ -213,6 +214,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_unregister_hot_key, NULL)
     ZEND_FE(pdr_get_system_path, NULL)
     ZEND_FE(pdr_browse_file, NULL)
+    ZEND_FE(pdr_browse_folder, NULL)
 
 
 	// 线程函数
