@@ -51,7 +51,7 @@ typedef struct _pdr_callback_handle
 	zval * pFuncName ;
 	zval ** ppArgs ;
 	int nArgc ;
-	void *** tsrm_ls ;
+	//void *** tsrm_ls ;
 
 	~_pdr_callback_handle()
 	{
