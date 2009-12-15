@@ -150,7 +150,7 @@ ZEND_FUNCTION(pdr_dhtml_set_handle)
 	pdr_callback_handle * pEventHandle = new pdr_callback_handle() ;
 	pEventHandle->pFuncTable = EG(function_table) ;
 	pEventHandle->pFuncName = *params[3] ;
-	pEventHandle->tsrm_ls = tsrm_ls;
+	// pEventHandle->tsrm_ls = tsrm_ls ;
 
 	(*params[3])->__refcount ++ ;
 	// ZVAL_ADDREF(*params[3]) ;
@@ -182,8 +182,8 @@ ZEND_FUNCTION(pdr_dhtml_set_handle)
 
 HRESULT __pdr_dhtml_onevent(pdr_callback_handle * pHandle,zval * pEventParam)
 {
-	//TSRMLS_FETCH() ;
-	void *** tsrm_ls = pHandle->tsrm_ls ;
+	TSRMLS_FETCH() ;
+	//void *** tsrm_ls = pHandle->tsrm_ls ;
 
 	// ²ÎÊý
 	zval ***pppArgs = NULL ;

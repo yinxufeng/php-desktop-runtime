@@ -21,7 +21,7 @@ UINT _pdr_work_thread(LPVOID pParam)
 
 ZEND_FUNCTION(pdr_thread_create_work)
 {
-	::AfxBeginThread(_pdr_work_thread,tsrm_ls) ;
+	//::AfxBeginThread(_pdr_work_thread,tsrm_ls) ;
 }
 
 ZEND_FUNCTION(pdr_thread_create_window)
@@ -148,7 +148,7 @@ ZEND_FUNCTION(pdr_thread_get_hwnd)
 	pThreadRc->handle_type->pFunc = *params[1] ;\
 	pThreadRc->handle_type->pppArgs = argc>2? (params+2): NULL ;\
 	pThreadRc->handle_type->nArgc = argc-2;\
-	pThreadRc->handle_type->tsrm_ls = tsrm_ls;\
+	/*pThreadRc->handle_type->tsrm_ls = tsrm_ls;*/\
 \
 	/* 增加 回调函数 和 回调参数 的引用计数 */\
 	pThreadRc->handle_type->pFunc->__refcount ++ ; \
@@ -164,12 +164,12 @@ ZEND_FUNCTION(pdr_thread_get_hwnd)
 
 ZEND_FUNCTION(pdr_thread_set_init_handle)
 {
-	__pdr_thread_set_handle(pInitHandle)
+	//__pdr_thread_set_handle(pInitHandle)
 }
 
 ZEND_FUNCTION(pdr_thread_set_exit_handle)
 {
-	__pdr_thread_set_handle(pExitHandle)
+	//__pdr_thread_set_handle(pExitHandle)
 }
 
 

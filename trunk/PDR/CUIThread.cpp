@@ -32,7 +32,7 @@ BOOL CUIThread::InitInstance()
 				, this->m_pInitHandle->pFunc
 				, &pRet
 				, this->m_pInitHandle->nArgc, this->m_pInitHandle->pppArgs, 0, NULL 
-				, this->m_pInitHandle->tsrm_ls
+				//, this->m_pInitHandle->tsrm_ls
 		) ;
 
 		// 将 php 回调函数返回值作为 线程主窗口
@@ -68,7 +68,7 @@ int CUIThread::ExitInstance()
 			, this->m_pExitHandle->pFunc
 			, &pRet
 			, this->m_pExitHandle->nArgc, this->m_pExitHandle->pppArgs, 0, NULL 
-			, this->m_pExitHandle->tsrm_ls
+			//, this->m_pExitHandle->tsrm_ls
 		) ;
 
 		// 将 php 回调函数返回值作为 线程主窗口

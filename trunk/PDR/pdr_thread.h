@@ -10,7 +10,7 @@ typedef struct _pdr_window_thread_handle
 	zval *** pppArgs ;
 	int nArgc ;
 	HashTable * pFuncTable ;
-	void ***tsrm_ls ;
+	// void ***tsrm_ls ;
 
 } pdr_window_thread_handle ;
 

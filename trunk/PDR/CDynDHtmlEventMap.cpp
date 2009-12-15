@@ -131,8 +131,8 @@ HRESULT CDynDHtmlEventMap::OnEvent(CString strId,CString strEventType,zval * pEv
 
 	// 调用 PHP 事件
 	// ----------------------------------------------
-	//TSRMLS_FETCH() ;
-	void *** tsrm_ls = pEventHandle->tsrm_ls ;
+	TSRMLS_FETCH() ;
+	// void *** tsrm_ls = pEventHandle->tsrm_ls ;
 
 	bool bCreateEventOb = false ;
 	if(!pEventParam)
