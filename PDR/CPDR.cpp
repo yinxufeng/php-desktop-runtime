@@ -110,6 +110,7 @@ ZEND_FUNCTION(pdr_browse_file) ;
 ZEND_FUNCTION(pdr_browse_folder) ;
 ZEND_FUNCTION(pdr_get_locale) ;
 ZEND_FUNCTION(pdr_get_charset) ;
+ZEND_FUNCTION(pdr_get_php_path) ;
 
 
 // 线程函数
@@ -221,6 +222,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_browse_folder, NULL)
     ZEND_FE(pdr_get_locale, NULL)
     ZEND_FE(pdr_get_charset, NULL)
+    ZEND_FE(pdr_get_php_path, NULL)
 
 
 	// 线程函数

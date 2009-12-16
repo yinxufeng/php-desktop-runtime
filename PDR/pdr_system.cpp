@@ -525,3 +525,15 @@ ZEND_FUNCTION(pdr_get_charset)
 
 	RETURN_LONG((long)atoi(szCodePage)) ;
 }
+
+ZEND_FUNCTION(pdr_get_php_path)
+{
+    char psPHPPath[MAX_PATH] ;
+
+	DWORD nPathLen = GetModuleFileName(NULL,psPHPPath,MAX_PATH) ;
+	psPHPPath[nPathLen] = '\0' ;
+
+	RETURN_STRING(psPHPPath,1) ;
+}
+
+ 
