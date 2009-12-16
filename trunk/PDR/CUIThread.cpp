@@ -22,6 +22,8 @@ CUIThread::~CUIThread()
 
 BOOL CUIThread::InitInstance()
 {
+	TSRMLS_FETCH() ;
+
 	// php 回调函数
 	if( this->m_pInitHandle->pFunc )
 	{
@@ -32,7 +34,7 @@ BOOL CUIThread::InitInstance()
 				, this->m_pInitHandle->pFunc
 				, &pRet
 				, this->m_pInitHandle->nArgc, this->m_pInitHandle->pppArgs, 0, NULL 
-				//, this->m_pInitHandle->tsrm_ls
+				TSRMLS_CC
 		) ;
 
 		// 将 php 回调函数返回值作为 线程主窗口
@@ -56,6 +58,8 @@ BOOL CUIThread::InitInstance()
 
 int CUIThread::ExitInstance()
 {
+	TSRMLS_FETCH() ;
+
 	int nRetCode = 0 ;
 
 	// php 回调函数
@@ -68,7 +72,7 @@ int CUIThread::ExitInstance()
 			, this->m_pExitHandle->pFunc
 			, &pRet
 			, this->m_pExitHandle->nArgc, this->m_pExitHandle->pppArgs, 0, NULL 
-			//, this->m_pExitHandle->tsrm_ls
+			TSRMLS_CC
 		) ;
 
 		// 将 php 回调函数返回值作为 线程主窗口

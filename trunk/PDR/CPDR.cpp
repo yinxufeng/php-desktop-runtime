@@ -8,6 +8,7 @@
 #include <Winuser.h>
 #include "define_const.h"
 #include "define_const_vkey.h"
+#include "define_const_locale.h"
 
 
 #ifdef _DEBUG
@@ -69,6 +70,7 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	// ----------------------------------
 	_pdr_define_const
 	_pdr_define_const_vkey
+	_pdr_define_const_locale
 
 
 	// 初始化 mfc
@@ -106,6 +108,7 @@ ZEND_FUNCTION(pdr_unregister_hot_key) ;
 ZEND_FUNCTION(pdr_get_system_path) ;
 ZEND_FUNCTION(pdr_browse_file) ;
 ZEND_FUNCTION(pdr_browse_folder) ;
+ZEND_FUNCTION(pdr_get_locale) ;
 
 
 // 线程函数
@@ -215,6 +218,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_system_path, NULL)
     ZEND_FE(pdr_browse_file, NULL)
     ZEND_FE(pdr_browse_folder, NULL)
+    ZEND_FE(pdr_get_locale, NULL)
 
 
 	// 线程函数
