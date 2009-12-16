@@ -560,6 +560,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\define_const_locale.h"
+				>
+			</File>
+			<File
 				RelativePath=".\define_const_vkey.h"
 				>
 			</File>

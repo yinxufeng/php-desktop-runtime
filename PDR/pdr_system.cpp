@@ -508,3 +508,9 @@ ZEND_FUNCTION(pdr_browse_folder)
 }
 
 
+
+ZEND_FUNCTION(pdr_get_locale)
+{
+	LCID nLCId = GetSystemDefaultLCID() ;
+	RETURN_LONG((long)nLCId) ;
+}
