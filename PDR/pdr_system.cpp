@@ -514,3 +514,14 @@ ZEND_FUNCTION(pdr_get_locale)
 	LCID nLCId = GetSystemDefaultLCID() ;
 	RETURN_LONG((long)nLCId) ;
 }
+ZEND_FUNCTION(pdr_get_charset)
+{
+    char szCodePage[128] ;
+	if(!GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTCODEPAGE,szCodePage, sizeof(szCodePage)-1))
+    {
+		zend_error(E_WARNING, "PDR: GetLocaleInfo failed." );
+		RETURN_FALSE ;
+    }
+
+	RETURN_LONG((long)atoi(szCodePage)) ;
+}
