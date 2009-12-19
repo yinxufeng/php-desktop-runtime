@@ -25,6 +25,9 @@ int _pdr_get_resrc_thread_window()
 int _pdr_get_resrc_menu_icon()
 { return resrc_pdr_menu_icon ; }
 
+int _pdr_get_resrc_com()
+{ return resrc_pdr_com ; }
+
 
 // 销毁资源
 void _php_pdr_dhtml_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
@@ -57,6 +60,11 @@ void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	CMenu *pMenu= (CMenu *) rsrc->ptr ;
 	delete pMenu ;
 }
+void _php_pdr_com_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+{
+	HANDLE hCom = (HANDLE)(long) rsrc->ptr ;
+	::CloseHandle(hCom) ;
+}
 
 // 初始化函数
 ZEND_MINIT_FUNCTION(pdr_init)
@@ -65,6 +73,7 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	resrc_pdr_dhtml_dlg = zend_register_list_destructors_ex(_php_pdr_dhtml_destruction_handler, NULL, resrc_name_pdr_dhtml_dlg, module_number);
 	resrc_pdr_thread_window = zend_register_list_destructors_ex(_php_pdr_thread_destruction_handler, NULL, resrc_name_pdr_thread_window, module_number);
 	resrc_pdr_menu_icon = zend_register_list_destructors_ex(_php_pdr_menu_destruction_handler, NULL, resrc_name_pdr_menu_icon, module_number);
+	resrc_pdr_com = zend_register_list_destructors_ex(_php_pdr_com_destruction_handler, NULL, resrc_name_pdr_com, module_number);
 
 	// 定义常量
 	// ----------------------------------
@@ -197,6 +206,15 @@ ZEND_FUNCTION(dhtml_menu_radio_check) ;
 ZEND_FUNCTION(dhtml_menu_item_count) ;
 ZEND_FUNCTION(dhtml_menu_item_text) ;
 ZEND_FUNCTION(dhtml_menu_item_id) ;
+
+// 串口输入输出 函数
+ZEND_FUNCTION(dhtml_com_open) ;
+ZEND_FUNCTION(dhtml_com_stat) ;
+ZEND_FUNCTION(dhtml_com_setup_buffer) ;
+ZEND_FUNCTION(dhtml_com_set_timeouts) ;
+ZEND_FUNCTION(dhtml_com_write) ;
+ZEND_FUNCTION(dhtml_com_read) ;
+ZEND_FUNCTION(dhtml_com_close) ;
 
 
 /* compiled function list so Zend knows what's in this module */

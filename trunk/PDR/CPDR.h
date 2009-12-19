@@ -31,17 +31,21 @@ PDR_API int fnCPDR(void);
 #define __PDR_RESRC_MPARAM(other_param,...) ,other_param ,__VA_ARGS__
 
 
-#define resrc_name_pdr_dhtml_dlg  "PDR DHTML Dialog"
+#define resrc_name_pdr_dhtml_dlg "PDR DHTML Dialog"
 static int resrc_pdr_dhtml_dlg ;
 int _pdr_get_resrc_dhtml_dlg() ;
 
-#define resrc_name_pdr_thread_window  "PDR Window Thread"
+#define resrc_name_pdr_thread_window "PDR Window Thread"
 static int resrc_pdr_thread_window ;
 int _pdr_get_resrc_thread_window() ;
 
-#define resrc_name_pdr_menu_icon  "PDR Popup Menu"
+#define resrc_name_pdr_menu_icon "PDR Popup Menu"
 static int resrc_pdr_menu_icon ;
 int _pdr_get_resrc_menu_icon() ;
+
+#define resrc_name_pdr_com "PDR COM"
+static int resrc_pdr_com ;
+int _pdr_get_resrc_com() ;
 
 
 
