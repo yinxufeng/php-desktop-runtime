@@ -78,12 +78,12 @@ extern "C" {
 
 
 #ifdef _DEBUG
-typedef struct __BreakpointStruct{ int m ; } _BreakpointStruct ;
+/*typedef struct __BreakpointStruct{ int m ; } _BreakpointStruct ;
 
 #define breakpoint \
 	__BreakpointStruct * __pBreakPoint = new __BreakpointStruct() ;\
 	__pBreakPoint = NULL ;\
-	__pBreakPoint->m = 1 ;
+	__pBreakPoint->m = 1 ;*/
 #endif
 
 

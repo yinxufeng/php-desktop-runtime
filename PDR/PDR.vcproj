@@ -572,6 +572,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_com.h"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_dhtml.h"
 				>
 			</File>
