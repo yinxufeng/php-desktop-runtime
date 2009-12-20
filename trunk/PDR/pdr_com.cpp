@@ -1,52 +1,54 @@
 #include "stdafx.h"
 #include "CPDR.h"
+#include "pdr_com.h"
 
-ZEND_FUNCTION(dhtml_com_open)
+ZEND_FUNCTION(pdr_com_open)
 {
 	char * psComPort ;
 	int nComPort=0 ;
 	long nDesiredAccess=GENERIC_READ|GENERIC_WRITE ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &psComPort, &nComPort, &nDesiredAccess )==FAILURE )
+	bool bAsync = false ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bl", &psComPort, &nComPort, &nDesiredAccess, &bAsync )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 
-	HANDLE hCom = ::CreateFile( psComPort,nDesiredAccess,0,NULL,OPEN_EXISTING,0,NULL ) ;
+	pdr_com_handle * pComHandle = new pdr_com_handle() ;
+	pComHandle->hCom = ::CreateFile( psComPort,nDesiredAccess,0,NULL,OPEN_EXISTING,bAsync?FILE_FLAG_OVERLAPPED:0,NULL ) ;
 
-	if(hCom==(HANDLE)-1)
+	if(pComHandle->hCom==(HANDLE)-1)
 	{
 		RETURN_FALSE
 	}
 	else
 	{
 		int nResrc = _pdr_get_resrc_com() ;
-		ZEND_REGISTER_RESOURCE( return_value, (void*)(long)hCom, nResrc )
+		ZEND_REGISTER_RESOURCE( return_value, (void*)pComHandle, nResrc )
 	}
 }
 
 // 取得已经打开的 COM句柄 资源
 #define PDR_GetComHandleFromResrc(type_spec,other_param) zval * zvalResrc ;\
-	void * pResrc = NULL ;\
+	pdr_com_handle * pComHandle = NULL ;\
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, type_spec, &zvalResrc other_param ) == FAILURE )\
 	{\
 		RETURN_FALSE\
 	}\
-	ZEND_FETCH_RESOURCE(pResrc, void*, &zvalResrc, -1, resrc_name_pdr_com, _pdr_get_resrc_com()) ;\
-	if(!pResrc)\
+	ZEND_FETCH_RESOURCE(pComHandle, pdr_com_handle*, &zvalResrc, -1, resrc_name_pdr_com, _pdr_get_resrc_com()) ;\
+	if(!pComHandle || !pComHandle->hCom )\
 	{\
 		zend_error(E_WARNING, "PDR : you was given a avalid COM handle." );\
 		RETURN_FALSE\
-	}\
-	HANDLE hCom = (HANDLE)(long)pResrc ;
+	}
 
-ZEND_FUNCTION(dhtml_com_stat)
+ZEND_FUNCTION(pdr_com_stat)
 {
 	int nBaudRate=9600, nByteSize=8, nParity=0, nStopBits=0 ;
 	PDR_GetComHandleFromResrc("r|llll",__PDR_RESRC_MPARAM(&nBaudRate,&nByteSize,&nParity,&nStopBits))
 
 	DCB dcb;
 	//获取串口设备状态信息
-	if (!GetCommState(hCom, &dcb))
+	if (!GetCommState(pComHandle->hCom, &dcb))
 	{
 		RETURN_FALSE
     }
@@ -57,7 +59,7 @@ ZEND_FUNCTION(dhtml_com_stat)
 	dcb.StopBits = nStopBits ;		// one stop bit 0
 
 	//设置串口设备状态
-	if (!SetCommState(hCom, &dcb))
+	if (!SetCommState(pComHandle->hCom, &dcb))
 	{
 		RETURN_FALSE
 	}
@@ -65,13 +67,54 @@ ZEND_FUNCTION(dhtml_com_stat)
 	RETURN_TRUE
 }
 
-ZEND_FUNCTION(dhtml_com_set_timeouts)
-{
-	long nReadIntervalTimeout = 100 ;			// 接收时，两字符间最大的时延
-	long nReadTotalTimeoutMultiplier = 100 ;	// 读取每字节的超时
-	long nReadTotalTimeoutConstant = 100 ;		// 读串口数据的固定超时
-	long nWriteTotalTimeoutMultiplier = 100 ;	// 写每字节的超时
-	long nWriteTotalTimeoutConstant = 100 ;		// 写串口数据的固定超时
+ZEND_FUNCTION(pdr_com_set_timeouts)
+{/*
+  ReadIntervalTimeout:指定时间最大值（毫秒），充许接收的2个字节间有时间差。也就  
+  是说，刚接收了一个字节后，等了ReadIntervalTimeout时间后还没有新的字节到达，就  
+  认为本次读串口操作结束（后面的字节等下一次读取操作来处理）。即使你想读8个字节，  
+  但读第2个字节后，过了ReadIntervalTimeout时间后，第3个字节还没到。实际上就只读  
+  了2个字节。  
+   
+  ReadTotalTimeoutMultiplier:指定比例因子（毫秒），实际上是设置读取一个字节和等  
+  待下一个字节所需的时间，这样总的超时时间为读取的字节数乘以该值，同样一次读取  
+  操作到达这个时间后，也认为本次读操作己经结束。  
+   
+  ReadTotalTimeoutConstant:可以理解为一个修正时间，实际上就是按ReadTotalTimeout  
+  Multiplier计算出的超时时间再加上该时间才作为整个超时时间。  
+   
+  WriteTotalTimeoutMultiplier，WriteTotalTimeoutConstant   意思类似。  
+  如果设为0值表示这些参数不起作用。  
+   
+  这样我们很容易看出，如果我们想读写可靠，要根据  
+  不同的速率和应用实际情况设置合适的值。和同步模式和异步模式、不同的通信协议无关。  
+   
+  重点在于理解:超时就意味着本次读写操作结束。  
+   
+  常见设置:  
+  一般都会做以下设置：  
+  TimeOuts.ReadIntervalTimeout=MAXDWORD;                        
+  //   把间隔超时设为最大，把总超时设为0将导致ReadFile立即返回并完成操作  
+   
+  TimeOuts.ReadTotalTimeoutMultiplier=0;                        
+  //读时间系数  
+   
+  TimeOuts.ReadTotalTimeoutConstant=0;                          
+  //读时间常量      
+   
+  TimeOuts.WriteTotalTimeoutMultiplier=50;                
+  //总超时=时间系数*要求读/写的字符数+时间常量  
+   
+  TimeOuts.WriteTotalTimeoutConstant=2000;                
+  //设置写超时以指定WriteComm成员函数中的   
+ 
+ */
+
+	long nReadIntervalTimeout = 0 ;						// 接收时，两字符间最大的时延
+	/*(妙)*/long nReadTotalTimeoutMultiplier = 0 ;		// 读取每字节的超时(秒)
+	/*(微妙)*/long nReadTotalTimeoutConstant = 0 ;		// 读串口数据的固定超时
+
+	long nWriteTotalTimeoutMultiplier = 0 ;				// 写每字节的超时
+	long nWriteTotalTimeoutConstant = 0 ;				// 写串口数据的固定超时
 
 	int nOutputBuffSize=1024, nInputBuffSize=1024 ;
 	PDR_GetComHandleFromResrc("r|lllll",__PDR_RESRC_MPARAM(
@@ -90,42 +133,42 @@ ZEND_FUNCTION(dhtml_com_set_timeouts)
 	comTimeOut.WriteTotalTimeoutConstant = nWriteTotalTimeoutConstant ;
 
 	//设备串口设备超时时限
-	RETURN_BOOL(SetCommTimeouts(hCom,&comTimeOut))
+	RETURN_BOOL(SetCommTimeouts(pComHandle->hCom,&comTimeOut))
 }
 
-ZEND_FUNCTION(dhtml_com_setup_buffer)
+ZEND_FUNCTION(pdr_com_setup_buffer)
 {
 	int nOutputBuffSize=1024, nInputBuffSize=1024 ;
 	PDR_GetComHandleFromResrc("r|ll",__PDR_RESRC_MPARAM(&nInputBuffSize,&nOutputBuffSize))
 		
 	//设备串口设备读写缓冲区大小
-	RETURN_BOOL( SetupComm(hCom,nInputBuffSize,nOutputBuffSize) )
+	RETURN_BOOL( SetupComm(pComHandle->hCom,nInputBuffSize,nOutputBuffSize) )
 }
 
-ZEND_FUNCTION(dhtml_com_write)
+ZEND_FUNCTION(pdr_com_write)
 {
 	char * psData ;
 	int nDataLen ;
 	PDR_GetComHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
 
 	DWORD dwBytesWrite=0 ;
-	if(!WriteFile(hCom,psData,nDataLen,&dwBytesWrite,NULL)) 
+	if(!WriteFile(pComHandle->hCom,psData,nDataLen,&dwBytesWrite,NULL)) 
 	{
 		RETURN_FALSE
 	}
-	PurgeComm(hCom, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
+	PurgeComm(pComHandle->hCom, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
 
 	RETURN_LONG(dwBytesWrite)
 }
 
-ZEND_FUNCTION(dhtml_com_read)
+ZEND_FUNCTION(pdr_com_read)
 {
 	int nReadLen=1024 ;
 	PDR_GetComHandleFromResrc("r|l",__PDR_RESRC_MPARAM(&nReadLen))
 
-	char * psData = new char(nReadLen+1) ;
+	char * psData = new char[nReadLen+1] ;
 	DWORD nCount;//读取的字节数
-	if( !ReadFile(hCom,psData,nReadLen,&nCount,NULL) )
+	if( !ReadFile(pComHandle->hCom,psData,nReadLen,&nCount,NULL) )
 	{
 		RETURN_FALSE
 	}
@@ -135,13 +178,24 @@ ZEND_FUNCTION(dhtml_com_read)
 	zval * pvRetString ;
 	MAKE_STD_ZVAL(pvRetString)
 	ZVAL_STRING(pvRetString,psData,1)
-	delete psData ;
+	delete [] psData ;
 
 	RETURN_ZVAL(pvRetString,0,0) 
 }
 
-ZEND_FUNCTION(dhtml_com_close)
+ZEND_FUNCTION(pdr_com_close)
 {
-	PDR_GetComHandleFromResrc("r")
-	RETURN_BOOL(::CloseHandle(hCom)) ;
+	PDR_GetComHandleFromResrc("r",)
+
+	if( !::CloseHandle(pComHandle->hCom) )
+	{
+		RETURN_FALSE
+	}
+
+	else
+	{
+		pComHandle->hCom = NULL ;
+		RETURN_TRUE
+	}
+
 }

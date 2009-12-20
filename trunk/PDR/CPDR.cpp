@@ -6,6 +6,7 @@
 #include "CUIThread.h"
 #include "pdr_thread.h"
 #include <Winuser.h>
+#include "pdr_com.h"
 #include "define_const.h"
 #include "define_const_vkey.h"
 #include "define_const_locale.h"
@@ -62,8 +63,15 @@ void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 void _php_pdr_com_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
-	HANDLE hCom = (HANDLE)(long) rsrc->ptr ;
-	::CloseHandle(hCom) ;
+	pdr_com_handle * pComHandle = (pdr_com_handle *) rsrc->ptr ;
+
+	if( pComHandle->hCom )
+	{
+		::CloseHandle(pComHandle->hCom) ;
+		pComHandle->hCom = NULL ;
+	}
+
+	delete pComHandle ;
 }
 
 // 初始化函数
@@ -208,13 +216,13 @@ ZEND_FUNCTION(dhtml_menu_item_text) ;
 ZEND_FUNCTION(dhtml_menu_item_id) ;
 
 // 串口输入输出 函数
-ZEND_FUNCTION(dhtml_com_open) ;
-ZEND_FUNCTION(dhtml_com_stat) ;
-ZEND_FUNCTION(dhtml_com_setup_buffer) ;
-ZEND_FUNCTION(dhtml_com_set_timeouts) ;
-ZEND_FUNCTION(dhtml_com_write) ;
-ZEND_FUNCTION(dhtml_com_read) ;
-ZEND_FUNCTION(dhtml_com_close) ;
+ZEND_FUNCTION(pdr_com_open) ;
+ZEND_FUNCTION(pdr_com_stat) ;
+ZEND_FUNCTION(pdr_com_set_timeouts) ;
+ZEND_FUNCTION(pdr_com_setup_buffer) ;
+ZEND_FUNCTION(pdr_com_write) ;
+ZEND_FUNCTION(pdr_com_read) ;
+ZEND_FUNCTION(pdr_com_close) ;
 
 
 /* compiled function list so Zend knows what's in this module */
@@ -314,6 +322,7 @@ zend_function_entry pdr_dhtml_functions[] = {
 
 
 	// 菜单 函数
+	// ------------------------
     ZEND_FE(dhtml_menu_create, NULL)
     ZEND_FE(dhtml_menu_append, NULL)
     ZEND_FE(dhtml_menu_insert, NULL)
@@ -326,6 +335,16 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(dhtml_menu_radio_check, NULL)
     ZEND_FE(dhtml_menu_item_count, NULL)
     ZEND_FE(dhtml_menu_item_text, NULL)
+
+	// 串口输入输出 函数
+	// ------------------------
+    ZEND_FE(pdr_com_open, NULL)
+    ZEND_FE(pdr_com_stat, NULL)
+    ZEND_FE(pdr_com_set_timeouts, NULL)
+    ZEND_FE(pdr_com_setup_buffer, NULL)
+    ZEND_FE(pdr_com_write, NULL)
+    ZEND_FE(pdr_com_read, NULL)
+    ZEND_FE(pdr_com_close, NULL)
 
 
     {NULL, NULL, NULL}
