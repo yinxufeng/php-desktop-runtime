@@ -43,9 +43,9 @@ int _pdr_get_resrc_thread_window() ;
 static int resrc_pdr_menu_icon ;
 int _pdr_get_resrc_menu_icon() ;
 
-#define resrc_name_pdr_com "PDR COM"
-static int resrc_pdr_com ;
-int _pdr_get_resrc_com() ;
+#define resrc_name_pdr_file "PDR COM"
+static int resrc_pdr_file ;
+int _pdr_get_resrc_file() ;
 
 
 

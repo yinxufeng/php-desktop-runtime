@@ -6,10 +6,11 @@
 #include "CUIThread.h"
 #include "pdr_thread.h"
 #include <Winuser.h>
-#include "pdr_com.h"
+#include "pdr_file.h"
 #include "define_const.h"
 #include "define_const_vkey.h"
 #include "define_const_locale.h"
+#include "define_const_file.h"
 
 
 #ifdef _DEBUG
@@ -26,8 +27,8 @@ int _pdr_get_resrc_thread_window()
 int _pdr_get_resrc_menu_icon()
 { return resrc_pdr_menu_icon ; }
 
-int _pdr_get_resrc_com()
-{ return resrc_pdr_com ; }
+int _pdr_get_resrc_file()
+{ return resrc_pdr_file ; }
 
 
 // 销毁资源
@@ -63,15 +64,15 @@ void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 void _php_pdr_com_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
-	pdr_com_handle * pComHandle = (pdr_com_handle *) rsrc->ptr ;
+	pdr_file_handle * pFileHandle = (pdr_file_handle *) rsrc->ptr ;
 
-	if( pComHandle->hCom )
+	if( pFileHandle->hFile )
 	{
-		::CloseHandle(pComHandle->hCom) ;
-		pComHandle->hCom = NULL ;
+		::CloseHandle(pFileHandle->hFile) ;
+		pFileHandle->hFile = NULL ;
 	}
 
-	delete pComHandle ;
+	delete pFileHandle ;
 }
 
 // 初始化函数
@@ -81,13 +82,14 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	resrc_pdr_dhtml_dlg = zend_register_list_destructors_ex(_php_pdr_dhtml_destruction_handler, NULL, resrc_name_pdr_dhtml_dlg, module_number);
 	resrc_pdr_thread_window = zend_register_list_destructors_ex(_php_pdr_thread_destruction_handler, NULL, resrc_name_pdr_thread_window, module_number);
 	resrc_pdr_menu_icon = zend_register_list_destructors_ex(_php_pdr_menu_destruction_handler, NULL, resrc_name_pdr_menu_icon, module_number);
-	resrc_pdr_com = zend_register_list_destructors_ex(_php_pdr_com_destruction_handler, NULL, resrc_name_pdr_com, module_number);
+	resrc_pdr_file = zend_register_list_destructors_ex(_php_pdr_com_destruction_handler, NULL, resrc_name_pdr_file, module_number);
 
 	// 定义常量
 	// ----------------------------------
 	_pdr_define_const
 	_pdr_define_const_vkey
 	_pdr_define_const_locale
+	_pdr_define_const_file
 
 
 	// 初始化 mfc
@@ -215,14 +217,14 @@ ZEND_FUNCTION(dhtml_menu_item_count) ;
 ZEND_FUNCTION(dhtml_menu_item_text) ;
 ZEND_FUNCTION(dhtml_menu_item_id) ;
 
-// 串口输入输出 函数
-ZEND_FUNCTION(pdr_com_open) ;
+// 文件操/串口 操作 函数
+ZEND_FUNCTION(pdr_file_create) ;
+ZEND_FUNCTION(pdr_file_write) ;
+ZEND_FUNCTION(pdr_file_read) ;
+ZEND_FUNCTION(pdr_file_close) ;
 ZEND_FUNCTION(pdr_com_stat) ;
 ZEND_FUNCTION(pdr_com_set_timeouts) ;
 ZEND_FUNCTION(pdr_com_setup_buffer) ;
-ZEND_FUNCTION(pdr_com_write) ;
-ZEND_FUNCTION(pdr_com_read) ;
-ZEND_FUNCTION(pdr_com_close) ;
 
 
 /* compiled function list so Zend knows what's in this module */
@@ -336,15 +338,15 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(dhtml_menu_item_count, NULL)
     ZEND_FE(dhtml_menu_item_text, NULL)
 
-	// 串口输入输出 函数
+	// 文件操/串口 操作 函数
 	// ------------------------
-    ZEND_FE(pdr_com_open, NULL)
+    ZEND_FE(pdr_file_create, NULL)
+    ZEND_FE(pdr_file_read, NULL)
+    ZEND_FE(pdr_file_write, NULL)
+    ZEND_FE(pdr_file_close, NULL)
     ZEND_FE(pdr_com_stat, NULL)
     ZEND_FE(pdr_com_set_timeouts, NULL)
     ZEND_FE(pdr_com_setup_buffer, NULL)
-    ZEND_FE(pdr_com_write, NULL)
-    ZEND_FE(pdr_com_read, NULL)
-    ZEND_FE(pdr_com_close, NULL)
 
 
     {NULL, NULL, NULL}
