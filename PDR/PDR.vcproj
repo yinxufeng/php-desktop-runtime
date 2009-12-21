@@ -474,7 +474,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_file.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_menu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_reg.cpp"
 				>
 			</File>
 			<File
@@ -564,6 +572,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\define_const_file.h"
+				>
+			</File>
+			<File
 				RelativePath=".\define_const_locale.h"
 				>
 			</File>
@@ -572,11 +584,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\pdr_com.h"
+				RelativePath=".\pdr_dhtml.h"
 				>
 			</File>
 			<File
-				RelativePath=".\pdr_dhtml.h"
+				RelativePath=".\pdr_file.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_reg.h"
 				>
 			</File>
 			<File

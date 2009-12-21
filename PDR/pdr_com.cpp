@@ -1,45 +1,7 @@
 #include "stdafx.h"
 #include "CPDR.h"
-#include "pdr_com.h"
+#include "pdr_file.h"
 
-ZEND_FUNCTION(pdr_com_open)
-{
-	char * psComPort ;
-	int nComPort=0 ;
-	long nDesiredAccess=GENERIC_READ|GENERIC_WRITE ;
-	bool bAsync = false ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bl", &psComPort, &nComPort, &nDesiredAccess, &bAsync )==FAILURE )
-	{
-		RETURN_FALSE
-	}
-
-	pdr_com_handle * pComHandle = new pdr_com_handle() ;
-	pComHandle->hCom = ::CreateFile( psComPort,nDesiredAccess,0,NULL,OPEN_EXISTING,bAsync?FILE_FLAG_OVERLAPPED:0,NULL ) ;
-
-	if(pComHandle->hCom==(HANDLE)-1)
-	{
-		RETURN_FALSE
-	}
-	else
-	{
-		int nResrc = _pdr_get_resrc_com() ;
-		ZEND_REGISTER_RESOURCE( return_value, (void*)pComHandle, nResrc )
-	}
-}
-
-// 取得已经打开的 COM句柄 资源
-#define PDR_GetComHandleFromResrc(type_spec,other_param) zval * zvalResrc ;\
-	pdr_com_handle * pComHandle = NULL ;\
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, type_spec, &zvalResrc other_param ) == FAILURE )\
-	{\
-		RETURN_FALSE\
-	}\
-	ZEND_FETCH_RESOURCE(pComHandle, pdr_com_handle*, &zvalResrc, -1, resrc_name_pdr_com, _pdr_get_resrc_com()) ;\
-	if(!pComHandle || !pComHandle->hCom )\
-	{\
-		zend_error(E_WARNING, "PDR : you was given a avalid COM handle." );\
-		RETURN_FALSE\
-	}
 
 ZEND_FUNCTION(pdr_com_stat)
 {
@@ -48,7 +10,7 @@ ZEND_FUNCTION(pdr_com_stat)
 
 	DCB dcb;
 	//获取串口设备状态信息
-	if (!GetCommState(pComHandle->hCom, &dcb))
+	if (!GetCommState(pFileHandle->hFile, &dcb))
 	{
 		RETURN_FALSE
     }
@@ -59,7 +21,7 @@ ZEND_FUNCTION(pdr_com_stat)
 	dcb.StopBits = nStopBits ;		// one stop bit 0
 
 	//设置串口设备状态
-	if (!SetCommState(pComHandle->hCom, &dcb))
+	if (!SetCommState(pFileHandle->hFile, &dcb))
 	{
 		RETURN_FALSE
 	}
@@ -133,7 +95,7 @@ ZEND_FUNCTION(pdr_com_set_timeouts)
 	comTimeOut.WriteTotalTimeoutConstant = nWriteTotalTimeoutConstant ;
 
 	//设备串口设备超时时限
-	RETURN_BOOL(SetCommTimeouts(pComHandle->hCom,&comTimeOut))
+	RETURN_BOOL(SetCommTimeouts(pFileHandle->hFile,&comTimeOut))
 }
 
 ZEND_FUNCTION(pdr_com_setup_buffer)
@@ -142,7 +104,7 @@ ZEND_FUNCTION(pdr_com_setup_buffer)
 	PDR_GetComHandleFromResrc("r|ll",__PDR_RESRC_MPARAM(&nInputBuffSize,&nOutputBuffSize))
 		
 	//设备串口设备读写缓冲区大小
-	RETURN_BOOL( SetupComm(pComHandle->hCom,nInputBuffSize,nOutputBuffSize) )
+	RETURN_BOOL( SetupComm(pFileHandle->hFile,nInputBuffSize,nOutputBuffSize) )
 }
 
 ZEND_FUNCTION(pdr_com_write)
@@ -152,50 +114,11 @@ ZEND_FUNCTION(pdr_com_write)
 	PDR_GetComHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
 
 	DWORD dwBytesWrite=0 ;
-	if(!WriteFile(pComHandle->hCom,psData,nDataLen,&dwBytesWrite,NULL)) 
+	if(!WriteFile(pFileHandle->hFile,psData,nDataLen,&dwBytesWrite,NULL)) 
 	{
 		RETURN_FALSE
 	}
-	PurgeComm(pComHandle->hCom, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
+	PurgeComm(pFileHandle->hFile, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
 
 	RETURN_LONG(dwBytesWrite)
-}
-
-ZEND_FUNCTION(pdr_com_read)
-{
-	int nReadLen=1024 ;
-	PDR_GetComHandleFromResrc("r|l",__PDR_RESRC_MPARAM(&nReadLen))
-
-	char * psData = new char[nReadLen+1] ;
-	DWORD nCount;//读取的字节数
-	if( !ReadFile(pComHandle->hCom,psData,nReadLen,&nCount,NULL) )
-	{
-		RETURN_FALSE
-	}
-
-	psData[nCount]='\0';
-
-	zval * pvRetString ;
-	MAKE_STD_ZVAL(pvRetString)
-	ZVAL_STRING(pvRetString,psData,1)
-	delete [] psData ;
-
-	RETURN_ZVAL(pvRetString,0,0) 
-}
-
-ZEND_FUNCTION(pdr_com_close)
-{
-	PDR_GetComHandleFromResrc("r",)
-
-	if( !::CloseHandle(pComHandle->hCom) )
-	{
-		RETURN_FALSE
-	}
-
-	else
-	{
-		pComHandle->hCom = NULL ;
-		RETURN_TRUE
-	}
-
 }
