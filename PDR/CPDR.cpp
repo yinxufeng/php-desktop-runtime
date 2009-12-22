@@ -200,7 +200,7 @@ ZEND_FUNCTION(pdr_window_set_pos);
 ZEND_FUNCTION(pdr_window_get_thread);
 ZEND_FUNCTION(pdr_window_get_process);
 ZEND_FUNCTION(pdr_window_foreground);
-ZEND_FUNCTION(pdr_window_msg) ;
+ZEND_FUNCTION(pdr_window_msgbox) ;
 ZEND_FUNCTION(pdr_window_set_parent) ;
 ZEND_FUNCTION(pdr_window_get_parent) ;
 ZEND_FUNCTION(pdr_window_get_desktop) ;
@@ -269,6 +269,8 @@ ZEND_FUNCTION(pdr_com_open) ;
 ZEND_FUNCTION(pdr_com_stat) ;
 ZEND_FUNCTION(pdr_com_set_timeouts) ;
 ZEND_FUNCTION(pdr_com_setup_buffer) ;
+ZEND_FUNCTION(pdr_handle_write) ;
+ZEND_FUNCTION(pdr_handle_read) ;
 
 // 进程/管道 函数
 ZEND_FUNCTION(pdr_pipe_create) ;
@@ -330,7 +332,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_window_get_thread, NULL)
     ZEND_FE(pdr_window_get_process, NULL)
     ZEND_FE(pdr_window_foreground, NULL)
-    ZEND_FE(pdr_window_msg, NULL)
+    ZEND_FE(pdr_window_msgbox, NULL)
     ZEND_FE(pdr_window_set_parent, NULL)
     ZEND_FE(pdr_window_get_parent, NULL)
     ZEND_FE(pdr_window_get_desktop, NULL)
@@ -400,6 +402,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_com_stat, NULL)
     ZEND_FE(pdr_com_set_timeouts, NULL)
     ZEND_FE(pdr_com_setup_buffer, NULL)
+    ZEND_FE(pdr_handle_write, NULL)
+    ZEND_FE(pdr_handle_read, NULL)
 
 	// 进程/管道 函数
 	// ------------------------
