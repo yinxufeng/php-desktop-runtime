@@ -4,6 +4,9 @@ typedef struct _pdr_proc_handle
 	HANDLE hProcess ;
 	HANDLE hThread ;
 
+	DWORD dwProcessId ;
+	DWORD dwThreadId ;
+
 } pdr_proc_handle ;
 
 typedef struct _pdr_pipe_handle

@@ -96,6 +96,8 @@ void _php_pdr_proc_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 		pProc->hThread = NULL ;
 	}
 
+	pProc->dwProcessId = 0 ;
+	pProc->dwThreadId = 0 ;
 	delete pProc ;
 }
 void _php_pdr_pipe_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
@@ -277,6 +279,11 @@ ZEND_FUNCTION(pdr_pipe_create) ;
 ZEND_FUNCTION(pdr_pipe_get_read_handle) ;
 ZEND_FUNCTION(pdr_pipe_get_write_handle) ;
 ZEND_FUNCTION(pdr_pipe_peek) ;
+ZEND_FUNCTION(pdr_proc_create) ;
+ZEND_FUNCTION(pdr_proc_get_handle) ;
+ZEND_FUNCTION(pdr_proc_get_tread_handle) ;
+ZEND_FUNCTION(pdr_proc_get_id) ;
+ZEND_FUNCTION(pdr_proc_get_tread_id) ;
 
 
 
@@ -411,6 +418,11 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_pipe_get_read_handle, NULL)
     ZEND_FE(pdr_pipe_get_write_handle, NULL)
     ZEND_FE(pdr_pipe_peek, NULL)
+    ZEND_FE(pdr_proc_create, NULL)
+    ZEND_FE(pdr_proc_get_handle, NULL)
+    ZEND_FE(pdr_proc_get_tread_handle, NULL)
+    ZEND_FE(pdr_proc_get_id, NULL)
+    ZEND_FE(pdr_proc_get_tread_id, NULL)
 
 
     {NULL, NULL, NULL}
