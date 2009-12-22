@@ -42,7 +42,7 @@ typedef struct _pdr_pipe_handle
 	ZEND_FETCH_RESOURCE(pPipe, pdr_pipe_handle*, &zvalResrc, -1, resrc_name_pdr_pipe, _pdr_get_resrc_pipe()) ;\
 	if(!pPipe || !pPipe->hRead || !pPipe->hWrite )\
 	{\
-		zend_error(E_WARNING, "PDR Process: you was given a avalid pipe handle." );\
+		zend_error(E_WARNING, "PDR Pipe: you was given a avalid pipe handle." );\
 		RETURN_FALSE\
 	}
 

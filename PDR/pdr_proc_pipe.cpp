@@ -92,6 +92,37 @@ ZEND_FUNCTION(pdr_pipe_peek)
 	}
 }
 
+ZEND_FUNCTION(pdr_pipe_get_std)
+{
+	long nHanleType = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nHanleType )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+	if( nHanleType<STD_INPUT_HANDLE || nHanleType>STD_ERROR_HANDLE )
+	{
+		zend_error(E_WARNING, "PDR Pipe: you was given a avalid pipe handle type." );
+		RETURN_FALSE
+	}
+
+	RETURN_LONG((long)::GetStdHandle(nHanleType))
+}
+ZEND_FUNCTION(pdr_pipe_set_std)
+{
+	long nHanleType = 0 ;
+	long nHanle = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &nHanleType, &nHanle )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+	if( nHanleType<STD_INPUT_HANDLE || nHanleType>STD_ERROR_HANDLE )
+	{
+		zend_error(E_WARNING, "PDR Pipe: you was given a avalid pipe handle type." );
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL(::SetStdHandle(nHanleType,(HANDLE)nHanle))
+}
 
 // process //////////////////////////////////////////////
 
