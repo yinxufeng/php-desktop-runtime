@@ -43,9 +43,17 @@ int _pdr_get_resrc_thread_window() ;
 static int resrc_pdr_menu_icon ;
 int _pdr_get_resrc_menu_icon() ;
 
-#define resrc_name_pdr_file "PDR COM"
+#define resrc_name_pdr_file "PDR Win32 File"
 static int resrc_pdr_file ;
 int _pdr_get_resrc_file() ;
+
+#define resrc_name_pdr_proc "PDR Process"
+static int resrc_pdr_proc ;
+int _pdr_get_resrc_proc() ;
+
+#define resrc_name_pdr_pipe "PDR Pipe"
+static int resrc_pdr_pipe ;
+int _pdr_get_resrc_pipe() ;
 
 
 
