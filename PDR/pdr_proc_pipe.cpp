@@ -91,3 +91,90 @@ ZEND_FUNCTION(pdr_pipe_peek)
 		RETURN_ZVAL(pZvalData,0,0) ;
 	}
 }
+
+
+// process //////////////////////////////////////////////
+
+ZEND_FUNCTION(pdr_proc_create)
+{
+	long nReadPipeHandle=0,nWritePipeHandle=0, nErrorPipeHandle=0 ;
+	char * psApplicationName ;
+	long nApplicationNameLen = 0 ;
+	char * psCommandLine ;
+	long nCommandLineLen = 0 ;
+	bool bInheritHandles = true ;
+	long nCreateFlags = 0 ;
+	char * psCurrentDir ;
+	long nCurrentDirLen = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|ssbllll"
+			, &psApplicationName, &nApplicationNameLen
+			, &psCommandLine, &nCommandLineLen
+			, &psCurrentDir, &nCurrentDirLen
+			, &bInheritHandles
+			, &nReadPipeHandle,&nWritePipeHandle,&nErrorPipeHandle
+			, &nCreateFlags
+		)==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	STARTUPINFO sui ;
+	PROCESS_INFORMATION pi ;
+	ZeroMemory(&sui,sizeof(STARTUPINFO)) ;
+	sui.cb = sizeof(STARTUPINFO) ;
+	sui.dwFlags = STARTF_USESTDHANDLES ;
+	sui.hStdInput = nReadPipeHandle? (HANDLE)nReadPipeHandle: NULL ;
+	sui.hStdOutput = nWritePipeHandle? (HANDLE)nWritePipeHandle: NULL ;
+	sui.hStdError = nErrorPipeHandle? (HANDLE)nErrorPipeHandle: NULL ;
+
+	if( !::CreateProcess(
+		nApplicationNameLen? psApplicationName: NULL
+		, nCommandLineLen? psCommandLine: NULL
+		, NULL, NULL
+		, bInheritHandles
+		, nCreateFlags
+		, NULL
+		, nCurrentDirLen? psCurrentDir: NULL
+		, &sui, &pi
+	) )
+	{
+		RETURN_FALSE
+	}
+
+	else
+	{
+		pdr_proc_handle * pProc = new pdr_proc_handle() ;
+		pProc->hProcess = pi.hProcess ;
+		pProc->hThread = pi.hThread ;
+		pProc->dwProcessId = pi.dwProcessId ;
+		pProc->dwThreadId = pi.dwThreadId ;
+
+		int nResrc = _pdr_get_resrc_proc() ;
+		ZEND_REGISTER_RESOURCE( return_value, (void*)pProc, nResrc )
+	}
+}
+
+
+ZEND_FUNCTION(pdr_proc_get_handle)
+{
+	PDR_GetProcHandleFromResrc("r",)
+	RETURN_LONG((long)pProcess->hProcess)
+}
+
+ZEND_FUNCTION(pdr_proc_get_tread_handle)
+{
+	PDR_GetProcHandleFromResrc("r",)
+	RETURN_LONG((long)pProcess->hThread)
+}
+
+ZEND_FUNCTION(pdr_proc_get_id)
+{
+	PDR_GetProcHandleFromResrc("r",)
+	RETURN_LONG((long)pProcess->dwProcessId)
+}
+
+ZEND_FUNCTION(pdr_proc_get_tread_id)
+{
+	PDR_GetProcHandleFromResrc("r",)
+	RETURN_LONG((long)pProcess->dwThreadId)
+}
