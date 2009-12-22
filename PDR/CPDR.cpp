@@ -278,6 +278,7 @@ ZEND_FUNCTION(pdr_handle_read) ;
 ZEND_FUNCTION(pdr_pipe_create) ;
 ZEND_FUNCTION(pdr_pipe_get_read_handle) ;
 ZEND_FUNCTION(pdr_pipe_get_write_handle) ;
+ZEND_FUNCTION(pdr_pipe_get_size) ;
 ZEND_FUNCTION(pdr_pipe_peek) ;
 ZEND_FUNCTION(pdr_pipe_get_std) ;
 ZEND_FUNCTION(pdr_pipe_set_std) ;
@@ -420,6 +421,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_pipe_create, NULL)
     ZEND_FE(pdr_pipe_get_read_handle, NULL)
     ZEND_FE(pdr_pipe_get_write_handle, NULL)
+    ZEND_FE(pdr_pipe_get_size, NULL)
     ZEND_FE(pdr_pipe_peek, NULL)
     ZEND_FE(pdr_pipe_get_std, NULL)
     ZEND_FE(pdr_pipe_set_std, NULL)

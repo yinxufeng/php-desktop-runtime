@@ -67,8 +67,9 @@ typedef int socklen_t;
 
 #endif
 
-
-// #define PHP_COMPILER_ID "VC8"
+#ifdef PHP_COMPILER_VC8
+#define PHP_COMPILER_ID "VC8"
+#endif
 
 extern "C" {
 	#include "zend_config.w32.h"
