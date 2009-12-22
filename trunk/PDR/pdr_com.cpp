@@ -2,11 +2,35 @@
 #include "CPDR.h"
 #include "pdr_file.h"
 
+ZEND_FUNCTION(pdr_com_open)
+{
+	char * psComPort ;
+	int nComPort=0 ;
+	long nDesiredAccess=GENERIC_READ|GENERIC_WRITE ;
+	bool bAsync = false ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bl", &psComPort, &nComPort, &nDesiredAccess, &bAsync )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	pdr_file_handle * pFileHandle = new pdr_file_handle() ;
+	pFileHandle->hFile = ::CreateFile( psComPort,nDesiredAccess,0,NULL,OPEN_EXISTING,bAsync?FILE_FLAG_OVERLAPPED:0,NULL ) ;
+
+	if(pFileHandle->hFile==(HANDLE)-1)
+	{
+		RETURN_FALSE
+	}
+	else
+	{
+		int nResrc = _pdr_get_resrc_file() ;
+		ZEND_REGISTER_RESOURCE( return_value, (void*)pFileHandle, nResrc )
+	}
+}
 
 ZEND_FUNCTION(pdr_com_stat)
 {
 	int nBaudRate=9600, nByteSize=8, nParity=0, nStopBits=0 ;
-	PDR_GetComHandleFromResrc("r|llll",__PDR_RESRC_MPARAM(&nBaudRate,&nByteSize,&nParity,&nStopBits))
+	PDR_GetWin32FileHandleFromResrc("r|llll",__PDR_RESRC_MPARAM(&nBaudRate,&nByteSize,&nParity,&nStopBits))
 
 	DCB dcb;
 	//获取串口设备状态信息
@@ -79,7 +103,7 @@ ZEND_FUNCTION(pdr_com_set_timeouts)
 	long nWriteTotalTimeoutConstant = 0 ;				// 写串口数据的固定超时
 
 	int nOutputBuffSize=1024, nInputBuffSize=1024 ;
-	PDR_GetComHandleFromResrc("r|lllll",__PDR_RESRC_MPARAM(
+	PDR_GetWin32FileHandleFromResrc("r|lllll",__PDR_RESRC_MPARAM(
 			&nReadIntervalTimeout
 			, &nReadTotalTimeoutMultiplier
 			, &nReadTotalTimeoutConstant
@@ -101,7 +125,7 @@ ZEND_FUNCTION(pdr_com_set_timeouts)
 ZEND_FUNCTION(pdr_com_setup_buffer)
 {
 	int nOutputBuffSize=1024, nInputBuffSize=1024 ;
-	PDR_GetComHandleFromResrc("r|ll",__PDR_RESRC_MPARAM(&nInputBuffSize,&nOutputBuffSize))
+	PDR_GetWin32FileHandleFromResrc("r|ll",__PDR_RESRC_MPARAM(&nInputBuffSize,&nOutputBuffSize))
 		
 	//设备串口设备读写缓冲区大小
 	RETURN_BOOL( SetupComm(pFileHandle->hFile,nInputBuffSize,nOutputBuffSize) )
@@ -111,7 +135,7 @@ ZEND_FUNCTION(pdr_com_write)
 {
 	char * psData ;
 	int nDataLen ;
-	PDR_GetComHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
+	PDR_GetWin32FileHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
 
 	DWORD dwBytesWrite=0 ;
 	if(!WriteFile(pFileHandle->hFile,psData,nDataLen,&dwBytesWrite,NULL)) 

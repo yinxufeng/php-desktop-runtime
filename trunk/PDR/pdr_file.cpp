@@ -44,7 +44,7 @@ ZEND_FUNCTION(pdr_file_write)
 {
 	char * psData ;
 	int nDataLen ;
-	PDR_GetComHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
+	PDR_GetWin32FileHandleFromResrc("rs",__PDR_RESRC_MPARAM(&psData,&nDataLen))
 
 	DWORD dwBytesWrite=0 ;
 	if(!WriteFile(pFileHandle->hFile,psData,nDataLen,&dwBytesWrite,NULL)) 
@@ -59,7 +59,7 @@ ZEND_FUNCTION(pdr_file_write)
 ZEND_FUNCTION(pdr_file_read)
 {
 	int nReadLen=1024 ;
-	PDR_GetComHandleFromResrc("r|l",__PDR_RESRC_MPARAM(&nReadLen))
+	PDR_GetWin32FileHandleFromResrc("r|l",__PDR_RESRC_MPARAM(&nReadLen))
 
 	char * psData = new char[nReadLen+1] ;
 	DWORD nCount;//读取的字节数
@@ -80,7 +80,7 @@ ZEND_FUNCTION(pdr_file_read)
 
 ZEND_FUNCTION(pdr_file_close)
 {
-	PDR_GetComHandleFromResrc("r",)
+	PDR_GetWin32FileHandleFromResrc("r",)
 
 	if( !::CloseHandle(pFileHandle->hFile) )
 	{

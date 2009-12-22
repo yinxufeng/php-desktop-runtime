@@ -482,6 +482,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_proc_pipe.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_reg.cpp"
 				>
 			</File>
@@ -589,6 +593,10 @@
 			</File>
 			<File
 				RelativePath=".\pdr_file.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_proc_pipe.h"
 				>
 			</File>
 			<File

@@ -5,8 +5,9 @@
 #include "CDHtmlDlg.h"
 #include "CUIThread.h"
 #include "pdr_thread.h"
-#include <Winuser.h>
 #include "pdr_file.h"
+#include "pdr_proc_pipe.h"
+#include <Winuser.h>
 #include "define_const.h"
 #include "define_const_vkey.h"
 #include "define_const_locale.h"
@@ -29,6 +30,12 @@ int _pdr_get_resrc_menu_icon()
 
 int _pdr_get_resrc_file()
 { return resrc_pdr_file ; }
+
+int _pdr_get_resrc_proc()
+{ return resrc_pdr_proc ; }
+
+int _pdr_get_resrc_pipe()
+{ return resrc_pdr_pipe ; }
 
 
 // 销毁资源
@@ -62,7 +69,7 @@ void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	CMenu *pMenu= (CMenu *) rsrc->ptr ;
 	delete pMenu ;
 }
-void _php_pdr_com_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void _php_pdr_file_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
 	pdr_file_handle * pFileHandle = (pdr_file_handle *) rsrc->ptr ;
 
@@ -74,6 +81,40 @@ void _php_pdr_com_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 
 	delete pFileHandle ;
 }
+void _php_pdr_proc_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+{
+	pdr_proc_handle * pProc = (pdr_proc_handle *) rsrc->ptr ;
+
+	if( pProc->hProcess )
+	{
+		::CloseHandle(pProc->hProcess) ;
+		pProc->hProcess = NULL ;
+	}
+	if( pProc->hThread )
+	{
+		::CloseHandle(pProc->hThread) ;
+		pProc->hThread = NULL ;
+	}
+
+	delete pProc ;
+}
+void _php_pdr_pipe_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+{
+	pdr_pipe_handle * pPipe = (pdr_pipe_handle *) rsrc->ptr ;
+
+	if( pPipe->hRead )
+	{
+		::CloseHandle(pPipe->hRead) ;
+		pPipe->hRead = NULL ;
+	}
+	if( pPipe->hWrite )
+	{
+		::CloseHandle(pPipe->hWrite) ;
+		pPipe->hWrite = NULL ;
+	}
+
+	delete pPipe ;
+}
 
 // 初始化函数
 ZEND_MINIT_FUNCTION(pdr_init)
@@ -82,7 +123,9 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	resrc_pdr_dhtml_dlg = zend_register_list_destructors_ex(_php_pdr_dhtml_destruction_handler, NULL, resrc_name_pdr_dhtml_dlg, module_number);
 	resrc_pdr_thread_window = zend_register_list_destructors_ex(_php_pdr_thread_destruction_handler, NULL, resrc_name_pdr_thread_window, module_number);
 	resrc_pdr_menu_icon = zend_register_list_destructors_ex(_php_pdr_menu_destruction_handler, NULL, resrc_name_pdr_menu_icon, module_number);
-	resrc_pdr_file = zend_register_list_destructors_ex(_php_pdr_com_destruction_handler, NULL, resrc_name_pdr_file, module_number);
+	resrc_pdr_file = zend_register_list_destructors_ex(_php_pdr_file_destruction_handler, NULL, resrc_name_pdr_file, module_number);
+	resrc_pdr_proc = zend_register_list_destructors_ex(_php_pdr_proc_destruction_handler, NULL, resrc_name_pdr_proc, module_number);
+	resrc_pdr_pipe = zend_register_list_destructors_ex(_php_pdr_pipe_destruction_handler, NULL, resrc_name_pdr_pipe, module_number);
 
 	// 定义常量
 	// ----------------------------------
@@ -217,14 +260,23 @@ ZEND_FUNCTION(dhtml_menu_item_count) ;
 ZEND_FUNCTION(dhtml_menu_item_text) ;
 ZEND_FUNCTION(dhtml_menu_item_id) ;
 
-// 文件操/串口 操作 函数
+// 文件操/串口 操作函数
 ZEND_FUNCTION(pdr_file_create) ;
 ZEND_FUNCTION(pdr_file_write) ;
 ZEND_FUNCTION(pdr_file_read) ;
 ZEND_FUNCTION(pdr_file_close) ;
+ZEND_FUNCTION(pdr_com_open) ;
 ZEND_FUNCTION(pdr_com_stat) ;
 ZEND_FUNCTION(pdr_com_set_timeouts) ;
 ZEND_FUNCTION(pdr_com_setup_buffer) ;
+
+// 进程/管道 函数
+ZEND_FUNCTION(pdr_pipe_create) ;
+ZEND_FUNCTION(pdr_pipe_get_read_handle) ;
+ZEND_FUNCTION(pdr_pipe_get_write_handle) ;
+ZEND_FUNCTION(pdr_pipe_peek) ;
+
+
 
 
 /* compiled function list so Zend knows what's in this module */
@@ -338,15 +390,23 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(dhtml_menu_item_count, NULL)
     ZEND_FE(dhtml_menu_item_text, NULL)
 
-	// 文件操/串口 操作 函数
+	// 文件操/串口 操作函数
 	// ------------------------
     ZEND_FE(pdr_file_create, NULL)
     ZEND_FE(pdr_file_read, NULL)
     ZEND_FE(pdr_file_write, NULL)
     ZEND_FE(pdr_file_close, NULL)
+    ZEND_FE(pdr_com_open, NULL)
     ZEND_FE(pdr_com_stat, NULL)
     ZEND_FE(pdr_com_set_timeouts, NULL)
     ZEND_FE(pdr_com_setup_buffer, NULL)
+
+	// 进程/管道 函数
+	// ------------------------
+    ZEND_FE(pdr_pipe_create, NULL)
+    ZEND_FE(pdr_pipe_get_read_handle, NULL)
+    ZEND_FE(pdr_pipe_get_write_handle, NULL)
+    ZEND_FE(pdr_pipe_peek, NULL)
 
 
     {NULL, NULL, NULL}
