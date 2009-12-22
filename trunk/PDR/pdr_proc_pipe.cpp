@@ -5,13 +5,14 @@
 
 ZEND_FUNCTION(pdr_pipe_create)
 {
-	long nSize = 0 ;
+	long nSize = 10240 ;
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &nSize )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 
 	pdr_pipe_handle * pPipe = new pdr_pipe_handle() ;
+	pPipe->nSize = nSize ;
 
 	SECURITY_ATTRIBUTES saAttr;
 	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
@@ -19,7 +20,7 @@ ZEND_FUNCTION(pdr_pipe_create)
 	saAttr.lpSecurityDescriptor = NULL; 
 
 
-	if( !::CreatePipe( &pPipe->hRead, &pPipe->hWrite, &saAttr, nSize ) )
+	if( !::CreatePipe( &pPipe->hRead, &pPipe->hWrite, &saAttr, pPipe->nSize ) )
 	{
 		delete pPipe ;
 		RETURN_FALSE
@@ -40,6 +41,11 @@ ZEND_FUNCTION(pdr_pipe_get_write_handle)
 {
 	PDR_GetPipeHandleFromResrc("r",)
 	RETURN_LONG((long)pPipe->hWrite)
+}
+ZEND_FUNCTION(pdr_pipe_get_size)
+{
+	PDR_GetPipeHandleFromResrc("r",)
+	RETURN_LONG((long)pPipe->nSize)
 }
 
 ZEND_FUNCTION(pdr_pipe_peek)

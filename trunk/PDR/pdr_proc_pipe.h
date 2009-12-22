@@ -14,6 +14,8 @@ typedef struct _pdr_pipe_handle
 	HANDLE hRead ;
 	HANDLE hWrite ;
 
+	long nSize ;
+
 } pdr_pipe_handle ;
 
 
