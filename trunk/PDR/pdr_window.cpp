@@ -294,16 +294,16 @@ ZEND_FUNCTION(pdr_window_foreground)
 	::SwitchToThisWindow(hWnd,bRestore) ;
 }
 
-ZEND_FUNCTION(pdr_window_msg)
+ZEND_FUNCTION(pdr_window_msgbox)
 {
 	char * psMsg ;
 	int nMsgLen = 0, nType=MB_OK ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &psMsg, &nMsgLen, &nType )==FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|sl", &psMsg, &nMsgLen, &nType )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 
-	RETURN_LONG( ::AfxMessageBox(psMsg,nType) ) ;
+	RETURN_LONG( ::AfxMessageBox(nMsgLen?psMsg:"",nType) ) ;
 }
 
 ZEND_FUNCTION(pdr_window_set_parent)

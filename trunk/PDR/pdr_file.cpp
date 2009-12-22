@@ -94,3 +94,50 @@ ZEND_FUNCTION(pdr_file_close)
 	}
 
 }
+
+
+ZEND_FUNCTION(pdr_handle_write)
+{
+	char * psData ;
+	int nDataLen ;
+	long nHandle=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &nHandle,&psData,&nDataLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	DWORD dwBytesWrite=0 ;
+	if(!WriteFile((HANDLE)nHandle,psData,nDataLen,&dwBytesWrite,NULL)) 
+	{
+		RETURN_FALSE
+	}
+	PurgeComm((HANDLE)nHandle, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
+
+	RETURN_LONG(dwBytesWrite)
+}
+
+ZEND_FUNCTION(pdr_handle_read)
+{
+	long nHandle=0 ;
+	int nReadLen=1024 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|l", &nHandle,&nReadLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	char * psData = new char[nReadLen+1] ;
+	DWORD nCount;//读取的字节数
+	if( !ReadFile((HANDLE)nHandle,psData,nReadLen,&nCount,NULL) )
+	{
+		RETURN_FALSE
+	}
+
+	psData[nCount]='\0';
+
+	zval * pvRetString ;
+	MAKE_STD_ZVAL(pvRetString)
+	ZVAL_STRING(pvRetString,psData,1)
+	delete [] psData ;
+
+	RETURN_ZVAL(pvRetString,0,0) 
+}

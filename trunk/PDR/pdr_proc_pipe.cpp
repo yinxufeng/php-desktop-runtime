@@ -19,7 +19,7 @@ ZEND_FUNCTION(pdr_pipe_create)
 	saAttr.lpSecurityDescriptor = NULL; 
 
 
-	if( ::CreatePipe( &pPipe->hRead, &pPipe->hWrite, &saAttr, nSize ) )
+	if( !::CreatePipe( &pPipe->hRead, &pPipe->hWrite, &saAttr, nSize ) )
 	{
 		delete pPipe ;
 		RETURN_FALSE
@@ -45,7 +45,7 @@ ZEND_FUNCTION(pdr_pipe_get_write_handle)
 ZEND_FUNCTION(pdr_pipe_peek)
 {
 	long nHandle=0,nSize = 0 ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|l", &nSize )==FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|l", &nHandle,&nSize )==FAILURE )
 	{
 		RETURN_FALSE
 	}
