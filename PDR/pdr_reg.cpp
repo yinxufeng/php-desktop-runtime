@@ -14,7 +14,7 @@ ZEND_FUNCTION(pdr_reg_create)
 	}
 
 	HKEY hKey ;
-	if( !::RegCreateKey(pdr_reg_key(nKey),psSubKey,&hKey) )
+	if( ERROR_SUCCESS!=::RegCreateKey(pdr_reg_key(nKey),psSubKey,&hKey) )
 	{
 		RETURN_FALSE
 	}
@@ -32,7 +32,7 @@ ZEND_FUNCTION(pdr_reg_open)
 	}
 
 	HKEY hKey ;
-	if( !::RegOpenKey(pdr_reg_key(nKey),psSubKey,&hKey) )
+	if( ERROR_SUCCESS!=::RegOpenKey(pdr_reg_key(nKey),psSubKey,&hKey) )
 	{
 		RETURN_FALSE
 	}
@@ -50,7 +50,9 @@ ZEND_FUNCTION(pdr_reg_set_string)
 	{
 		RETURN_FALSE
 	}
-	RETURN_BOOL(RegSetValue(pdr_reg_key(nKey),psSubKey,REG_SZ,psData,nDataLen)) 
+	RETURN_BOOL(
+		ERROR_SUCCESS==RegSetValue(pdr_reg_key(nKey),psSubKey,REG_SZ,psData,nDataLen)
+	) 
 }
 ZEND_FUNCTION(pdr_reg_set)
 {
@@ -65,7 +67,9 @@ ZEND_FUNCTION(pdr_reg_set)
 		RETURN_FALSE
 	}
 
-	RETURN_BOOL(RegSetValueEx(pdr_reg_key(nKeyHandle),psValueName,0,nValueType,(const BYTE *)psData,nDataLen)) 
+	RETURN_BOOL(
+		ERROR_SUCCESS==RegSetValueEx(pdr_reg_key(nKeyHandle),psValueName,0,nValueType,(const BYTE *)psData,nDataLen)
+	) 
 }
 ZEND_FUNCTION(pdr_reg_get_string)
 {
@@ -78,13 +82,13 @@ ZEND_FUNCTION(pdr_reg_get_string)
 	}
 
 	long nStringLen = 0 ;
-	if( !::RegQueryValue(pdr_reg_key(nKey),psSubKey,NULL,&nStringLen) )
+	if( RegQueryValue(pdr_reg_key(nKey),psSubKey,NULL,&nStringLen)!=ERROR_SUCCESS )
 	{
 		RETURN_FALSE
 	}
 
 	char * psData = new char[nStringLen] ;
-	if( !::RegQueryValue(pdr_reg_key(nKey),psSubKey,psData,&nStringLen) )
+	if( ::RegQueryValue(pdr_reg_key(nKey),psSubKey,psData,&nStringLen)!=ERROR_SUCCESS )
 	{
 		delete [] psData ;
 		RETURN_FALSE
@@ -109,24 +113,51 @@ ZEND_FUNCTION(pdr_reg_get)
 
 	DWORD nValueType = REG_SZ ;
 	DWORD nDataLen = 0 ;
-	if( !::RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,NULL,&nDataLen) )
+	long br = RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,NULL,&nDataLen) ;
+	if( br!=ERROR_SUCCESS )
 	{
 		RETURN_FALSE
 	}
 
-	char * psData = new char[nDataLen] ;
-	if( !::RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,(BYTE*)psData,&nDataLen) )
+
+	// 32 整数
+	if(	nDataLen>=REG_DWORD && nDataLen<=REG_DWORD_BIG_ENDIAN )
 	{
+		BYTE * psData = new BYTE[nDataLen] ;
+		if( ::RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,(BYTE*)psData,&nDataLen)!=ERROR_SUCCESS )
+		{
+			delete [] psData ;
+			RETURN_FALSE
+		}
+
+		long nRet = (long) (psData[0] | (psData[1]<<8) | (psData[2]<<16) | (psData[3]<<24)) ;
 		delete [] psData ;
-		RETURN_FALSE
+
+		RETURN_LONG( nRet ) ;
+
 	}
 
-	zval * pzvRet ;
-	MAKE_STD_ZVAL(pzvRet)
-	ZVAL_STRING(pzvRet,psData,1)
-	delete [] psData ;
+	// 以字符串格式返回
+	else
+	{
+		char * psData = new char[nDataLen+1] ;
+		if( ::RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,(BYTE*)psData,&nDataLen)!=ERROR_SUCCESS )
+		{
+			delete [] psData ;
+			RETURN_FALSE
+		}
 
-	RETURN_ZVAL(pzvRet,0,0)
+		psData[nDataLen] = '\0' ;
+
+		zval * pzvRet ;
+		MAKE_STD_ZVAL(pzvRet)
+		ZVAL_STRING(pzvRet,psData,1)
+		delete [] psData ;
+
+		RETURN_ZVAL(pzvRet,0,0)
+	}
+
+
 }
 ZEND_FUNCTION(pdr_reg_get_type)
 {
