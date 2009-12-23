@@ -275,12 +275,13 @@ ZEND_FUNCTION(pdr_proc_get_tread_id) ;
 // ------------------------
 ZEND_FUNCTION(pdr_reg_create) ;
 ZEND_FUNCTION(pdr_reg_open) ;
-ZEND_FUNCTION(pdr_reg_set_string) ;
 ZEND_FUNCTION(pdr_reg_set) ;
-ZEND_FUNCTION(pdr_reg_get_string) ;
 ZEND_FUNCTION(pdr_reg_get) ;
+ZEND_FUNCTION(pdr_reg_set_string) ;
+ZEND_FUNCTION(pdr_reg_get_string) ;
 ZEND_FUNCTION(pdr_reg_get_type) ;
-ZEND_FUNCTION(pdr_reg_delete) ;
+ZEND_FUNCTION(pdr_reg_delete_value) ;
+ZEND_FUNCTION(pdr_reg_delete_key) ;
 ZEND_FUNCTION(pdr_reg_close) ;
 ZEND_FUNCTION(pdr_reg_flush) ;
 
@@ -423,7 +424,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_reg_get_string, NULL)
     ZEND_FE(pdr_reg_get, NULL)
     ZEND_FE(pdr_reg_get_type, NULL)
-    ZEND_FE(pdr_reg_delete, NULL)
+    ZEND_FE(pdr_reg_delete_value, NULL)
+    ZEND_FE(pdr_reg_delete_key, NULL)
     ZEND_FE(pdr_reg_close, NULL)
     ZEND_FE(pdr_reg_flush, NULL)
 

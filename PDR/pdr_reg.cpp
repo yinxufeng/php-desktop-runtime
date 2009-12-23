@@ -59,17 +59,36 @@ ZEND_FUNCTION(pdr_reg_set)
 	long nKeyHandle ;
 	char * psValueName ;
 	long nValueNameLen = 0 ;
-	char * psData ;
-	long nDataLen = 0 ;
+	char * psValue ;
+	long nValueLen = 0 ;
 	long nValueType = REG_SZ ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss|l", &nKeyHandle,&psValueName,&nValueNameLen,&psData,&nDataLen,&nValueType )==FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss|l", &nKeyHandle,&psValueName,&nValueNameLen,&psValue,&nValueLen,&nValueType )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 
-	RETURN_BOOL(
-		ERROR_SUCCESS==RegSetValueEx(pdr_reg_key(nKeyHandle),psValueName,0,nValueType,(const BYTE *)psData,nDataLen)
-	) 
+	// 32 整数
+	if(	nValueType>=REG_DWORD && nValueType<=REG_DWORD_BIG_ENDIAN )
+	{
+		long nValue = atol(psValue) ;
+		BYTE pData[4] ;
+		pData[0] = (BYTE)(nValue & 0x000000FF) ;
+		pData[1] = (BYTE)((nValue & 0x0000FF00)>>8) ;
+		pData[2] = (BYTE)((nValue & 0x00FF0000)>>16) ;
+		pData[3] = (BYTE)((nValue & 0xFF000000)>>24) ;
+		
+		RETURN_BOOL(
+			ERROR_SUCCESS==RegSetValueEx(pdr_reg_key(nKeyHandle),psValueName,0,nValueType,pData,4)
+		) 
+	}
+
+	// 以字符串格式
+	else
+	{
+		RETURN_BOOL(
+			ERROR_SUCCESS==RegSetValueEx(pdr_reg_key(nKeyHandle),psValueName,0,nValueType,(const BYTE *)psValue,nValueLen)
+		) 
+	}
 }
 ZEND_FUNCTION(pdr_reg_get_string)
 {
@@ -121,7 +140,7 @@ ZEND_FUNCTION(pdr_reg_get)
 
 
 	// 32 整数
-	if(	nDataLen>=REG_DWORD && nDataLen<=REG_DWORD_BIG_ENDIAN )
+	if(	nValueType>=REG_DWORD && nValueType<=REG_DWORD_BIG_ENDIAN )
 	{
 		BYTE * psData = new BYTE[nDataLen] ;
 		if( ::RegQueryValueEx(pdr_reg_key(nKeyHandle),psValueName,0,&nValueType,(BYTE*)psData,&nDataLen)!=ERROR_SUCCESS )
@@ -178,7 +197,7 @@ ZEND_FUNCTION(pdr_reg_get_type)
 	RETURN_LONG(nValueType)
 }
 
-ZEND_FUNCTION(pdr_reg_delete)
+ZEND_FUNCTION(pdr_reg_delete_key)
 {
 	long nKey ;
 	char * psSubKey ;
@@ -188,6 +207,18 @@ ZEND_FUNCTION(pdr_reg_delete)
 		RETURN_FALSE
 	}
 	RETURN_BOOL(RegDeleteKey(pdr_reg_key(nKey),psSubKey)==ERROR_SUCCESS)
+}
+
+ZEND_FUNCTION(pdr_reg_delete_value)
+{
+	long nKeyHandle ;
+	char * psValueName ;
+	long nValueNameLen = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &nKeyHandle,&psValueName,&nValueNameLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+	RETURN_BOOL(RegDeleteValue(pdr_reg_key(nKeyHandle),psValueName)==ERROR_SUCCESS)
 }
 
 ZEND_FUNCTION(pdr_reg_close)
