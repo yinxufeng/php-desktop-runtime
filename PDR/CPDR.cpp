@@ -136,13 +136,6 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	_pdr_define_const_locale
 	_pdr_define_const_file
 
-
-	// 初始化 mfc
-	// ----------------------------------
-	AfxEnableControlContainer();
-	CoInitialize(NULL);
-
-
 	return SUCCESS;
 }
 
@@ -176,18 +169,6 @@ ZEND_FUNCTION(pdr_get_locale) ;
 ZEND_FUNCTION(pdr_get_charset) ;
 ZEND_FUNCTION(pdr_get_php_path) ;
 
-
-// 线程函数
-// ------------------------
-/*ZEND_FUNCTION(pdr_thread_create_work) ;
-ZEND_FUNCTION(pdr_thread_create_window) ;
-ZEND_FUNCTION(pdr_thread_set_hwnd) ;
-ZEND_FUNCTION(pdr_thread_get_hwnd) ;
-ZEND_FUNCTION(pdr_thread_set_init_handle) ;
-ZEND_FUNCTION(pdr_thread_set_exit_handle) ;
-ZEND_FUNCTION(pdr_thread_resume) ;
-ZEND_FUNCTION(pdr_thread_suspend) ;*/
-
 // Window 函数
 // ------------------------
 ZEND_FUNCTION(pdr_window_get_long);
@@ -214,7 +195,6 @@ ZEND_FUNCTION(pdr_window_send_msg) ;
 ZEND_FUNCTION(pdr_window_post_msg) ;
 ZEND_FUNCTION(pdr_window_set_transparency) ;
 
-
 // DHTML 函数
 // ------------------------
 ZEND_FUNCTION(pdr_dhtml_new);
@@ -240,7 +220,6 @@ ZEND_FUNCTION(pdr_dhtml_get_tags);
 ZEND_FUNCTION(pdr_dhtml_el_collection_len);
 ZEND_FUNCTION(pdr_dhtml_el_collection_item);
 
-
 // Tray Icon 函数
 // ------------------------
 ZEND_FUNCTION(pdr_tray_create);
@@ -248,6 +227,7 @@ ZEND_FUNCTION(pdr_tray_modify);
 ZEND_FUNCTION(pdr_tray_delete);
 
 // 菜单 函数
+// ------------------------
 ZEND_FUNCTION(dhtml_menu_create) ;
 ZEND_FUNCTION(dhtml_menu_append) ;
 ZEND_FUNCTION(dhtml_menu_insert) ;
@@ -263,6 +243,7 @@ ZEND_FUNCTION(dhtml_menu_item_text) ;
 ZEND_FUNCTION(dhtml_menu_item_id) ;
 
 // 文件操/串口 操作函数
+// ------------------------
 ZEND_FUNCTION(pdr_file_create) ;
 ZEND_FUNCTION(pdr_file_write) ;
 ZEND_FUNCTION(pdr_file_read) ;
@@ -275,6 +256,7 @@ ZEND_FUNCTION(pdr_handle_write) ;
 ZEND_FUNCTION(pdr_handle_read) ;
 
 // 进程/管道 函数
+// ------------------------
 ZEND_FUNCTION(pdr_pipe_create) ;
 ZEND_FUNCTION(pdr_pipe_get_read_handle) ;
 ZEND_FUNCTION(pdr_pipe_get_write_handle) ;
@@ -289,6 +271,18 @@ ZEND_FUNCTION(pdr_proc_get_tread_handle) ;
 ZEND_FUNCTION(pdr_proc_get_id) ;
 ZEND_FUNCTION(pdr_proc_get_tread_id) ;
 
+// Windows注册表 函数
+// ------------------------
+ZEND_FUNCTION(pdr_reg_create) ;
+ZEND_FUNCTION(pdr_reg_open) ;
+ZEND_FUNCTION(pdr_reg_set_string) ;
+ZEND_FUNCTION(pdr_reg_set) ;
+ZEND_FUNCTION(pdr_reg_get_string) ;
+ZEND_FUNCTION(pdr_reg_get) ;
+ZEND_FUNCTION(pdr_reg_get_type) ;
+ZEND_FUNCTION(pdr_reg_delete) ;
+ZEND_FUNCTION(pdr_reg_close) ;
+ZEND_FUNCTION(pdr_reg_flush) ;
 
 
 
@@ -316,18 +310,6 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_locale, NULL)
     ZEND_FE(pdr_get_charset, NULL)
     ZEND_FE(pdr_get_php_path, NULL)
-
-
-	// 线程函数
-	// ------------------------
-    /*ZEND_FE(pdr_thread_create_work, NULL)
-    ZEND_FE(pdr_thread_create_window, NULL)
-    ZEND_FE(pdr_thread_set_hwnd, NULL)
-    ZEND_FE(pdr_thread_get_hwnd, NULL)
-    ZEND_FE(pdr_thread_set_init_handle, NULL)
-    ZEND_FE(pdr_thread_set_exit_handle, NULL)
-    ZEND_FE(pdr_thread_resume, NULL)
-	ZEND_FE(pdr_thread_suspend, NULL)*/
 
 	// Window 函数
 	// ------------------------
@@ -431,6 +413,20 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_proc_get_tread_handle, NULL)
     ZEND_FE(pdr_proc_get_id, NULL)
     ZEND_FE(pdr_proc_get_tread_id, NULL)
+
+	// Windows注册表 函数
+	// ------------------------
+    ZEND_FE(pdr_reg_create, NULL)
+    ZEND_FE(pdr_reg_open, NULL)
+    ZEND_FE(pdr_reg_set_string, NULL)
+    ZEND_FE(pdr_reg_set, NULL)
+    ZEND_FE(pdr_reg_get_string, NULL)
+    ZEND_FE(pdr_reg_get, NULL)
+    ZEND_FE(pdr_reg_get_type, NULL)
+    ZEND_FE(pdr_reg_delete, NULL)
+    ZEND_FE(pdr_reg_close, NULL)
+    ZEND_FE(pdr_reg_flush, NULL)
+
 
 
     {NULL, NULL, NULL}

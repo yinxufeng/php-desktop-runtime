@@ -600,10 +600,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\pdr_reg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\pdr_thread.h"
 				>
 			</File>

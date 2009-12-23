@@ -1,13 +1,23 @@
 #include "stdafx.h"
 #include "CPDR.h"
 #include "pdr_dhtml.h"
-//#include "comutil.h"
-//#pragma comment(lib,"comsupp.lib")
-//#pragma comment(lib,"kernel32.lib")
 
+static bool bInitMfc = false ;
 
 ZEND_FUNCTION(pdr_dhtml_new)
 {
+
+	// ≥ı ºªØ mfc
+	// ----------------------------------
+	if(!bInitMfc)
+	{
+		AfxEnableControlContainer();
+		CoInitialize(NULL);
+		
+		bInitMfc = true ;
+	}
+
+
 	bool bWindowDecorator = true ;
 	zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|b", &bWindowDecorator ) ;
 

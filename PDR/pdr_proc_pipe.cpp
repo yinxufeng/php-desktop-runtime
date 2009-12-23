@@ -105,7 +105,7 @@ ZEND_FUNCTION(pdr_pipe_get_std)
 	{
 		RETURN_FALSE
 	}
-	if( nHanleType<STD_INPUT_HANDLE || nHanleType>STD_ERROR_HANDLE )
+	if( nHanleType>STD_INPUT_HANDLE || nHanleType<STD_ERROR_HANDLE )
 	{
 		zend_error(E_WARNING, "PDR Pipe: you was given a avalid pipe handle type." );
 		RETURN_FALSE
@@ -121,7 +121,7 @@ ZEND_FUNCTION(pdr_pipe_set_std)
 	{
 		RETURN_FALSE
 	}
-	if( nHanleType<STD_INPUT_HANDLE || nHanleType>STD_ERROR_HANDLE )
+	if( nHanleType>STD_INPUT_HANDLE || nHanleType<STD_ERROR_HANDLE )
 	{
 		zend_error(E_WARNING, "PDR Pipe: you was given a avalid pipe handle type." );
 		RETURN_FALSE
@@ -214,4 +214,16 @@ ZEND_FUNCTION(pdr_proc_get_tread_id)
 {
 	PDR_GetProcHandleFromResrc("r",)
 	RETURN_LONG((long)pProcess->dwThreadId)
+}
+
+ZEND_FUNCTION(pdr_proc_terminate)
+{
+	long nProcessHandle ;
+	long nExitCode=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|l", &nProcessHandle,&nExitCode )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL(::TerminateProcess((HANDLE)nProcessHandle,nExitCode)) ;
 }
