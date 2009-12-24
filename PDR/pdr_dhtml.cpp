@@ -482,8 +482,17 @@ ZEND_FUNCTION(pdr_dhtml_call)
 					, &nArgErr
 	);
 
-	CString strResult(varResult) ;
-	RETURN_STRINGL( (char *)(LPCTSTR)strResult,strResult.GetLength(), 1 )
+	if(hResult!=S_OK)
+	{
+		RETURN_FALSE
+	}
+
+	else
+	{
+		CString strResult(varResult) ;
+		strResult.GetLength() ;
+		RETURN_STRINGL( (char *)(LPCTSTR)strResult,strResult.GetLength(), 1 )
+	}
 }
 
 ZEND_FUNCTION(pdr_dhtml_get_tags)
