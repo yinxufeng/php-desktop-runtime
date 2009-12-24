@@ -11,7 +11,8 @@
 #define DLG_EVENT_ONNAVIGATECOMPLETE 0x0003
 #define DLG_EVENT_ONDOCUMENTCOMPLETE 0x0004
 #define DLG_EVENT_ONCOMMAND 0x0005
-#define DLG_EVENT_END 0x0005
+#define DLG_EVENT_ONCLOSE 0x0006
+#define DLG_EVENT_END 0x0006
 
 
 #define TRAY_EVENT_ONMOUSEMOVE		WM_MOUSEMOVE
@@ -79,6 +80,7 @@ public:
 	virtual void OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl) ;
 	virtual void OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl) ;
 	
+	afx_msg void OnClose();
 	afx_msg LRESULT OnTrayIcon(WPARAM id, LPARAM message);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 };
