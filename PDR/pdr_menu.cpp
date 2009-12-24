@@ -2,7 +2,7 @@
 #include "CPDR.h"
 
 
-ZEND_FUNCTION(dhtml_menu_create)
+ZEND_FUNCTION(pdr_menu_create)
 {
 	CMenu * pMenu = new CMenu() ;
 	pMenu->CreatePopupMenu() ;
@@ -26,7 +26,7 @@ ZEND_FUNCTION(dhtml_menu_create)
 		RETURN_FALSE\
 	}
 
-ZEND_FUNCTION(dhtml_menu_append)
+ZEND_FUNCTION(pdr_menu_append)
 {
 	long nFlag=MF_STRING, nId=0 ;
 	char * psText ;
@@ -36,7 +36,7 @@ ZEND_FUNCTION(dhtml_menu_append)
 	pMenu->AppendMenu(nFlag,nId,psText) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_insert)
+ZEND_FUNCTION(pdr_menu_insert)
 {
 	long nFlag=MF_STRING|MF_BYCOMMAND, nId=0, nPos ;
 	char * psText ;
@@ -46,7 +46,7 @@ ZEND_FUNCTION(dhtml_menu_insert)
 	pMenu->InsertMenu(nPos,nFlag,nId,psText) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_modify)
+ZEND_FUNCTION(pdr_menu_modify)
 {
 	long nFlag=MF_STRING|MF_BYCOMMAND, nId=0, nPos ;
 	char * psText ;
@@ -56,35 +56,35 @@ ZEND_FUNCTION(dhtml_menu_modify)
 	pMenu->ModifyMenu(nPos,nFlag,nId,psText) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_remove)
+ZEND_FUNCTION(pdr_menu_remove)
 {
 	long nPos,nPosFlag=MF_BYCOMMAND ;
 	_pdr_menu_getresrc("rl|l",__PDR_RESRC_MPARAM(&nPos,&nPosFlag))
 	pMenu->RemoveMenu(nPos,nPosFlag) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_enable)
+ZEND_FUNCTION(pdr_menu_enable)
 {
 	long nPos, nFlag=MF_ENABLED|MF_BYCOMMAND ;	// MF_DISABLED,MF_GRAYED,MF_ENABLED
 	_pdr_menu_getresrc("rl|l",__PDR_RESRC_MPARAM(&nPos,&nFlag))
 	pMenu->EnableMenuItem(nPos,nFlag) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_check)
+ZEND_FUNCTION(pdr_menu_check)
 {
 	long nPos, nFlag=MF_CHECKED|MF_BYCOMMAND ; // MF_CHECKED,MF_UNCHECKED
 	_pdr_menu_getresrc("rl|l",__PDR_RESRC_MPARAM(&nPos,&nFlag))
 	pMenu->CheckMenuItem(nPos,nFlag) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_radio_check)
+ZEND_FUNCTION(pdr_menu_radio_check)
 {
 	long nFirstPos, nLastPos, nCheckedPos, nPosFlag=MF_BYCOMMAND ;
 	_pdr_menu_getresrc("rlll|l",__PDR_RESRC_MPARAM(&nFirstPos,&nLastPos,&nCheckedPos,&nPosFlag))
 	pMenu->CheckMenuRadioItem(nFirstPos,nLastPos,nCheckedPos,nPosFlag) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_popup)
+ZEND_FUNCTION(pdr_menu_popup)
 {
 	long nWnd, nX=-1, nY=-1, nFlag=TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL ;
 	_pdr_menu_getresrc("rl|lll",__PDR_RESRC_MPARAM(&nWnd,&nX,&nY,&nFlag))
@@ -117,20 +117,20 @@ ZEND_FUNCTION(dhtml_menu_popup)
 	::PostMessage(hWnd,WM_NULL,0,0); 
 }
 
-ZEND_FUNCTION(dhtml_menu_get_hmenu)
+ZEND_FUNCTION(pdr_menu_get_hmenu)
 {
 	_pdr_menu_getresrc("r",)
 	RETURN_LONG((long)pMenu->GetSafeHmenu()) ;
 }
 
 
-ZEND_FUNCTION(dhtml_menu_item_count)
+ZEND_FUNCTION(pdr_menu_item_count)
 {
 	_pdr_menu_getresrc("r",)
 	RETURN_LONG(pMenu->GetMenuItemCount()) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_item_text)
+ZEND_FUNCTION(pdr_menu_item_text)
 {
 	long nPos, nPosFlag=MF_BYCOMMAND ;
 	_pdr_menu_getresrc("rl|l",__PDR_RESRC_MPARAM(&nPos,&nPosFlag))
@@ -140,7 +140,7 @@ ZEND_FUNCTION(dhtml_menu_item_text)
 	RETURN_STRING((char *)(LPCTSTR)strText,1) ;
 }
 
-ZEND_FUNCTION(dhtml_menu_item_id)
+ZEND_FUNCTION(pdr_menu_item_id)
 {
 	long nPos ;
 	_pdr_menu_getresrc("rl",__PDR_RESRC_MPARAM(&nPos))

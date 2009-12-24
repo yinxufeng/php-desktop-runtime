@@ -141,3 +141,16 @@ ZEND_FUNCTION(pdr_handle_read)
 
 	RETURN_ZVAL(pvRetString,0,0) 
 }
+
+
+ZEND_FUNCTION(pdr_handle_close)
+{
+	// 取得参数
+	long nHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nHandle) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL(::CloseHandle((HANDLE)nHandle)) ;
+}

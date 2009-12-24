@@ -486,6 +486,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_rc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_reg.cpp"
 				>
 			</File>

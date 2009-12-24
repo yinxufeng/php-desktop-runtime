@@ -252,7 +252,7 @@ ZEND_FUNCTION(pdr_create_mutex)
 	char * psMutexName ;
 	long nMutexNameLen = 0 ;
 	bool bInitialOwner = false ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bl", &psMutexName, &nMutexNameLen, &bInitialOwner) == FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|b", &psMutexName, &nMutexNameLen, &bInitialOwner) == FAILURE )
 	{
 		RETURN_FALSE
 	}
@@ -295,21 +295,6 @@ ZEND_FUNCTION(pdr_release_mutex)
 	}
 
 	RETURN_BOOL(::ReleaseMutex((HANDLE)nHandle)) ;
-}
-
-
-
-
-ZEND_FUNCTION(pdr_close_handle)
-{
-	// 取得参数
-	long nHandle ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nHandle) == FAILURE )
-	{
-		RETURN_FALSE
-	}
-
-	RETURN_BOOL(::CloseHandle((HANDLE)nHandle)) ;
 }
 
 
@@ -535,5 +520,3 @@ ZEND_FUNCTION(pdr_get_php_path)
 
 	RETURN_STRING(psPHPPath,1) ;
 }
-
- 

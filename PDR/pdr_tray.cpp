@@ -33,7 +33,6 @@ ZEND_FUNCTION(pdr_tray_create)
 	RETURN_BOOL(Shell_NotifyIcon(NIM_ADD, &tray)) ;
 }
 
-
 ZEND_FUNCTION(pdr_tray_modify)
 {
 	_tray_icon_set
