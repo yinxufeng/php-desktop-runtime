@@ -109,6 +109,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="&quot;%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe&quot; $(SolutionDir)  $(ProjectDir)define_const.tsvn_template.h  $(ProjectDir)define_const.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -149,7 +150,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="php5ts.lib&#x0D;&#x0A;Psapi.lib&#x0D;&#x0A;/verbose:lib&#x0D;&#x0A;/force:multiple"
-				OutputFile="$(OutDir)\php_pdr_5.2.x_vc9.dl"
+				OutputFile="$(OutDir)\php_pdr_5.2.x_vc9.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.2.11-Win32\dev&quot;"
 				IgnoreDefaultLibraryNames=""
@@ -282,6 +283,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="&quot;%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe&quot; $(SolutionDir)  $(ProjectDir)define_const.tsvn_template.h  $(ProjectDir)define_const.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -367,6 +369,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="&quot;%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe&quot; $(SolutionDir)  $(ProjectDir)define_const.tsvn_template.h  $(ProjectDir)define_const.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
