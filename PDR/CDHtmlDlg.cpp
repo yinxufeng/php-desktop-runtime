@@ -48,6 +48,7 @@ BOOL CDHtmlDlg::OnInitDialog()
 
 BEGIN_MESSAGE_MAP(CDHtmlDlg, CDHtmlDialog)
 	ON_MESSAGE(WM_TRAY_ICON, OnTrayIcon)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 void CDHtmlDlg::SetElementEventHandle(long nEventType,char * pElemId,pdr_callback_handle * pEventHandle)
@@ -260,7 +261,7 @@ void CDHtmlDlg::OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 }
 
 LRESULT CDHtmlDlg::OnTrayIcon(WPARAM wParam, LPARAM lParam)
-{	
+{
 	CString strMsg = GetDHtmlEventName(lParam) ;
 
 	CreatePHPObject
@@ -292,6 +293,14 @@ BOOL CDHtmlDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 	efree(pEventParam) ;
 
 	return ( bRet || CDHtmlDialog::OnCommand(wParam, lParam) );
+}
+
+void CDHtmlDlg::OnClose()
+{
+	if( m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONCLOSE))!=S_FALSE )
+	{
+		CDialog::OnClose() ;
+	}
 }
 
 
@@ -374,6 +383,7 @@ CString GetDHtmlEventName(long nType)
 		case DLG_EVENT_ONNAVIGATECOMPLETE: return CString("navigatecomplete") ;
 		case DLG_EVENT_ONDOCUMENTCOMPLETE: return CString("documentcomplete") ;
 		case DLG_EVENT_ONCOMMAND: return CString("command") ;
+		case DLG_EVENT_ONCLOSE: return CString("close") ;
 
 		case TRAY_EVENT_ONMOUSEMOVE: return CString("traymousemove") ;
 		case TRAY_EVENT_ONLBUTTONDOWN: return CString("traylbuttondown") ;
