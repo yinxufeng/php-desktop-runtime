@@ -292,6 +292,7 @@ ZEND_FUNCTION(pdr_window_foreground)
 	}
 
 	::SwitchToThisWindow(hWnd,bRestore) ;
+	RETURN_TRUE
 }
 
 ZEND_FUNCTION(pdr_window_msgbox)
@@ -432,13 +433,13 @@ ZEND_FUNCTION(pdr_window_post_msg)
 		RETURN_FALSE
 	}
 
-	RETURN_LONG( ::PostMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam) ) ;
+	RETURN_BOOL( ::PostMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam) ) ;
 }
 
 ZEND_FUNCTION(pdr_window_set_transparency)
 {
 	char r=(char)255, g=(char)255, b=(char)255 ;
-	int nAlpha = 0 ;
+	int nAlpha = 255 ;
 	int nFlags = LWA_ALPHA ;
 	long nWnd = 0 ;
 

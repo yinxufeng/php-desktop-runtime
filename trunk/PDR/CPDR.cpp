@@ -156,7 +156,6 @@ ZEND_FUNCTION(pdr_pump_msg);
 ZEND_FUNCTION(pdr_peek_msg);
 ZEND_FUNCTION(pdr_get_msg);
 ZEND_FUNCTION(pdr_dispatch_msg);
-ZEND_FUNCTION(pdr_close_handle) ;
 ZEND_FUNCTION(pdr_create_mutex) ;
 ZEND_FUNCTION(pdr_open_mutex) ;
 ZEND_FUNCTION(pdr_release_mutex) ;
@@ -228,19 +227,19 @@ ZEND_FUNCTION(pdr_tray_delete);
 
 // 菜单 函数
 // ------------------------
-ZEND_FUNCTION(dhtml_menu_create) ;
-ZEND_FUNCTION(dhtml_menu_append) ;
-ZEND_FUNCTION(dhtml_menu_insert) ;
-ZEND_FUNCTION(dhtml_menu_modify) ;
-ZEND_FUNCTION(dhtml_menu_remove) ;
-ZEND_FUNCTION(dhtml_menu_popup) ;
-ZEND_FUNCTION(dhtml_menu_get_hmenu) ;
-ZEND_FUNCTION(dhtml_menu_enable) ;
-ZEND_FUNCTION(dhtml_menu_check) ;
-ZEND_FUNCTION(dhtml_menu_radio_check) ;
-ZEND_FUNCTION(dhtml_menu_item_count) ;
-ZEND_FUNCTION(dhtml_menu_item_text) ;
-ZEND_FUNCTION(dhtml_menu_item_id) ;
+ZEND_FUNCTION(pdr_menu_create) ;
+ZEND_FUNCTION(pdr_menu_append) ;
+ZEND_FUNCTION(pdr_menu_insert) ;
+ZEND_FUNCTION(pdr_menu_modify) ;
+ZEND_FUNCTION(pdr_menu_remove) ;
+ZEND_FUNCTION(pdr_menu_popup) ;
+ZEND_FUNCTION(pdr_menu_get_hmenu) ;
+ZEND_FUNCTION(pdr_menu_enable) ;
+ZEND_FUNCTION(pdr_menu_check) ;
+ZEND_FUNCTION(pdr_menu_radio_check) ;
+ZEND_FUNCTION(pdr_menu_item_count) ;
+ZEND_FUNCTION(pdr_menu_item_text) ;
+ZEND_FUNCTION(pdr_menu_item_id) ;
 
 // 文件操/串口 操作函数
 // ------------------------
@@ -254,6 +253,7 @@ ZEND_FUNCTION(pdr_com_set_timeouts) ;
 ZEND_FUNCTION(pdr_com_setup_buffer) ;
 ZEND_FUNCTION(pdr_handle_write) ;
 ZEND_FUNCTION(pdr_handle_read) ;
+ZEND_FUNCTION(pdr_handle_close) ;
 
 // 进程/管道 函数
 // ------------------------
@@ -285,6 +285,11 @@ ZEND_FUNCTION(pdr_reg_delete_key) ;
 ZEND_FUNCTION(pdr_reg_close) ;
 ZEND_FUNCTION(pdr_reg_flush) ;
 
+// Win32资源 函数
+// ------------------------
+ZEND_FUNCTION(pdr_rc_filetype_icon) ;
+ZEND_FUNCTION(pdr_rc_save_icon) ;
+
 
 
 /* compiled function list so Zend knows what's in this module */
@@ -299,7 +304,6 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_peek_msg, NULL)
     ZEND_FE(pdr_get_msg, NULL)
     ZEND_FE(pdr_dispatch_msg, NULL)
-    ZEND_FE(pdr_close_handle, NULL)
     ZEND_FE(pdr_create_mutex, NULL)
     ZEND_FE(pdr_open_mutex, NULL)
     ZEND_FE(pdr_release_mutex, NULL)
@@ -373,18 +377,18 @@ zend_function_entry pdr_dhtml_functions[] = {
 
 	// 菜单 函数
 	// ------------------------
-    ZEND_FE(dhtml_menu_create, NULL)
-    ZEND_FE(dhtml_menu_append, NULL)
-    ZEND_FE(dhtml_menu_insert, NULL)
-    ZEND_FE(dhtml_menu_modify, NULL)
-    ZEND_FE(dhtml_menu_remove, NULL)
-    ZEND_FE(dhtml_menu_popup, NULL)
-    ZEND_FE(dhtml_menu_get_hmenu, NULL)
-    ZEND_FE(dhtml_menu_enable, NULL)
-    ZEND_FE(dhtml_menu_check, NULL)
-    ZEND_FE(dhtml_menu_radio_check, NULL)
-    ZEND_FE(dhtml_menu_item_count, NULL)
-    ZEND_FE(dhtml_menu_item_text, NULL)
+    ZEND_FE(pdr_menu_create, NULL)
+    ZEND_FE(pdr_menu_append, NULL)
+    ZEND_FE(pdr_menu_insert, NULL)
+    ZEND_FE(pdr_menu_modify, NULL)
+    ZEND_FE(pdr_menu_remove, NULL)
+    ZEND_FE(pdr_menu_popup, NULL)
+    ZEND_FE(pdr_menu_get_hmenu, NULL)
+    ZEND_FE(pdr_menu_enable, NULL)
+    ZEND_FE(pdr_menu_check, NULL)
+    ZEND_FE(pdr_menu_radio_check, NULL)
+    ZEND_FE(pdr_menu_item_count, NULL)
+    ZEND_FE(pdr_menu_item_text, NULL)
 
 	// 文件操/串口 操作函数
 	// ------------------------
@@ -398,6 +402,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_com_setup_buffer, NULL)
     ZEND_FE(pdr_handle_write, NULL)
     ZEND_FE(pdr_handle_read, NULL)
+    ZEND_FE(pdr_handle_close, NULL)
 
 	// 进程/管道 函数
 	// ------------------------
@@ -429,6 +434,10 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_reg_close, NULL)
     ZEND_FE(pdr_reg_flush, NULL)
 
+	// Win32资源 函数
+	// ------------------------
+    ZEND_FE(pdr_rc_filetype_icon, NULL)
+    ZEND_FE(pdr_rc_save_icon, NULL)
 
 
     {NULL, NULL, NULL}
