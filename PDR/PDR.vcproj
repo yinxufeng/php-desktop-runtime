@@ -100,7 +100,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release-5.2.11|Win32"
-			OutputDirectory="$(SolutionDir)..\php-5.2.11-Win32\ext"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="1"
@@ -149,7 +149,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="php5ts.lib&#x0D;&#x0A;Psapi.lib&#x0D;&#x0A;/verbose:lib&#x0D;&#x0A;/force:multiple"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="$(OutDir)\php_pdr_5.2.x_vc9.dl"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.2.11-Win32\dev&quot;"
 				IgnoreDefaultLibraryNames=""
@@ -273,7 +273,7 @@
 		</Configuration>
 		<Configuration
 			Name="Relese-5.3.1|Win32"
-			OutputDirectory="$(SolutionDir)..\php-5.3.1-Win32\ext"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="1"
@@ -322,7 +322,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="php5ts.lib&#x0D;&#x0A;Psapi.lib&#x0D;&#x0A;/force:multiple"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="$(OutDir)\php_pdr_5.3.x_vc9.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.3.1-Win32\dev&quot;"
 				GenerateDebugInformation="true"
@@ -407,7 +407,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="php5.lib&#x0D;&#x0A;Psapi.lib&#x0D;&#x0A;/force:multiple"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
+				OutputFile="$(OutDir)\php_pdr_5.3.x_nts_vc8.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.3.1-nts-Win32\dev&quot;"
 				GenerateDebugInformation="true"
