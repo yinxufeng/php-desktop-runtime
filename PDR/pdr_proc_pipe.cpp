@@ -227,3 +227,23 @@ ZEND_FUNCTION(pdr_proc_terminate)
 
 	RETURN_BOOL(::TerminateProcess((HANDLE)nProcessHandle,nExitCode)) ;
 }
+
+ZEND_FUNCTION(pdr_proc_exit_code)
+{
+	long nProcessHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nProcessHandle )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	DWORD nExitCode ;
+	if(::GetExitCodeProcess((HANDLE)nProcessHandle,&nExitCode))
+	{
+		RETURN_LONG(nExitCode) ;
+	}
+
+	else
+	{
+		RETURN_FALSE
+	}
+}

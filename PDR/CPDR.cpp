@@ -270,6 +270,7 @@ ZEND_FUNCTION(pdr_proc_get_handle) ;
 ZEND_FUNCTION(pdr_proc_get_tread_handle) ;
 ZEND_FUNCTION(pdr_proc_get_id) ;
 ZEND_FUNCTION(pdr_proc_get_tread_id) ;
+ZEND_FUNCTION(pdr_proc_exit_code) ;
 
 // Windows注册表 函数
 // ------------------------
@@ -419,6 +420,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_proc_get_tread_handle, NULL)
     ZEND_FE(pdr_proc_get_id, NULL)
     ZEND_FE(pdr_proc_get_tread_id, NULL)
+    ZEND_FE(pdr_proc_exit_code, NULL)
+
 
 	// Windows注册表 函数
 	// ------------------------
