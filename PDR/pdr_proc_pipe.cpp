@@ -236,7 +236,7 @@ ZEND_FUNCTION(pdr_proc_exit_code)
 		RETURN_FALSE
 	}
 
-	DWORD nExitCode ;
+	DWORD nExitCode = 0 ;
 	if(::GetExitCodeProcess((HANDLE)nProcessHandle,&nExitCode))
 	{
 		RETURN_LONG(nExitCode) ;
