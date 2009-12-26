@@ -167,6 +167,7 @@ ZEND_FUNCTION(pdr_browse_folder) ;
 ZEND_FUNCTION(pdr_get_locale) ;
 ZEND_FUNCTION(pdr_get_charset) ;
 ZEND_FUNCTION(pdr_get_php_path) ;
+ZEND_FUNCTION(pdr_get_cursor_pos) ;
 
 // Window º¯Êý
 // ------------------------
@@ -319,6 +320,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_locale, NULL)
     ZEND_FE(pdr_get_charset, NULL)
     ZEND_FE(pdr_get_php_path, NULL)
+    ZEND_FE(pdr_get_cursor_pos, NULL)
 
 	// Window º¯Êý
 	// ------------------------
