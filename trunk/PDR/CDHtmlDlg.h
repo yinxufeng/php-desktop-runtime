@@ -12,7 +12,10 @@
 #define DLG_EVENT_ONDOCUMENTCOMPLETE 0x0004
 #define DLG_EVENT_ONCOMMAND 0x0005
 #define DLG_EVENT_ONCLOSE 0x0006
-#define DLG_EVENT_END 0x0006
+
+#define DLG_EVENT_PRETRANSLATEMSG 0x0007
+#define DLG_EVENT_WINDOWPROC 0x0008
+#define DLG_EVENT_END 0x0008
 
 
 #define TRAY_EVENT_ONMOUSEMOVE		WM_MOUSEMOVE
@@ -83,6 +86,11 @@ public:
 	afx_msg void OnClose();
 	afx_msg LRESULT OnTrayIcon(WPARAM id, LPARAM message);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+protected:
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+
 };
 
 
