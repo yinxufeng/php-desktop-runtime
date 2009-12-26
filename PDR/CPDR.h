@@ -79,3 +79,24 @@ typedef struct _pdr_callback_handle
 	}
 
 } pdr_callback_handle ;
+
+
+#define _make_msg_object(msg) zval * pZvalMsgPoint = NULL ; \
+	MAKE_STD_ZVAL(pZvalMsgPoint) ;\
+	array_init(pZvalMsgPoint);\
+	add_index_long(pZvalMsgPoint,0,msg.pt.x) ;\
+	add_index_long(pZvalMsgPoint,1,msg.pt.y) ;\
+\
+	zval * pZvalMsg = NULL ;\
+	MAKE_STD_ZVAL(pZvalMsg) ;\
+	object_init(pZvalMsg);\
+	add_property_long(pZvalMsg, "hwnd", (long)msg.hwnd) ;\
+	add_property_long(pZvalMsg, "message", (long)msg.message) ;\
+	add_property_long(pZvalMsg, "wParam", (long)msg.wParam) ;\
+	add_property_long(pZvalMsg, "lParam", (long)msg.lParam) ;\
+	add_property_long(pZvalMsg, "time", (long)msg.time) ;\
+	add_property_zval(pZvalMsg, "pt", pZvalMsgPoint) ;\
+
+#define _make_msg_object_p(pMsg)	_make_msg_object((*pMsg))
+
+
