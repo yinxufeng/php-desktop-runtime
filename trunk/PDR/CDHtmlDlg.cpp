@@ -311,9 +311,18 @@ void CDHtmlDlg::OnClose()
 
 BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 {
-	// TODO: 在此添加专用代码和/或调用基类
+	TSRMLS_FETCH() ;
+	_make_msg_object_p(pMsg) ;
+	if( FALSE = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) )
+	{
+		return CDialog::PreTranslateMessage(pMsg);
+	}
 
-	return CDialog::PreTranslateMessage(pMsg);
+	// 消息已经被处理，不再继续处理
+	else
+	{
+		return TRUE ;
+	}
 }
 
 LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
