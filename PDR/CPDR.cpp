@@ -170,6 +170,8 @@ ZEND_FUNCTION(pdr_get_php_path) ;
 
 // Window º¯Êý
 // ------------------------
+ZEND_FUNCTION(pdr_window_set_text) ;
+ZEND_FUNCTION(pdr_window_get_text) ;
 ZEND_FUNCTION(pdr_window_get_long);
 ZEND_FUNCTION(pdr_window_set_long);
 ZEND_FUNCTION(pdr_window_get_pixel);
@@ -320,6 +322,8 @@ zend_function_entry pdr_dhtml_functions[] = {
 
 	// Window º¯Êý
 	// ------------------------
+    ZEND_FE(pdr_window_set_text, NULL)
+    ZEND_FE(pdr_window_get_text, NULL)
     ZEND_FE(pdr_window_get_long, NULL)
     ZEND_FE(pdr_window_set_long, NULL)
     ZEND_FE(pdr_window_get_pixel, NULL)
