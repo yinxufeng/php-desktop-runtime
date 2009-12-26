@@ -38,6 +38,9 @@ void CDHtmlDlg::DoDataExchange(CDataExchange* pDX)
 
 BOOL CDHtmlDlg::OnInitDialog()
 {
+	// 需要初始化 ole ，否则 dhtml 中无法复制
+	OleInitialize(NULL) ;
+
 	CDHtmlDialog::OnInitDialog() ;
 
 	SetExternalDispatch(GetIDispatch(TRUE)) ;
@@ -300,6 +303,8 @@ void CDHtmlDlg::OnClose()
 	if( m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONCLOSE))!=S_FALSE )
 	{
 		CDialog::OnClose() ;
+
+		OleUninitialize() ;
 	}
 }
 
