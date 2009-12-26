@@ -155,6 +155,7 @@ ZEND_FUNCTION(pdr_get_process_filename);
 ZEND_FUNCTION(pdr_pump_msg);
 ZEND_FUNCTION(pdr_peek_msg);
 ZEND_FUNCTION(pdr_get_msg);
+ZEND_FUNCTION(pdr_translate_msg) ;
 ZEND_FUNCTION(pdr_dispatch_msg);
 ZEND_FUNCTION(pdr_create_mutex) ;
 ZEND_FUNCTION(pdr_open_mutex) ;
@@ -308,6 +309,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_pump_msg, NULL)
     ZEND_FE(pdr_peek_msg, NULL)
     ZEND_FE(pdr_get_msg, NULL)
+    ZEND_FE(pdr_translate_msg, NULL)
     ZEND_FE(pdr_dispatch_msg, NULL)
     ZEND_FE(pdr_create_mutex, NULL)
     ZEND_FE(pdr_open_mutex, NULL)

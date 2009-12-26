@@ -100,3 +100,32 @@ typedef struct _pdr_callback_handle
 #define _make_msg_object_p(pMsg)	_make_msg_object((*pMsg))
 
 
+#define _make_msg_from_object(pzvObject) \
+	zval * pZvalHwnd = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"hwnd",4,0 TSRMLS_CC) ;\
+	zval * pZvalMessage = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"message",7,0 TSRMLS_CC) ;\
+	zval * pZvalWParam = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"wParam",6,0 TSRMLS_CC) ;\
+	zval * pZvalLParam = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"lParam",6,0 TSRMLS_CC) ;\
+	zval * pZvalTime = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"time",4,0 TSRMLS_CC) ;\
+	zval * pZvalPT = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"pt",2,0 TSRMLS_CC) ;\
+	zval ** ppZvalPTX ;\
+	zval ** ppZvalPTY ;\
+	if( pZvalPT && Z_ARRVAL_P(pZvalPT) )\
+	{\
+		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 0, (void**)&ppZvalPTX) ;\
+		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 1, (void**)&ppZvalPTY) ;\
+	}\
+	else\
+	{\
+		ppZvalPTX = NULL ;\
+		ppZvalPTY = NULL ;\
+	}\
+\
+	MSG msg ;\
+	msg.hwnd = (HWND)Z_LVAL_P(pZvalHwnd) ;\
+	msg.message = (UINT)Z_LVAL_P(pZvalMessage) ;\
+	msg.wParam = (WPARAM)Z_LVAL_P(pZvalWParam) ;\
+	msg.lParam = (LPARAM)Z_LVAL_P(pZvalLParam) ;\
+	msg.time = (DWORD)Z_LVAL_P(pZvalTime) ;\
+	msg.pt.x = ppZvalPTX? Z_LVAL_PP(ppZvalPTX): 0 ;\
+	msg.pt.y = ppZvalPTY? Z_LVAL_PP(ppZvalPTY): 0 ;\
+
