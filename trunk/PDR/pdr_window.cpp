@@ -1,6 +1,60 @@
 #include "stdafx.h"
 #include "CPDR.h"
 
+ZEND_FUNCTION(pdr_window_set_text)
+{
+	char * psText ;
+	int nWnd=0, nTextLen=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &nWnd, &psText, &nTextLen ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HWND hWnd = (HWND)nWnd ;
+	if( !::IsWindow(hWnd) )
+	{
+		RETURN_FALSE 
+	}
+
+	RETURN_BOOL(::SetWindowText(hWnd,psText)) ;
+}
+
+ZEND_FUNCTION(pdr_window_get_text)
+{
+	int nWnd=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nWnd ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HWND hWnd = (HWND)nWnd ;
+	if( !::IsWindow(hWnd) )
+	{
+		RETURN_FALSE 
+	}
+
+	
+	zval * pzvRet ;
+	MAKE_STD_ZVAL(pzvRet)
+
+	int nTextLen = GetWindowTextLength(hWnd) ;
+	if( !nTextLen )
+	{
+		ZVAL_STRING(pzvRet,"",1) ;
+	}
+
+	else
+	{
+		char * psText = new char[nTextLen+1] ;
+		int nTextLen = ::GetWindowText(hWnd,psText,nTextLen) ;
+		psText[nTextLen] = '\0' ;
+
+		ZVAL_STRING(pzvRet,psText,1) ;
+		delete [] psText ;
+	}
+
+	RETURN_ZVAL(pzvRet,0,0)
+}
 
 ZEND_FUNCTION(pdr_window_get_long)
 {
