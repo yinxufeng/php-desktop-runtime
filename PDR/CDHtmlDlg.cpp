@@ -309,6 +309,21 @@ void CDHtmlDlg::OnClose()
 }
 
 
+BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	return CDialog::PreTranslateMessage(pMsg);
+}
+
+LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	return CDialog::WindowProc(message, wParam, lParam);
+}
+
+
 
 
 
@@ -389,6 +404,9 @@ CString GetDHtmlEventName(long nType)
 		case DLG_EVENT_ONDOCUMENTCOMPLETE: return CString("documentcomplete") ;
 		case DLG_EVENT_ONCOMMAND: return CString("command") ;
 		case DLG_EVENT_ONCLOSE: return CString("close") ;
+
+		case DLG_EVENT_PRETRANSLATEMSG: return CString("pretranslatemsg") ;
+		case DLG_EVENT_WINDOWPROC: return CString("windowproc") ;
 
 		case TRAY_EVENT_ONMOUSEMOVE: return CString("traymousemove") ;
 		case TRAY_EVENT_ONLBUTTONDOWN: return CString("traylbuttondown") ;
