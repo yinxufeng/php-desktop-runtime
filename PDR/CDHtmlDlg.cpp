@@ -313,7 +313,7 @@ BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 {
 	TSRMLS_FETCH() ;
 	_make_msg_object_p(pMsg) ;
-	if( FALSE = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) )
+	if( FALSE == this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) )
 	{
 		return CDialog::PreTranslateMessage(pMsg);
 	}

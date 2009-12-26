@@ -189,6 +189,7 @@ ZEND_FUNCTION(pdr_get_msg)
 	RETURN_ZVAL(pZvalMsg,0,0) ;
 }
 
+
 ZEND_FUNCTION(pdr_dispatch_msg)
 {
 	// 取得参数
@@ -198,36 +199,23 @@ ZEND_FUNCTION(pdr_dispatch_msg)
 		RETURN_FALSE
 	}
 
-	zval * pZvalHwnd = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"hwnd",4,0 TSRMLS_CC) ;
-	zval * pZvalMessage = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"message",7,0 TSRMLS_CC) ;
-	zval * pZvalWParam = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"wParam",6,0 TSRMLS_CC) ;
-	zval * pZvalLParam = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"lParam",6,0 TSRMLS_CC) ;
-	zval * pZvalTime = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"time",4,0 TSRMLS_CC) ;
-	zval * pZvalPT = zend_read_property(Z_OBJCE_P(pZvalMsg), pZvalMsg,"pt",2,0 TSRMLS_CC) ;
-	zval ** ppZvalPTX ;
-	zval ** ppZvalPTY ;
-	if( pZvalPT && Z_ARRVAL_P(pZvalPT) )
+	_make_msg_from_object(pZvalMsg) ;
+
+	RETURN_LONG((long)::DispatchMessage(&msg)) ;
+}
+
+ZEND_FUNCTION(pdr_translate_msg)
+{
+	// 取得参数
+	zval * pZvalMsg ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &pZvalMsg) == FAILURE )
 	{
-		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 0, (void**)&ppZvalPTX) ;
-		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 1, (void**)&ppZvalPTY) ;
-	}
-	else
-	{
-		ppZvalPTX = NULL ;
-		ppZvalPTY = NULL ;
+		RETURN_FALSE
 	}
 
-	MSG msg ;
-	msg.hwnd = (HWND)Z_LVAL_P(pZvalHwnd) ;
-	msg.message = (UINT)Z_LVAL_P(pZvalMessage) ;
-	msg.wParam = (WPARAM)Z_LVAL_P(pZvalWParam) ;
-	msg.lParam = (LPARAM)Z_LVAL_P(pZvalLParam) ;
-	msg.time = (DWORD)Z_LVAL_P(pZvalTime) ;
-	msg.pt.x = ppZvalPTX? Z_LVAL_PP(ppZvalPTX): 0 ;
-	msg.pt.y = ppZvalPTY? Z_LVAL_PP(ppZvalPTY): 0 ;
+	_make_msg_from_object(pZvalMsg) ;
 
-	::TranslateMessage(&msg) ;
-	::DispatchMessage(&msg) ;
+	RETURN_BOOL(::TranslateMessage(&msg)) ;
 }
 
 ZEND_FUNCTION(pdr_create_mutex)
