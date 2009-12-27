@@ -6,7 +6,6 @@ static bool bInitMfc = false ;
 
 ZEND_FUNCTION(pdr_dhtml_new)
 {
-
 	// ≥ı ºªØ mfc
 	// ----------------------------------
 	if(!bInitMfc)

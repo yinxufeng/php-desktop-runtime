@@ -349,18 +349,6 @@ ZEND_FUNCTION(pdr_window_foreground)
 	RETURN_TRUE
 }
 
-ZEND_FUNCTION(pdr_window_msgbox)
-{
-	char * psMsg ;
-	int nMsgLen = 0, nType=MB_OK ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|sl", &psMsg, &nMsgLen, &nType )==FAILURE )
-	{
-		RETURN_FALSE
-	}
-
-	RETURN_LONG( ::AfxMessageBox(nMsgLen?psMsg:"",nType) ) ;
-}
-
 ZEND_FUNCTION(pdr_window_set_parent)
 {
 	long nHwnd=0, nParentHwnd=0 ;
