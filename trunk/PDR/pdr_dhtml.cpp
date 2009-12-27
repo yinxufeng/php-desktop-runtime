@@ -206,7 +206,7 @@ HRESULT __pdr_dhtml_onevent(pdr_callback_handle * pHandle,zval * pEventParam)
 		pppArgs[i] = &pHandle->ppArgs[i-1] ;
 	}
 
-	zval *retval_ptr;
+	zval *retval_ptr = NULL ;
 	call_user_function_ex(
 		pHandle->pFuncTable
 		, NULL, pHandle->pFuncName
@@ -216,15 +216,23 @@ HRESULT __pdr_dhtml_onevent(pdr_callback_handle * pHandle,zval * pEventParam)
 
 	delete [] pppArgs ;
 
-	switch( Z_TYPE_P(retval_ptr) )
+	if( retval_ptr )
 	{
-		case IS_LONG :
-			return (HRESULT)Z_LVAL_P(retval_ptr) ;
-		case IS_NULL :
-			return S_OK ;
-		default :
-			zend_error(E_WARNING, "PDR DHTML: the dhtml event handle function(method) must return a int value." );
-			return S_OK ;
+		switch( Z_TYPE_P(retval_ptr) )
+		{
+			case IS_LONG :
+				return (HRESULT)Z_LVAL_P(retval_ptr) ;
+			case IS_NULL :
+				return S_OK ;
+			default :
+				zend_error(E_WARNING, "PDR DHTML: the dhtml event handle function(method) must return a int value." );
+				return S_OK ;
+		}
+	}
+
+	else
+	{
+		return S_OK ;
 	}
 }
 
