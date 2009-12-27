@@ -530,5 +530,5 @@ ZEND_FUNCTION(pdr_msgbox)
 	}
 
 	
-	RETURN_LONG( ::MessageBox( (HWND)nOwnerWnd, nMsgLen?psMsg:"", nTitleLen?psTitle:NULL, nType ) ) ;
+	RETURN_LONG( ::MessageBox( (HWND)nOwnerWnd, nMsgLen?psMsg:"", nTitleLen?psTitle:"", nType ) ) ;
 }
