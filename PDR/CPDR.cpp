@@ -169,6 +169,7 @@ ZEND_FUNCTION(pdr_get_locale) ;
 ZEND_FUNCTION(pdr_get_charset) ;
 ZEND_FUNCTION(pdr_get_php_path) ;
 ZEND_FUNCTION(pdr_get_cursor_pos) ;
+ZEND_FUNCTION(pdr_msgbox) ;
 
 // Window º¯Êý
 // ------------------------
@@ -186,7 +187,6 @@ ZEND_FUNCTION(pdr_window_set_pos);
 ZEND_FUNCTION(pdr_window_get_thread);
 ZEND_FUNCTION(pdr_window_get_process);
 ZEND_FUNCTION(pdr_window_foreground);
-ZEND_FUNCTION(pdr_window_msgbox) ;
 ZEND_FUNCTION(pdr_window_set_parent) ;
 ZEND_FUNCTION(pdr_window_get_parent) ;
 ZEND_FUNCTION(pdr_window_get_desktop) ;
@@ -323,6 +323,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_charset, NULL)
     ZEND_FE(pdr_get_php_path, NULL)
     ZEND_FE(pdr_get_cursor_pos, NULL)
+    ZEND_FE(pdr_msgbox, NULL)
 
 	// Window º¯Êý
 	// ------------------------
@@ -340,7 +341,6 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_window_get_thread, NULL)
     ZEND_FE(pdr_window_get_process, NULL)
     ZEND_FE(pdr_window_foreground, NULL)
-    ZEND_FE(pdr_window_msgbox, NULL)
     ZEND_FE(pdr_window_set_parent, NULL)
     ZEND_FE(pdr_window_get_parent, NULL)
     ZEND_FE(pdr_window_get_desktop, NULL)

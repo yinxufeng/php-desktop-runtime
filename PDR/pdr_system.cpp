@@ -514,3 +514,21 @@ ZEND_FUNCTION(pdr_get_cursor_pos)
 
 	RETURN_ZVAL(pzvRet,0,0) ;
 }
+
+ZEND_FUNCTION(pdr_msgbox)
+{
+	char * psMsg ;
+	long nMsgLen = 0 ;
+	char * psTitle ;
+	long nTitleLen = 0 ;
+	long nType=MB_OK ;
+	long nOwnerWnd = 0 ;
+
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|ssll", &psMsg, &nMsgLen, &psTitle, &nTitleLen, &nType, &nOwnerWnd )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	
+	RETURN_LONG( ::MessageBox( (HWND)nOwnerWnd, nMsgLen?psMsg:"", nTitleLen?psTitle:NULL, nType ) ) ;
+}

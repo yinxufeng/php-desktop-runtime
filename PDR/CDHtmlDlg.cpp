@@ -16,6 +16,10 @@ BEGIN_DISPATCH_MAP(CDHtmlDlg, CDHtmlDialog)
 	DISP_FUNCTION(CDHtmlDlg, "call", CallPHPFunction, VT_BSTR, VTS_BSTR VTS_BSTR)
 END_DISPATCH_MAP()
 
+BEGIN_MESSAGE_MAP(CDHtmlDlg, CDHtmlDialog)
+	ON_MESSAGE(WM_TRAY_ICON, OnTrayIcon)
+	ON_WM_CLOSE()
+END_MESSAGE_MAP()
 
 CDHtmlDlg::CDHtmlDlg(UINT nIDTemplate/*=CDHtmlDlg::IDD*/,CWnd* pParent /*=NULL*/)
 	: CDHtmlDialog(nIDTemplate, CDHtmlDlg::IDH, pParent)
@@ -48,11 +52,6 @@ BOOL CDHtmlDlg::OnInitDialog()
 	// 除非将焦点设置到控件，否则返回 TRUE
 	return m_dynMap.OnEvent(ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONINITDIALOG))==S_OK ;  
 }
-
-BEGIN_MESSAGE_MAP(CDHtmlDlg, CDHtmlDialog)
-	ON_MESSAGE(WM_TRAY_ICON, OnTrayIcon)
-	ON_WM_CLOSE()
-END_MESSAGE_MAP()
 
 void CDHtmlDlg::SetElementEventHandle(long nEventType,char * pElemId,pdr_callback_handle * pEventHandle)
 {
@@ -116,6 +115,11 @@ const DHtmlEventMapEntry* CDHtmlDlg::GetDHtmlEventMap()
 
 HRESULT CDHtmlDlg::OnHtmlEvent(IHTMLElement* pElement)
 {
+	if(!pElement)
+	{
+		return S_OK;
+	}
+
 	IHTMLEventObj * pEvent;
 	CComBSTR bs_id, bs_type;
 	
