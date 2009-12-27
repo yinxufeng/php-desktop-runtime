@@ -313,7 +313,10 @@ BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 {
 	TSRMLS_FETCH() ;
 	_make_msg_object_p(pMsg) ;
-	if( FALSE == this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) )
+	LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) ;
+	efree(pZvalMsg) ;
+
+	if( S_OK==nRet  )
 	{
 		return CDialog::PreTranslateMessage(pMsg);
 	}
@@ -321,15 +324,33 @@ BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 	// 消息已经被处理，不再继续处理
 	else
 	{
-		return TRUE ;
+		return nRet ;
 	}
 }
 
 LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	// TODO: 在此添加专用代码和/或调用基类
+	CreatePHPObject
 
-	return CDialog::WindowProc(message, wParam, lParam);
+	add_property_long(pEventParam, "hwnd", (long)GetSafeHwnd()) ;
+	add_property_long(pEventParam, "message", (long)message) ;
+	add_property_long(pEventParam, "wParam", (long)wParam) ;
+	add_property_long(pEventParam, "lParam", (long)lParam) ;
+
+	LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_WINDOWPROC), pEventParam ) ;
+	efree(pEventParam) ;
+
+	if( S_OK == nRet )
+	{
+		return CDialog::WindowProc(message, wParam, lParam);
+	}
+
+	// 消息已经被处理，不再继续处理
+	else
+	{
+		return nRet ;
+	}
+
 }
 
 
