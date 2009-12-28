@@ -466,15 +466,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CUIThread.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\pdr_com.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\pdr_dhtml.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_encode.cpp"
 				>
 			</File>
 			<File
@@ -576,10 +576,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CUIThread.h"
-				>
-			</File>
-			<File
 				RelativePath=".\define_const.h"
 				>
 			</File>
@@ -601,6 +597,10 @@
 			</File>
 			<File
 				RelativePath=".\pdr_dhtml.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_encode.h"
 				>
 			</File>
 			<File
