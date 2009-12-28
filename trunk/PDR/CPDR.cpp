@@ -3,10 +3,10 @@
 #include "stdafx.h"
 #include "CPDR.h"
 #include "CDHtmlDlg.h"
-#include "CUIThread.h"
 #include "pdr_thread.h"
 #include "pdr_file.h"
 #include "pdr_proc_pipe.h"
+// #include "pdr_encode.h"			// 仅仅实现了 HOOK PHP
 #include <Winuser.h>
 #include "define_const.h"
 #include "define_const_vkey.h"
@@ -38,6 +38,10 @@ int _pdr_get_resrc_pipe()
 { return resrc_pdr_pipe ; }
 
 
+
+
+
+
 // 销毁资源
 void _php_pdr_dhtml_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
@@ -47,7 +51,7 @@ void _php_pdr_dhtml_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 void _php_pdr_thread_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
-	pdr_window_thread *pThreadRc = (pdr_window_thread *) rsrc->ptr ;
+	/*pdr_window_thread *pThreadRc = (pdr_window_thread *) rsrc->ptr ;
 	
 	if( pThreadRc->pThread && pThreadRc->pThread->m_hThread )
 	{
@@ -62,7 +66,7 @@ void _php_pdr_thread_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	delete pThreadRc->pExitHandle ;
 	pThreadRc->pInitHandle = NULL ;
 
-	efree(pThreadRc);
+	efree(pThreadRc);*/
 }
 void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
@@ -136,6 +140,18 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	_pdr_define_const_locale
 	_pdr_define_const_file
 
+
+#ifdef pdr_encode
+	// pdr encode
+	// ----------------------------------
+	//  保存 PHP 原始函数
+	ORI_ZEND_COMPILE_FILE * _ori_zend_compile_file_ptr = pdr_get_ori_zend_compile_file() ;
+	(*_ori_zend_compile_file_ptr) = zend_compile_file ;
+
+	//  Hook 新函数
+	zend_compile_file = pdr_compile_file ;
+#endif
+
 	return SUCCESS;
 }
 
@@ -170,6 +186,8 @@ ZEND_FUNCTION(pdr_get_charset) ;
 ZEND_FUNCTION(pdr_get_php_path) ;
 ZEND_FUNCTION(pdr_get_cursor_pos) ;
 ZEND_FUNCTION(pdr_msgbox) ;
+
+ZEND_FUNCTION(pdr_thread_create) ;
 
 // Window 函数
 // ------------------------
@@ -324,6 +342,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_php_path, NULL)
     ZEND_FE(pdr_get_cursor_pos, NULL)
     ZEND_FE(pdr_msgbox, NULL)
+
+    ZEND_FE(pdr_thread_create, NULL)
 
 	// Window 函数
 	// ------------------------
