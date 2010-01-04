@@ -130,9 +130,8 @@ ZEND_FUNCTION(pdr_pump_msg)
 ZEND_FUNCTION(pdr_peek_msg)
 {
 	// 取得各项参数
-	long nWnd=0, nMsgFilterMin=0, nMsgFilterMax=0 ;
-	bool bRemove=false ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|lllb", &nWnd,&nMsgFilterMin,&nMsgFilterMax,&bRemove) == FAILURE )
+	long nWnd=0, nMsgFilterMin=0, nMsgFilterMax=0, nRemove=PM_NOREMOVE ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|llll", &nWnd,&nMsgFilterMin,&nMsgFilterMax,&nRemove) == FAILURE )
 	{
 		RETURN_NULL()
 	}
@@ -149,7 +148,7 @@ ZEND_FUNCTION(pdr_peek_msg)
 	}
 
 	MSG msg;
-	if( !::PeekMessage(&msg,hWnd,nMsgFilterMin,nMsgFilterMax,bRemove) )
+	if( !::PeekMessage(&msg,hWnd,nMsgFilterMin,nMsgFilterMax,nRemove) )
 	{
 		RETURN_NULL()
 	}
