@@ -109,6 +109,7 @@ ZEND_FUNCTION(pdr_handle_write)
 	DWORD dwBytesWrite=0 ;
 	if(!WriteFile((HANDLE)nHandle,psData,nDataLen,&dwBytesWrite,NULL)) 
 	{
+		DWORD dwError = ::GetLastError() ;
 		RETURN_FALSE
 	}
 	PurgeComm((HANDLE)nHandle, PURGE_TXABORT|PURGE_RXABORT|PURGE_TXCLEAR|PURGE_RXCLEAR) ;
