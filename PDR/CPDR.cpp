@@ -226,6 +226,7 @@ ZEND_FUNCTION(pdr_dhtml_get_hwnd);
 ZEND_FUNCTION(pdr_dhtml_ok);
 ZEND_FUNCTION(pdr_dhtml_cancel);
 ZEND_FUNCTION(pdr_dhtml_navigate);
+ZEND_FUNCTION(pdr_dhtml_set_icon) ;
 
 ZEND_FUNCTION(pdr_dhtml_set_html);
 ZEND_FUNCTION(pdr_dhtml_set_text);
@@ -382,6 +383,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_dhtml_ok, NULL)
     ZEND_FE(pdr_dhtml_cancel, NULL)
     ZEND_FE(pdr_dhtml_navigate, NULL)
+    ZEND_FE(pdr_dhtml_set_icon, NULL)
 
     ZEND_FE(pdr_dhtml_set_html, NULL)
     ZEND_FE(pdr_dhtml_set_text, NULL)

@@ -457,7 +457,15 @@ ZEND_FUNCTION(pdr_window_send_msg)
 		RETURN_FALSE
 	}
 
-	RETURN_LONG( ::SendMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam) ) ;
+	if(!::SendMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam))
+	{
+		DWORD dwError = GetLastError() ;
+		RETURN_FALSE
+	}
+	else
+	{
+		RETURN_TRUE
+	}
 }
 
 ZEND_FUNCTION(pdr_window_post_msg)
@@ -475,7 +483,15 @@ ZEND_FUNCTION(pdr_window_post_msg)
 		RETURN_FALSE
 	}
 
-	RETURN_BOOL( ::PostMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam) ) ;
+	if(!::PostMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam))
+	{
+		DWORD dwError = GetLastError() ;
+		RETURN_FALSE
+	}
+	else
+	{
+		RETURN_TRUE
+	}
 }
 
 ZEND_FUNCTION(pdr_window_set_transparency)

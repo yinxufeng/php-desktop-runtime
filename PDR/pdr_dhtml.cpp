@@ -596,3 +596,26 @@ ZEND_FUNCTION(pdr_dhtml_el_collection_item)
 
 	RETURN_LONG((long)pIHTMLEle) ;
 }
+
+
+ZEND_FUNCTION(pdr_dhtml_set_icon)
+{
+	// 取得各项参数
+	char* psIconFile = NULL ;
+	int nIconFileLen = 0 ;
+	bool bBigIcon = false ;
+
+	PDR_DHTML_GetDlgPtrFromResrc("rs|b",__PDR_RESRC_MPARAM(&psIconFile, &nIconFileLen, &bBigIcon))
+
+	HICON hIcon = (HICON)LoadImage(NULL, psIconFile, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE|LR_LOADFROMFILE|LR_LOADTRANSPARENT) ;
+	if(!hIcon)
+	{
+		zend_error( E_WARNING, "PDR DHtml : bad icon filename" );
+		RETURN_FALSE;
+	}
+
+	pDlg->SetIcon(hIcon,bBigIcon) ;
+	::CloseHandle(hIcon) ;
+
+	RETURN_TRUE ;
+}
