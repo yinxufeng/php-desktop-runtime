@@ -22,6 +22,10 @@ BEGIN_MESSAGE_MAP(CDHtmlDlg, CDHtmlDialog)
 	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
+BEGIN_EVENTSINK_MAP(CDHtmlDlg, CDHtmlDialog)
+	ON_EVENT(CDHtmlDlg, AFX_IDC_BROWSER, 250 /* BeforeNavigate2 */, OnBeforeNavigate2, VTS_DISPATCH VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PBOOL)
+END_EVENTSINK_MAP()
+
 CDHtmlDlg::CDHtmlDlg(UINT nIDTemplate/*=CDHtmlDlg::IDD*/,CWnd* pParent /*=NULL*/)
 	: CDHtmlDialog(nIDTemplate, CDHtmlDlg::IDH, pParent)
 {
@@ -265,6 +269,41 @@ void CDHtmlDlg::OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 	efree(pEventParam) ;
 }
 
+void CDHtmlDlg::OnBeforeNavigate2(LPDISPATCH pDisp, VARIANT FAR* URL, VARIANT FAR* Flags, VARIANT FAR* TargetFrameName, VARIANT FAR* PostData, VARIANT FAR* Headers, BOOL FAR* Cancel)
+{
+	// ¶ÏÑÔÀàÐÍ
+	ASSERT(V_VT(URL) == VT_BSTR);
+	ASSERT(V_VT(TargetFrameName) == VT_BSTR);
+	ASSERT(V_VT(PostData) == (VT_VARIANT | VT_BYREF));
+	ASSERT(V_VT(Headers) == VT_BSTR);
+	ASSERT(Cancel != NULL);
+
+	char *psPostData;
+	SafeArrayAccessData(PostData->parray, (void **)&psPostData);
+
+	CString strTargetFrameName(V_BSTR(TargetFrameName));
+	CString strURL(V_BSTR(URL));
+	CString strHeaders(V_BSTR(Headers));
+	DWORD nFlags = V_I4(Flags);
+
+
+	BOOL bCancel = FALSE;
+
+
+	CreatePHPObject
+	add_property_string(pEventParam, "url", (char *)(LPCTSTR)strURL, 1) ;
+	add_property_string(pEventParam, "headers", (char *)(LPCTSTR)strHeaders, 1) ;
+	add_property_string(pEventParam, "targetName", (char *)(LPCTSTR)strTargetFrameName, 1) ;
+	add_property_long(pEventParam, "flags", nFlags) ;
+	add_property_stringl(pEventParam, "postData", psPostData,PostData->parray->cbElements,1) ;
+
+	HRESULT nRes = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONBEFORENAVIGATE2), pEventParam ) ;
+	// ........
+
+	SafeArrayUnaccessData(PostData->parray) ;
+	*Cancel = (nRes==S_OK)? AFX_OLE_FALSE: AFX_OLE_TRUE ;
+}
+
 void CDHtmlDlg::OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 {
 	CDHtmlDialog::OnDocumentComplete(pDisp, szUrl);
@@ -452,6 +491,7 @@ CString GetDHtmlEventName(long nType)
 			
 		case DLG_EVENT_ONINITDIALOG: return CString("initdialog") ;
 		case DLG_EVENT_ONBEFORENAVIGATE: return CString("beforenavigate") ;
+		case DLG_EVENT_ONBEFORENAVIGATE2: return CString("beforenavigate2") ;
 		case DLG_EVENT_ONNAVIGATECOMPLETE: return CString("navigatecomplete") ;
 		case DLG_EVENT_ONDOCUMENTCOMPLETE: return CString("documentcomplete") ;
 		case DLG_EVENT_ONCOMMAND: return CString("command") ;
