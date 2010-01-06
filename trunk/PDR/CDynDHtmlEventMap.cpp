@@ -54,10 +54,13 @@ void CDynDHtmlEventMap::_destroy()
 {
 	if( m_eventMap ) {
 		long i= 0;
-		while( m_eventMap[i].nType!=DHTMLEVENTMAPENTRY_END ) free((char*)m_eventMap[i++].szName);
+		while( m_eventMap[i].nType!=DHTMLEVENTMAPENTRY_END )
+		{
+			free((char*)m_eventMap[i++].szName) ;
+		}
 		delete m_eventMap;
 	}
-    m_eventMap= NULL;
+    m_eventMap = NULL ;
     m_size= -1;
 
 	// É¾³ý ÊÂ¼þ
@@ -197,6 +200,8 @@ void CDynDHtmlEventMap::_bigger()
 	if( !m_eventMap ) {
 		m_eventMap= new DHtmlEventMapEntry[32];
 		m_size= 32;
+
+		m_eventMap->nType = DHTMLEVENTMAPENTRY_END ;
 		return;
 	}
 	
