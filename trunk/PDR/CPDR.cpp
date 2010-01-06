@@ -186,6 +186,7 @@ ZEND_FUNCTION(pdr_get_charset) ;
 ZEND_FUNCTION(pdr_get_php_path) ;
 ZEND_FUNCTION(pdr_get_cursor_pos) ;
 ZEND_FUNCTION(pdr_msgbox) ;
+ZEND_FUNCTION(pdr_appbar_get_rect) ;
 
 ZEND_FUNCTION(pdr_thread_create) ;
 
@@ -237,6 +238,7 @@ ZEND_FUNCTION(pdr_dhtml_get_value);
 ZEND_FUNCTION(pdr_dhtml_call) ;
 
 ZEND_FUNCTION(pdr_dhtml_set_handle);
+ZEND_FUNCTION(pdr_dhtml_clear_handles);
 ZEND_FUNCTION(pdr_dhtml_exec_script);
 ZEND_FUNCTION(pdr_dhtml_get_tags);
 ZEND_FUNCTION(pdr_dhtml_el_collection_len);
@@ -343,6 +345,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_php_path, NULL)
     ZEND_FE(pdr_get_cursor_pos, NULL)
     ZEND_FE(pdr_msgbox, NULL)
+	ZEND_FE(pdr_appbar_get_rect, NULL)
 
     ZEND_FE(pdr_thread_create, NULL)
 
@@ -386,6 +389,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_dhtml_set_icon, NULL)
 
     ZEND_FE(pdr_dhtml_set_html, NULL)
+    ZEND_FE(pdr_dhtml_clear_handles, NULL)
     ZEND_FE(pdr_dhtml_set_text, NULL)
     ZEND_FE(pdr_dhtml_set_value, NULL)
     ZEND_FE(pdr_dhtml_get_html, NULL)

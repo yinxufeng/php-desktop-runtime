@@ -75,7 +75,7 @@ ZEND_FUNCTION(pdr_dhtml_show)
 	int nCmdShow = SW_SHOWNORMAL ;
 	PDR_DHTML_GetDlgPtrFromResrc("r|l", __PDR_RESRC_MPARAM(&nCmdShow) )
 
-	pDlg->ShowWindow(nCmdShow) ;
+	RETURN_BOOL(pDlg->ShowWindow(nCmdShow))
 }
 
 ZEND_FUNCTION(pdr_dhtml_domodal)
@@ -187,6 +187,13 @@ ZEND_FUNCTION(pdr_dhtml_set_handle)
 	pDlg->SetElementEventHandle(nEventType,psHtmlId,pEventHandle) ;
 	
 	efree(params);
+}
+
+ZEND_FUNCTION(pdr_dhtml_clear_handles)
+{
+	// 取得对话框指针
+	PDR_DHTML_GetDlgPtrFromResrc("r",)
+	pDlg->ClearEventHandles() ;
 }
 
 HRESULT __pdr_dhtml_onevent(pdr_callback_handle * pHandle,zval * pEventParam)
@@ -607,6 +614,11 @@ ZEND_FUNCTION(pdr_dhtml_set_icon)
 
 	PDR_DHTML_GetDlgPtrFromResrc("rs|b",__PDR_RESRC_MPARAM(&psIconFile, &nIconFileLen, &bBigIcon))
 
+	if( !IsWindow(pDlg->m_hWnd) )
+	{
+		RETURN_FALSE;
+	}
+
 	HICON hIcon = (HICON)LoadImage(NULL, psIconFile, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE|LR_LOADFROMFILE|LR_LOADTRANSPARENT) ;
 	if(!hIcon)
 	{
@@ -615,7 +627,8 @@ ZEND_FUNCTION(pdr_dhtml_set_icon)
 	}
 
 	pDlg->SetIcon(hIcon,bBigIcon) ;
-	::CloseHandle(hIcon) ;
+	//::CloseHandle(hIcon) ;
 
 	RETURN_TRUE ;
 }
+

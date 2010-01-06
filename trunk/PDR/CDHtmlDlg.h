@@ -64,7 +64,8 @@ public:
 	virtual void OnOK();
 	virtual void OnCancel();
 
-	
+	void ClearEventHandles() ;
+
 	CDynDHtmlEventMap m_dynMap ;
 
 protected:
@@ -82,11 +83,14 @@ public:
 	virtual void OnBeforeNavigate(LPDISPATCH pDisp, LPCTSTR szUrl) ;
 	virtual void OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl) ;
 	virtual void OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl) ;
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	
 	afx_msg void OnClose();
 	afx_msg LRESULT OnTrayIcon(WPARAM id, LPARAM message);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	void DoSysCommand(int nId) ;
 
 protected:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
