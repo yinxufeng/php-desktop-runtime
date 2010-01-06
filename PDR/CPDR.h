@@ -67,6 +67,9 @@ typedef struct _pdr_callback_handle
 
 	~_pdr_callback_handle()
 	{
+		// 减少保存 回调函数 的变量的引用
+		pFuncName->__refcount -- ;
+
 		// 减少变量引用
 		for(int i=0;i<nArgc;i++)
 		{

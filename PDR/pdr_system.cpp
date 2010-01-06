@@ -552,3 +552,15 @@ ZEND_FUNCTION(pdr_appbar_get_rect)
 
 	RETURN_ZVAL(pRetRect,0,0)
 }
+
+ZEND_FUNCTION(pdr_var_ref_cnt)
+{
+	zval * pzVar ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &pzVar )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	// -1 ， 减去在当前栈中的引用计数
+	RETURN_LONG( pzVar->__refcount - 1 ) 
+}

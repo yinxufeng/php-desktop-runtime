@@ -47,7 +47,7 @@ void _php_pdr_dhtml_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
 	CDHtmlDlg *pDlg= (CDHtmlDlg *) rsrc->ptr;
 	delete pDlg ;
-	//efree(pDlg);
+	// efree(pDlg) ;
 }
 void _php_pdr_thread_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
@@ -187,6 +187,7 @@ ZEND_FUNCTION(pdr_get_php_path) ;
 ZEND_FUNCTION(pdr_get_cursor_pos) ;
 ZEND_FUNCTION(pdr_msgbox) ;
 ZEND_FUNCTION(pdr_appbar_get_rect) ;
+ZEND_FUNCTION(pdr_var_ref_cnt);
 
 ZEND_FUNCTION(pdr_thread_create) ;
 
@@ -216,6 +217,7 @@ ZEND_FUNCTION(pdr_window_destroy) ;
 ZEND_FUNCTION(pdr_window_send_msg) ;
 ZEND_FUNCTION(pdr_window_post_msg) ;
 ZEND_FUNCTION(pdr_window_set_transparency) ;
+ZEND_FUNCTION(pdr_window_lock_update) ;
 
 // DHTML º¯Êý
 // ------------------------
@@ -346,6 +348,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_cursor_pos, NULL)
     ZEND_FE(pdr_msgbox, NULL)
 	ZEND_FE(pdr_appbar_get_rect, NULL)
+	ZEND_FE(pdr_var_ref_cnt, NULL)
 
     ZEND_FE(pdr_thread_create, NULL)
 
@@ -375,6 +378,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_window_send_msg, NULL)
     ZEND_FE(pdr_window_post_msg, NULL)
     ZEND_FE(pdr_window_set_transparency, NULL)
+    ZEND_FE(pdr_window_lock_update, NULL)
 
 	// DHTML º¯Êý
 	// ------------------------

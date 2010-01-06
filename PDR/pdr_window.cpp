@@ -46,8 +46,10 @@ ZEND_FUNCTION(pdr_window_get_text)
 	else
 	{
 		char * psText = new char[nTextLen+1] ;
-		int nTextLen = ::GetWindowText(hWnd,psText,nTextLen) ;
-		psText[nTextLen] = '\0' ;
+		int nGetTextLen = ::GetWindowText(hWnd,psText,nTextLen) ;
+		psText[nGetTextLen] = '\0' ;
+
+		DWORD dwError = GetLastError() ;
 
 		ZVAL_STRING(pzvRet,psText,1) ;
 		delete [] psText ;
@@ -536,3 +538,26 @@ ZEND_FUNCTION(pdr_window_set_transparency)
 	}	
 }
 
+ZEND_FUNCTION(pdr_window_lock_update)
+{
+	long nWnd = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nWnd )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+	
+	if(!nWnd)
+	{
+		RETURN_BOOL(LockWindowUpdate(0))
+	}
+	else
+	{
+		HWND hWnd = (HWND)nWnd ;
+		if( !::IsWindow(hWnd) )
+		{
+			RETURN_FALSE
+		}
+
+		RETURN_BOOL(LockWindowUpdate(hWnd))
+	}
+}
