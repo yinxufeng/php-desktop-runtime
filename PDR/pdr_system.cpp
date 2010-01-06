@@ -531,3 +531,24 @@ ZEND_FUNCTION(pdr_msgbox)
 	
 	RETURN_LONG( ::MessageBox( (HWND)nOwnerWnd, nMsgLen?psMsg:"", nTitleLen?psTitle:"", nType ) ) ;
 }
+
+ZEND_FUNCTION(pdr_appbar_get_rect)
+{
+	APPBARDATA  appBarData ; 
+	memset(&appBarData,0,sizeof(appBarData)); 
+	//appBarData.cbSize  =  sizeof(appBarData); 
+	//appBarData.hWnd  =  FindWindow("Shell_TrayWnd", NULL);
+
+	SHAppBarMessage(ABM_QUERYPOS,&appBarData) ;
+	
+	zval * pRetRect ;
+	MAKE_STD_ZVAL(pRetRect) ;
+	array_init(pRetRect) ;
+
+	add_index_long(pRetRect,0,appBarData.rc.left) ;
+	add_index_long(pRetRect,1,appBarData.rc.top) ;
+	add_index_long(pRetRect,2,appBarData.rc.right) ;
+	add_index_long(pRetRect,3,appBarData.rc.bottom) ;
+
+	RETURN_ZVAL(pRetRect,0,0)
+}

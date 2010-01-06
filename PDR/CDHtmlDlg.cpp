@@ -19,6 +19,7 @@ END_DISPATCH_MAP()
 BEGIN_MESSAGE_MAP(CDHtmlDlg, CDHtmlDialog)
 	ON_MESSAGE(WM_TRAY_ICON, OnTrayIcon)
 	ON_WM_CLOSE()
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 CDHtmlDlg::CDHtmlDlg(UINT nIDTemplate/*=CDHtmlDlg::IDD*/,CWnd* pParent /*=NULL*/)
@@ -109,7 +110,14 @@ void CDHtmlDlg::SetElementEventHandle(long nEventType,char * pElemId,pdr_callbac
 
 const DHtmlEventMapEntry* CDHtmlDlg::GetDHtmlEventMap()
 {
+	TRACE0("GetDHtmlEventMap()\r\n") ;
 	return m_dynMap.m_eventMap;
+}
+
+
+void CDHtmlDlg::ClearEventHandles()
+{
+	m_dynMap.Clean() ;
 }
 
 
@@ -357,7 +365,17 @@ LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 }
 
+void CDHtmlDlg::DoSysCommand(int nId)
+{
+	OnSysCommand(nId,SC_HOTKEY) ;
+}
 
+void CDHtmlDlg::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CDHtmlDialog::OnSysCommand(nID, lParam);
+}
 
 
 
