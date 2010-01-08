@@ -314,6 +314,41 @@ ZEND_FUNCTION(pdr_dhtml_get_value)
 	RETURN_STRING( (char *)(LPCTSTR)strValue,1) ;
 }
 
+
+ZEND_FUNCTION(pdr_dhtml_get_baseurl)
+{
+	// 取得对话框指针
+	PDR_DHTML_GetDlgPtrFromResrc("r",)
+
+	if( !pDlg->GetSafeHwnd() )
+	{
+		zend_error(E_WARNING, "PDR DHTML: you must create this dialog first." );
+		RETURN_FALSE 
+	}
+	
+	IDispatch *pIDispatch = NULL;
+	HRESULT hr = pDlg->m_pBrowserApp->get_Document(&pIDispatch) ;
+	if( hr!=S_OK || !pIDispatch )
+	{
+		zend_error(E_WARNING, "PDR DHTML: can't query the IDispatch interface." );
+		RETURN_NULL()
+	}
+
+	IHTMLDocument3 * pIHTMLDocument3 = NULL ;
+	hr = pIDispatch->QueryInterface(IID_IHTMLDocument3, (void **) &pIHTMLDocument3);
+	if( hr!=S_OK || !pIHTMLDocument3 )
+	{
+		zend_error(E_WARNING, "PDR DHTML: can't query the IHTMLDocument3 interface." );
+		RETURN_NULL()
+	}
+
+	BSTR bstrBaseUrl ; 
+	pIHTMLDocument3->get_baseUrl(&bstrBaseUrl) ;
+
+	RETURN_STRING( (char *)(LPCTSTR)CString(bstrBaseUrl),1) ;
+}
+
+
 ZEND_FUNCTION(pdr_dhtml_ok)
 {
 	// 取得对话框指针

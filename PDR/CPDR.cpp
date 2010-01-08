@@ -238,6 +238,7 @@ ZEND_FUNCTION(pdr_dhtml_get_html);
 ZEND_FUNCTION(pdr_dhtml_get_text);
 ZEND_FUNCTION(pdr_dhtml_get_value);
 ZEND_FUNCTION(pdr_dhtml_call) ;
+ZEND_FUNCTION(pdr_dhtml_get_baseurl) ;
 
 ZEND_FUNCTION(pdr_dhtml_set_handle);
 ZEND_FUNCTION(pdr_dhtml_clear_handles);
@@ -400,6 +401,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_dhtml_get_text, NULL)
     ZEND_FE(pdr_dhtml_get_value, NULL)
     ZEND_FE(pdr_dhtml_call, NULL)
+    ZEND_FE(pdr_dhtml_get_baseurl, NULL)
 
     ZEND_FE(pdr_dhtml_set_handle, NULL)	
     ZEND_FE(pdr_dhtml_exec_script, NULL)
