@@ -588,3 +588,39 @@ ZEND_FUNCTION(pdr_var_ref_cnt)
 	// -1 ， 减去在当前栈中的引用计数
 	RETURN_LONG( pzVar->__refcount - 1 ) 
 }
+
+ZEND_FUNCTION(pdr_get_module_handle)
+{
+	char * psPEPath ;
+	int nPEPathLen ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &psPEPath, &nPEPathLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_LONG( (long)GetModuleHandle( nPEPathLen? (LPCTSTR)psPEPath: NULL ) );
+}
+
+ZEND_FUNCTION(pdr_load_library)
+{
+	char * psPEPath ;
+	int nPEPathLen ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &psPEPath, &nPEPathLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_LONG( (long)::LoadLibrary((LPCSTR)psPEPath) )
+}
+
+ZEND_FUNCTION(pdr_free_library)
+{
+	long nModuleHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nModuleHandle )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL( ::FreeLibrary((HMODULE)nModuleHandle) )
+}
+
