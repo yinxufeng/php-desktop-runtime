@@ -480,7 +480,7 @@ ZEND_FUNCTION(pdr_browse_folder2)
 	CFolderDialog aFolderDlg(&strRetPath, nPathLen?(LPCTSTR)psPath:NULL, nTitleLen?(LPCTSTR)psTitle:NULL) ;
 	if( aFolderDlg.DoModal()==IDOK )
 	{
-		RETURN_STRING((LPCTSTR)strRetPath,1)
+		RETURN_STRING((char*)(LPCTSTR)strRetPath,1)
 	}
 	else
 	{
