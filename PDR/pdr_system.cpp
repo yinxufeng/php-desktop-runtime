@@ -2,6 +2,8 @@
 #include "CPDR.h"
 #include "Psapi.h"
 #include "FolderDialog.h"
+#include <Winver.h>
+
 
 ZEND_FUNCTION(pdr_get_last_error)
 {
@@ -624,3 +626,31 @@ ZEND_FUNCTION(pdr_free_library)
 	RETURN_BOOL( ::FreeLibrary((HMODULE)nModuleHandle) )
 }
 
+
+ZEND_FUNCTION(pdr_file_version_info)
+{
+	char * psPEPath ;
+	int nPEPathLen ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &psPEPath, &nPEPathLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	DWORD dwSize = GetFileVersionInfoSize((LPCTSTR)psPEPath,0) ;
+	if(!dwSize)
+	{
+		RETURN_FALSE
+	}
+	
+	char * pBuffer = new char[dwSize] ;
+	GetFileVersionInfo((LPCTSTR)psPEPath,0,dwSize,pBuffer) ;
+
+	zval * pzvRet ;
+	MAKE_STD_ZVAL(pzvRet);
+	ZVAL_STRINGL(pzvRet,pBuffer,dwSize,1) ;
+	
+	delete[] pBuffer ;
+	pBuffer = NULL ;
+
+	RETURN_ZVAL(pzvRet,0,0)
+}
