@@ -5,7 +5,7 @@ ZEND_FUNCTION(pdr_rc_find)
 {
 	char *sName ;
 	long nTypeId, nNameLen, nModuleHandle, nLang=0, nSubLang=0 ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss|ll"
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls|ll"
 				, &nModuleHandle, &nTypeId
 				, &sName, &nNameLen
 				, &nLang, &nSubLang) == FAILURE )
