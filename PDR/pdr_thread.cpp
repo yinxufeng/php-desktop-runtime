@@ -128,7 +128,10 @@ pdr_thread_resrc::pdr_thread_resrc()
 	php_module.register_server_variables = php_embed_register_variables ;
 	php_module.log_message = php_embed_log_message ;
 	php_module.get_request_time = NULL ;
+	
+#ifdef PHP53
 	php_module.terminate_process = NULL ;
+#endif
 
 	//////////////////////////
 	// tsrm_ls = NULL ;
@@ -189,8 +192,9 @@ DWORD WINAPI pdr_thread_callback(LPVOID pParam)
 pThreadResrc->php_module.ini_entries = (char *)malloc(sizeof(HARDCODED_INI));
 memcpy(pThreadResrc->php_module.ini_entries, HARDCODED_INI, sizeof(HARDCODED_INI));
 
+#ifdef PHP53
 pThreadResrc->php_module.additional_functions = additional_functions ;
-
+#endif
 
 
 pThreadResrc->php_module.executable_location = NULL ;
