@@ -636,7 +636,7 @@ ZEND_FUNCTION(pdr_exe_version_info)
 	{
 		RETURN_FALSE
 	}
-	
+
 	CModuleVersion aVersionInfo ;
 	if( !aVersionInfo.GetFileVersionInfo((LPCTSTR)psFilePath) )
 	{
