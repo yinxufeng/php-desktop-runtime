@@ -2,6 +2,7 @@
 #include "CPDR.h"
 #include "Psapi.h"
 #include "FolderDialog.h"
+#include "ModulVer.h"
 #include <Winver.h>
 
 
@@ -627,30 +628,23 @@ ZEND_FUNCTION(pdr_free_library)
 }
 
 
-ZEND_FUNCTION(pdr_file_version_info)
+ZEND_FUNCTION(pdr_exe_version_info)
 {
-	char * psPEPath ;
-	int nPEPathLen ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &psPEPath, &nPEPathLen )==FAILURE )
-	{
-		RETURN_FALSE
-	}
-
-	DWORD dwSize = GetFileVersionInfoSize((LPCTSTR)psPEPath,0) ;
-	if(!dwSize)
+	char * psFilePath, * psItemName ;
+	int nFilePathLen, nItemNameLen ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &psFilePath, &nFilePathLen, &psItemName, &nItemNameLen )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 	
-	char * pBuffer = new char[dwSize] ;
-	GetFileVersionInfo((LPCTSTR)psPEPath,0,dwSize,pBuffer) ;
+	CModuleVersion aVersionInfo ;
+	if( !aVersionInfo.GetFileVersionInfo((LPCTSTR)psFilePath) )
+	{
+		DWORD dwError = ::GetLastError() ;
+		RETURN_FALSE
+	}
 
-	zval * pzvRet ;
-	MAKE_STD_ZVAL(pzvRet);
-	ZVAL_STRINGL(pzvRet,pBuffer,dwSize,1) ;
+	CString strValue = aVersionInfo.GetValue(psItemName) ;
 	
-	delete[] pBuffer ;
-	pBuffer = NULL ;
-
-	RETURN_ZVAL(pzvRet,0,0)
+	RETURN_STRING((char *)(LPCTSTR)strValue,1)
 }

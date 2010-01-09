@@ -470,6 +470,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ModulVer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_com.cpp"
 				>
 			</File>
@@ -601,6 +605,10 @@
 			</File>
 			<File
 				RelativePath=".\FolderDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModulVer.h"
 				>
 			</File>
 			<File
