@@ -189,6 +189,9 @@ ZEND_FUNCTION(pdr_get_cursor_pos) ;
 ZEND_FUNCTION(pdr_msgbox) ;
 ZEND_FUNCTION(pdr_appbar_get_rect) ;
 ZEND_FUNCTION(pdr_var_ref_cnt);
+ZEND_FUNCTION(pdr_get_module_handle) ;
+ZEND_FUNCTION(pdr_load_library) ;
+ZEND_FUNCTION(pdr_free_library) ;
 
 ZEND_FUNCTION(pdr_thread_create) ;
 
@@ -318,6 +321,12 @@ ZEND_FUNCTION(pdr_reg_flush) ;
 
 // Win32资源 函数
 // ------------------------
+ZEND_FUNCTION(pdr_rc_find) ;
+ZEND_FUNCTION(pdr_rc_load) ;
+ZEND_FUNCTION(pdr_rc_size) ;
+ZEND_FUNCTION(pdr_rc_lock) ;
+ZEND_FUNCTION(pdr_rc_read) ;
+
 ZEND_FUNCTION(pdr_rc_filetype_icon) ;
 ZEND_FUNCTION(pdr_rc_save_icon) ;
 
@@ -350,8 +359,11 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_get_php_path, NULL)
     ZEND_FE(pdr_get_cursor_pos, NULL)
     ZEND_FE(pdr_msgbox, NULL)
-	ZEND_FE(pdr_appbar_get_rect, NULL)
 	ZEND_FE(pdr_var_ref_cnt, NULL)
+	ZEND_FE(pdr_appbar_get_rect, NULL)
+	ZEND_FE(pdr_get_module_handle, NULL)
+	ZEND_FE(pdr_load_library, NULL)
+	ZEND_FE(pdr_free_library, NULL)
 
     ZEND_FE(pdr_thread_create, NULL)
 
@@ -483,6 +495,12 @@ zend_function_entry pdr_dhtml_functions[] = {
 
 	// Win32资源 函数
 	// ------------------------
+    ZEND_FE(pdr_rc_find, NULL)
+    ZEND_FE(pdr_rc_load, NULL)
+    ZEND_FE(pdr_rc_size, NULL)
+    ZEND_FE(pdr_rc_lock, NULL)
+    ZEND_FE(pdr_rc_read, NULL)
+
     ZEND_FE(pdr_rc_filetype_icon, NULL)
     ZEND_FE(pdr_rc_save_icon, NULL)
 

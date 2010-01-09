@@ -1,6 +1,145 @@
 #include "stdafx.h"
 
 
+ZEND_FUNCTION(pdr_rc_find)
+{
+	char *sName ;
+	long nTypeId, nNameLen, nModuleHandle, nLang=0, nSubLang=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss|ll"
+				, &nModuleHandle, &nTypeId
+				, &sName, &nNameLen
+				, nLang, &nSubLang) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	if( !nLang && !nSubLang )
+	{
+		HRSRC hRsrc ;
+		if( hRsrc=::FindResource((HMODULE)nModuleHandle,sName,MAKEINTRESOURCE(nTypeId)) )
+		{
+			RETURN_LONG((long)hRsrc)
+		}
+
+		else
+		{
+			RETURN_FALSE
+		}
+	}
+
+	else
+	{
+		HRSRC hRsrc ;
+		if( hRsrc=::FindResourceEx(
+				(HMODULE)nModuleHandle
+				, MAKEINTRESOURCE(nTypeId)
+				, sName
+				, MAKELANGID(nLang,nSubLang)
+		))
+		{
+			RETURN_LONG((long)hRsrc)
+		}
+
+		else
+		{
+			RETURN_FALSE
+		}
+	}
+
+}
+
+
+ZEND_FUNCTION(pdr_rc_load)
+{
+	long nModuleHandle, nRsrcHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &nModuleHandle, &nRsrcHandle ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HGLOBAL hGlobal = LoadResource((HMODULE)nModuleHandle,(HRSRC)nRsrcHandle) ;
+	if(!hGlobal)
+	{
+		RETURN_FALSE
+	}
+
+	else
+	{
+		RETURN_LONG((long)hGlobal)
+	}
+}
+
+ZEND_FUNCTION(pdr_rc_size)
+{
+	long nModuleHandle, nRsrcHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &nModuleHandle, &nRsrcHandle ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	DWORD nSize = SizeofResource((HMODULE)nModuleHandle,(HRSRC)nRsrcHandle) ;
+	
+	if(nSize)
+	{
+		RETURN_LONG((long)nSize)
+	}
+	else
+	{
+		RETURN_FALSE
+	}
+}
+
+ZEND_FUNCTION(pdr_rc_lock)
+{
+	long nRsrcHandle ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nRsrcHandle ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	void * pRsrc = LockResource((HRSRC)nRsrcHandle) ;
+	
+	if(pRsrc)
+	{
+		RETURN_LONG((long)pRsrc)
+	}
+	else
+	{
+		RETURN_FALSE
+	}
+}
+
+ZEND_FUNCTION(pdr_rc_read)
+{
+	long nRsrcPtr, nPos, nLength ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lll", &nRsrcPtr, &nPos, &nLength ) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	char * pBuffer = new char[nLength] ;
+	char * pRsrc = (char *)nRsrcPtr ;
+	pRsrc+= nPos ;
+
+	::CopyMemory(pBuffer,pRsrc,nLength) ;
+
+	zval * pzvRet ;
+	MAKE_STD_ZVAL(pzvRet);
+	ZVAL_STRINGL(pzvRet,pBuffer,nLength,1) ;
+
+	delete[] pBuffer ;
+	pRsrc = NULL ;
+
+	RETURN_ZVAL(pzvRet,0,0)
+}
+
+
+
+
+
+// icon ////////////////////////////////
+
+
 ZEND_FUNCTION(pdr_rc_filetype_icon)
 {
 	char * sFile ;
