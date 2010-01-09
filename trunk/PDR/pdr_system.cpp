@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CPDR.h"
 #include "Psapi.h"
+#include "FolderDialog.h"
 
 ZEND_FUNCTION(pdr_get_last_error)
 {
@@ -383,7 +384,7 @@ ZEND_FUNCTION(pdr_browse_file)
 }
 
 LPITEMIDLIST GetIDListFromPath(LPCTSTR lpszPath)  
-{  
+{
 	LPITEMIDLIST pidl = NULL;  
 	LPSHELLFOLDER pDesktopFolder;  
 	OLECHAR szOleChar[MAX_PATH];    
@@ -414,6 +415,7 @@ LPITEMIDLIST GetIDListFromPath(LPCTSTR lpszPath)
 
 	return   NULL;  
 }
+
 ZEND_FUNCTION(pdr_browse_folder)
 {
 	char *psRoot, * psTitle ;
@@ -463,6 +465,28 @@ ZEND_FUNCTION(pdr_browse_folder)
 	RETURN_STRING(pszPath,1) ;
 }
 
+ZEND_FUNCTION(pdr_browse_folder2)
+{
+	char *psPath, * psTitle ;
+	long nPathLen=0, nTitleLen=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|ss",
+				&psPath, &nPathLen
+				, &psTitle, &nTitleLen) == FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	CString strRetPath ;
+	CFolderDialog aFolderDlg(&strRetPath, nPathLen?(LPCTSTR)psPath:NULL, nTitleLen?(LPCTSTR)psTitle:NULL) ;
+	if( aFolderDlg.DoModal()==IDOK )
+	{
+		RETURN_STRING((LPCTSTR)strRetPath,1)
+	}
+	else
+	{
+		RETURN_NULL()
+	}
+}
 
 
 ZEND_FUNCTION(pdr_get_locale)
