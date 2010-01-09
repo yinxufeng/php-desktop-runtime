@@ -331,7 +331,7 @@ ZEND_FUNCTION(pdr_dhtml_get_baseurl)
 	if( hr!=S_OK || !pIDispatch )
 	{
 		zend_error(E_WARNING, "PDR DHTML: can't query the IDispatch interface." );
-		RETURN_NULL()
+		RETURN_FALSE
 	}
 
 	IHTMLDocument3 * pIHTMLDocument3 = NULL ;
@@ -339,11 +339,22 @@ ZEND_FUNCTION(pdr_dhtml_get_baseurl)
 	if( hr!=S_OK || !pIHTMLDocument3 )
 	{
 		zend_error(E_WARNING, "PDR DHTML: can't query the IHTMLDocument3 interface." );
-		RETURN_NULL()
+		RETURN_FALSE
 	}
 
 	BSTR bstrBaseUrl ; 
-	pIHTMLDocument3->get_baseUrl(&bstrBaseUrl) ;
+	hr = pIHTMLDocument3->get_baseUrl(&bstrBaseUrl) ;
+	if( hr!=E_NOTIMPL )
+	{
+		zend_error(E_WARNING, "PDR DHTML: IHTMLDocument3::baseUrl not implements" );
+		RETURN_FALSE
+	}
+	else if( hr!=S_OK )
+	{
+		zend_error(E_WARNING, "PDR DHTML: can't get the base url for html document." );
+		RETURN_FALSE
+	}
+
 
 	RETURN_STRING( (char *)(LPCTSTR)CString(bstrBaseUrl),1) ;
 }
