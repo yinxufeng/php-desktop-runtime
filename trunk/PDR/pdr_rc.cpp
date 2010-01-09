@@ -8,7 +8,7 @@ ZEND_FUNCTION(pdr_rc_find)
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss|ll"
 				, &nModuleHandle, &nTypeId
 				, &sName, &nNameLen
-				, nLang, &nSubLang) == FAILURE )
+				, &nLang, &nSubLang) == FAILURE )
 	{
 		RETURN_FALSE
 	}
