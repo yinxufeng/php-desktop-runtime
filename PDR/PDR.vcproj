@@ -466,6 +466,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FileDialogEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FolderDialog.cpp"
 				>
 			</File>
@@ -601,6 +605,10 @@
 			</File>
 			<File
 				RelativePath=".\define_const_vkey.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FileDialogEx.h"
 				>
 			</File>
 			<File
