@@ -19,7 +19,7 @@ CFileDialogEx::CFileDialogEx(
 		DWORD dwSize ,
 		LPCTSTR psTitle )
 	: CFileDialog(bOpenFileDialog,lpszDefExt,lpszFileName,dwFlags,lpszFilter,pParentWnd,dwSize) 
-	//, m_psTitle(psTitle)
+	, m_psTitle(psTitle)
 {}
 
 void CFileDialogEx::OnInitDone()
