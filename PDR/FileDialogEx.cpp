@@ -26,7 +26,7 @@ void CFileDialogEx::OnInitDone()
 {
 	if(m_psTitle)
 	{
-		SetWindowText(m_psTitle) ;
+		GetParent()->SetWindowText(m_psTitle) ;
 	}
 
 	CFileDialog::OnInitDone() ;
