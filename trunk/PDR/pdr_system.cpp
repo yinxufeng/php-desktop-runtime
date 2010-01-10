@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CPDR.h"
 #include "Psapi.h"
+#include "FileDialogEx.h"
 #include "FolderDialog.h"
 #include "ModulVer.h"
 #include <Winver.h>
@@ -330,14 +331,15 @@ ZEND_FUNCTION(pdr_get_system_path)
 ZEND_FUNCTION(pdr_browse_file)
 {
 	bool bOpenFileDialog = true ;
-	char * psDefExt, * psFileName, * psFilter ;
-	long nDefExtLen=0, nFileNameLen=0, nFilterLen=0, nFlags = OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT, nParentWnd=0 ;
+	char * psDefExt, * psFileName, * psFilter, * psDlgTitle ;
+	long nDefExtLen=0, nFileNameLen=0, nFilterLen=0, nFlags = OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT, nParentWnd=0, nDlgTitleLen=0 ;
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bsslsl",
 				&bOpenFileDialog 
-				, &psDefExt, &nDefExtLen
-				, &psFileName, &nFileNameLen
-				, &nFlags
 				, &psFilter, &nFilterLen
+				, &psFileName, &nFileNameLen
+				, &psDlgTitle, &nDlgTitleLen
+				, &nFlags
+				, &psDefExt, &nDefExtLen
 				, &nParentWnd) == FAILURE )
 	{
 		RETURN_FALSE
@@ -357,7 +359,7 @@ ZEND_FUNCTION(pdr_browse_file)
 		pParentWnd->Attach((HWND)nParentWnd) ;
 	}
 
-	CFileDialog aDlg(
+	CFileDialogEx aDlg(
 		bOpenFileDialog
 		, nDefExtLen? psDefExt: NULL
 		, nFileNameLen? psFileName: NULL
@@ -365,6 +367,7 @@ ZEND_FUNCTION(pdr_browse_file)
 		, nFilterLen? psFilter: NULL
 		, pParentWnd
 		, 0
+		, nDlgTitleLen? psDlgTitle: NULL
 	) ;
 
 	if(pParentWnd)

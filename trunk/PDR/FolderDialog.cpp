@@ -22,7 +22,7 @@ WNDPROC CFolderDialog::m_wndProc = NULL;
 // Return type		: 
 // Argument         : CString* pPath ; represent string where selected folder wil be saved
 CFolderDialog::CFolderDialog(CString* pRetPath,LPCTSTR psPath,LPCTSTR psTitle)
-	: CFileDialog(TRUE, NULL, psPath)
+: CFileDialog(TRUE, "_____|....____[#@$%^]_____||", psPath)
 	, m_psTitle(psTitle)
 	, m_pPath(pRetPath)
 {}
