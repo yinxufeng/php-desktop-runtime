@@ -332,7 +332,7 @@ ZEND_FUNCTION(pdr_browse_file)
 	bool bOpenFileDialog = true ;
 	char * psDefExt, * psFileName, * psFilter, * psDlgTitle ;
 	long nDefExtLen=0, nFileNameLen=0, nFilterLen=0, nFlags = OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT, nParentWnd=0, nDlgTitleLen=0 ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bsslsl",
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bssslsl",
 				&bOpenFileDialog 
 				, &psFilter, &nFilterLen
 				, &psFileName, &nFileNameLen
