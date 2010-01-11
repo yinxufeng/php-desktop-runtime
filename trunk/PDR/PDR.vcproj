@@ -25,6 +25,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="&quot;%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe&quot; $(SolutionDir)  $(ProjectDir)define_const.tsvn_template.h  $(ProjectDir)define_const.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
