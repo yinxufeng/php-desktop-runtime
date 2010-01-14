@@ -46,7 +46,7 @@ ZEND_FUNCTION(pdr_window_get_text)
 	else
 	{
 		char * psText = new char[nTextLen+1] ;
-		int nGetTextLen = ::GetWindowText(hWnd,psText,nTextLen) ;
+		int nGetTextLen = ::GetWindowText(hWnd,psText,nTextLen+1) ;
 		psText[nGetTextLen] = '\0' ;
 
 		DWORD dwError = GetLastError() ;
