@@ -443,6 +443,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\php_pdr_5.3.x_nts_vc8.dll&quot;  &quot;$(SolutionDir)..\..\JPDR\php-5.3.0-nts\ext&quot;&#x0D;&#x0A;copy &quot;$(OutDir)\php_pdr_5.3.x_nts_vc8.dll&quot;  &quot;$(SolutionDir)..\..\..\ga360\truck\alone\bin\ext\php_pdr.dll&quot;"
 			/>
 		</Configuration>
 	</Configurations>
