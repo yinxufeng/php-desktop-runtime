@@ -9,7 +9,7 @@
 
 ZEND_FUNCTION(pdr_get_last_error)
 {
-	RETURN_LONG( ::GetLastError() )
+	RETURN_LONG( _pdr_get_global_last_error() )
 }
 
 ZEND_FUNCTION(pdr_execute)
@@ -58,16 +58,20 @@ ZEND_FUNCTION(pdr_get_process_filename)
 
 	HANDLE hProcess ;
 	HMODULE hModule ;
-	hProcess = OpenProcess( PROCESS_ALL_ACCESS, FALSE, nProcessId );
+	hProcess = OpenProcess( PROCESS_QUERY_INFORMATION|PROCESS_VM_READ , TRUE, nProcessId );
 	if(!hProcess)
 	{
-		zend_error(E_WARNING, "PDR: paramter 1 is not a valid process handle." );
+		set_last_error
+
+		zend_error(E_WARNING, "PDR: paramter 1 is not a valid process id." );
 		RETURN_FALSE
 	}
 
 	DWORD cbNeeded ;
 	if(!EnumProcessModules( hProcess, &hModule, sizeof(hModule), &cbNeeded))
 	{
+		set_last_error
+
 		CloseHandle( hProcess );
 		RETURN_FALSE
 	}
@@ -75,6 +79,8 @@ ZEND_FUNCTION(pdr_get_process_filename)
 	char psProcessName[MAX_PATH] = "unknown" ;
 	if(!GetModuleFileNameEx( hProcess, hModule, psProcessName, MAX_PATH))
 	{
+		set_last_error
+
 		CloseHandle( hProcess );
 		RETURN_FALSE
 	}
@@ -243,7 +249,16 @@ ZEND_FUNCTION(pdr_create_mutex)
 		RETURN_FALSE
 	}
 
-	RETURN_LONG((long)nHandle)
+	if( nErr )
+	{
+		set_last_error
+		RETURN_FALSE
+	}
+
+	else
+	{
+		RETURN_LONG((long)nHandle)
+	}
 	// RETURN_BOOL( nErr!=ERROR_ALREADY_EXISTS )
 }
 
@@ -642,7 +657,7 @@ ZEND_FUNCTION(pdr_exe_version_info)
 	CModuleVersion aVersionInfo ;
 	if( !aVersionInfo.GetFileVersionInfo((LPCTSTR)psFilePath) )
 	{
-		DWORD dwError = ::GetLastError() ;
+		set_last_error
 		RETURN_FALSE
 	}
 

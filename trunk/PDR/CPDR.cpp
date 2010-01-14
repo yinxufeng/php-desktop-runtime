@@ -37,6 +37,11 @@ int _pdr_get_resrc_proc()
 int _pdr_get_resrc_pipe()
 { return resrc_pdr_pipe ; }
 
+DWORD * _pdr_get_global_last_error_ptr()
+{ return & pdr_global_last_error ; }
+DWORD _pdr_get_global_last_error()
+{ return pdr_global_last_error ; }
+
 
 
 
@@ -125,6 +130,9 @@ void _php_pdr_pipe_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 // 初始化函数
 ZEND_MINIT_FUNCTION(pdr_init)
 {
+	DWORD * pLastError = _pdr_get_global_last_error_ptr() ;
+	*pLastError = 0 ;
+
 	// 注册资源类型
 	resrc_pdr_dhtml_dlg = zend_register_list_destructors_ex(_php_pdr_dhtml_destruction_handler, NULL, resrc_name_pdr_dhtml_dlg, module_number);
 	resrc_pdr_thread_window = zend_register_list_destructors_ex(_php_pdr_thread_destruction_handler, NULL, resrc_name_pdr_thread_window, module_number);

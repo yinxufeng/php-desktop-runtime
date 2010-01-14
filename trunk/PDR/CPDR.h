@@ -57,6 +57,18 @@ int _pdr_get_resrc_pipe() ;
 
 
 
+static DWORD pdr_global_last_error ;
+DWORD _pdr_get_global_last_error() ;
+DWORD * _pdr_get_global_last_error_ptr() ;
+
+#define set_last_error	DWORD __nLastError = ::GetLastError() ;\
+	if(__nLastError)\
+	{\
+		DWORD * __pLastError = _pdr_get_global_last_error_ptr() ; \
+		*__pLastError = __nLastError ;\
+	}
+
+
 typedef struct _pdr_callback_handle
 {
 	HashTable * pFuncTable ;
