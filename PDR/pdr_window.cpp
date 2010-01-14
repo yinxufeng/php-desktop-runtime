@@ -49,7 +49,7 @@ ZEND_FUNCTION(pdr_window_get_text)
 		int nGetTextLen = ::GetWindowText(hWnd,psText,nTextLen+1) ;
 		psText[nGetTextLen] = '\0' ;
 
-		DWORD dwError = GetLastError() ;
+		set_last_error
 
 		ZVAL_STRING(pzvRet,psText,1) ;
 		delete [] psText ;
@@ -461,7 +461,7 @@ ZEND_FUNCTION(pdr_window_send_msg)
 
 	if(!::SendMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam))
 	{
-		DWORD dwError = GetLastError() ;
+		set_last_error
 		RETURN_FALSE
 	}
 	else
@@ -487,7 +487,7 @@ ZEND_FUNCTION(pdr_window_post_msg)
 
 	if(!::PostMessage(hWnd,(UINT)nMsg,(WPARAM)wParam,(LPARAM)lParam))
 	{
-		DWORD dwError = GetLastError() ;
+		set_last_error
 		RETURN_FALSE
 	}
 	else
