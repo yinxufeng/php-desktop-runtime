@@ -55,7 +55,7 @@ ZEND_FUNCTION(pdr_window_get_text)
 		delete [] psText ;
 	}
 
-	RETURN_ZVAL(pzvRet,0,0)
+	RETURN_ZVAL(pzvRet,1,0)
 }
 
 ZEND_FUNCTION(pdr_window_get_long)
