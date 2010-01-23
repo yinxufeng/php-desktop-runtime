@@ -59,10 +59,8 @@ int _pdr_get_resrc_pipe() ;
 
 static DWORD pdr_global_last_error ;
 DWORD _pdr_get_global_last_error() ;
-DWORD * _pdr_get_global_last_error_ptr() ;
-
-#define set_last_error	DWORD * __pLastError = _pdr_get_global_last_error_ptr() ; \
-		*__pLastError = ::GetLastError() ;\
+void _pdr_set_global_last_error(DWORD nError) ;
+#define set_last_error	_pdr_set_global_last_error(::GetLastError()) ;
 
 
 typedef struct _pdr_callback_handle

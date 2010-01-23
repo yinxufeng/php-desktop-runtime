@@ -61,7 +61,7 @@ ZEND_FUNCTION(pdr_get_process_filename)
 	// 提升当前进程的权限
 	if(bPrivilege)
 	{
-		BOOL bResult = TRUE;
+		DWORD dwError ;
 		HANDLE hToken=INVALID_HANDLE_VALUE;
 		TOKEN_PRIVILEGES TokenPrivileges;
 
@@ -74,13 +74,16 @@ ZEND_FUNCTION(pdr_get_process_filename)
 		TokenPrivileges.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED ;
 
 		LookupPrivilegeValue(NULL,SE_DEBUG_NAME,&TokenPrivileges.Privileges[0].Luid);
+		dwError = GetLastError() ;
 		AdjustTokenPrivileges(hToken,FALSE,&TokenPrivileges,sizeof(TOKEN_PRIVILEGES),NULL,NULL);
+		dwError = GetLastError() ;
+		CloseHandle(hToken);
+
 		if(GetLastError() != ERROR_SUCCESS)
 		{
 			set_last_error
-			bResult = FALSE;
+			RETURN_FALSE
 		}
-		CloseHandle(hToken);
 	}
 
 
