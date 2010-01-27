@@ -395,12 +395,10 @@ ZEND_FUNCTION(pdr_proc_enum)
 			}
 		}
 
-		
 		pzvProc->refcount__gc -- ;
 		add_index_zval(pzvRet,i,pzvProc) ;
 	}
 
 	pzvRet->refcount__gc -- ;
-	
 	RETURN_ZVAL(pzvRet,1,0) ;
 }

@@ -39,6 +39,11 @@ ZEND_FUNCTION(pdr_file_create)
 	}
 }
 
+ZEND_FUNCTION(pdr_file_get_handle)
+{
+	PDR_GetWin32FileHandleFromResrc("r",)
+	RETURN_LONG((long)pFileHandle->hFile) ;
+}
 
 ZEND_FUNCTION(pdr_file_write)
 {
