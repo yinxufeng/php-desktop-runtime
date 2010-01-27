@@ -87,7 +87,8 @@ ZEND_FUNCTION(pdr_adjust_token_privileges)
 ZEND_FUNCTION(pdr_get_process_filename)
 {
 	DWORD nProcessId = 0 ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nProcessId) == FAILURE )
+	bool bFullPath = true ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|b", &nProcessId, &bFullPath) == FAILURE )
 	{
 		RETURN_FALSE
 	}
@@ -113,7 +114,18 @@ ZEND_FUNCTION(pdr_get_process_filename)
 	}
 
 	char psProcessName[MAX_PATH] = "unknown" ;
-	if(!GetModuleFileNameEx( hProcess, hModule, psProcessName, MAX_PATH))
+	BOOL bSuc = FALSE ;
+	
+	if(bFullPath)
+	{
+		bSuc = ::GetModuleFileNameEx( hProcess, hModule, psProcessName, MAX_PATH) ;
+	}
+	else
+	{
+		bSuc = ::GetModuleBaseName(hProcess, hModule, psProcessName, MAX_PATH) ;
+	}
+
+	if(!bSuc)
 	{
 		set_last_error
 

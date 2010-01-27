@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CPDR.h"
 #include "pdr_proc_pipe.h"
+#include <Psapi.h>
 
 
 ZEND_FUNCTION(pdr_pipe_create)
@@ -256,4 +257,29 @@ ZEND_FUNCTION(pdr_proc_exit_code)
 	{
 		RETURN_FALSE
 	}
+}
+
+
+
+ZEND_FUNCTION(pdr_enum_procs)
+{
+	DWORD pdwProcesses[1024], dwNeeded;
+	if( !EnumProcesses(pdwProcesses,sizeof(pdwProcesses),&dwNeeded) )
+	{
+		set_last_error
+		RETURN_NULL() ;
+	}
+
+	zval * pzvRet ;
+	MAKE_STD_ZVAL(pzvRet) ;
+	array_init(pzvRet) ;
+
+	DWORD nProcessCount = dwNeeded / sizeof(DWORD);
+	for(unsigned int i=0;i<nProcessCount;i++)
+	{
+		add_index_long(pzvRet,0,pdwProcesses[i]) ;
+	}
+
+	
+	RETURN_ZVAL(pzvRet,1,0) ;
 }
