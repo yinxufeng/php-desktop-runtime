@@ -260,9 +260,68 @@ ZEND_FUNCTION(pdr_proc_exit_code)
 }
 
 
-
-ZEND_FUNCTION(pdr_enum_procs)
+DWORD GetCmdLine(HANDLE hProc,TCHAR* pCmdLine,DWORD dwBufLen) 
 {
+	#define BUFFER_LEN    512        //reading buffer for the commandline
+     
+    DWORD dwRet = -1; 
+    DWORD dwAddr = *(DWORD*)((DWORD)GetCommandLine + 1);//第2个字节开始才是我们要读的地址
+    TCHAR tcBuf[BUFFER_LEN] = {0}; 
+    DWORD dwRead = 0; 
+     
+    //判断平台
+    DWORD dwVer = GetVersion(); 
+    try
+    { 
+        if(dwVer < 0x80000000)        // Windows NT/2000/XP
+        { 
+            if(ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) 
+            { 
+                if(ReadProcessMemory(hProc,(LPVOID)dwAddr,tcBuf,BUFFER_LEN,&dwRead)) 
+                { 
+                    _tcsncpy(pCmdLine,tcBuf,dwBufLen);    //最好检查一下dwRead和dwBufLen的大小，使用较小的那个
+                    dwRet = 0; 
+                }
+            }
+        }
+        else                        // Windows 95/98/Me    and Win32s
+        {
+            while(true)                //使用while是为了出错时方便跳出循环
+            {
+                if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) break; 
+                if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) break; 
+
+                if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0xC0),tcBuf,BUFFER_LEN,&dwRead)) break; 
+                if(*tcBuf == 0) 
+                { 
+                    if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0x40),&dwAddr,4,&dwRead)) break; 
+                    if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0x8),&dwAddr,4,&dwRead)) break; 
+                    if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,tcBuf,BUFFER_LEN,&dwRead)) break; 
+                } 
+                 
+                _tcsncpy(pCmdLine,tcBuf,dwBufLen);    //最好检查一下dwRead和dwBufLen的大小，使用较小的那个
+                dwRet = 0; 
+                break; 
+            } 
+        } 
+    } 
+    catch(...) 
+    { 
+        dwRet = ERROR_INVALID_ACCESS;    //exception
+    }
+     
+	DWORD dwErr = ::GetLastError() ;
+    return dwRet; 
+}
+
+ZEND_FUNCTION(pdr_proc_enum)
+{
+	long nReturnType = PDR_ENUM_PROCS_ID ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &nReturnType )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
 	DWORD pdwProcesses[1024], dwNeeded;
 	if( !EnumProcesses(pdwProcesses,sizeof(pdwProcesses),&dwNeeded) )
 	{
@@ -277,9 +336,71 @@ ZEND_FUNCTION(pdr_enum_procs)
 	DWORD nProcessCount = dwNeeded / sizeof(DWORD);
 	for(unsigned int i=0;i<nProcessCount;i++)
 	{
-		add_index_long(pzvRet,0,pdwProcesses[i]) ;
+		zval * pzvProc ;
+		MAKE_STD_ZVAL(pzvProc) ;
+		array_init(pzvProc) ;
+
+		// 填入进程id
+		if(nReturnType&PDR_ENUM_PROCS_ID)
+		{
+			add_assoc_long(pzvProc,"id",pdwProcesses[i]) ;
+		}
+
+		// 打开进程，取得进程跟详细的内容
+		if(nReturnType>PDR_ENUM_PROCS_ID)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION|PROCESS_VM_READ,FALSE,pdwProcesses[i]) ;
+			if (hProcess)
+			{
+				HMODULE hModule;
+				DWORD nModuleNeeded;
+
+				// 枚举当前进程调用的所有模块
+				if ( EnumProcessModules(hProcess, &hModule, sizeof(hModule), &nModuleNeeded) )
+				{
+					// 获得并保存进程的名字
+					if(nReturnType&PDR_ENUM_PROCS_FILENAME)
+					{
+						char szName[MAX_PATH] ;
+						GetModuleBaseName(hProcess, hModule, szName, sizeof(szName));
+						add_assoc_string(pzvProc,"filename",szName,1) ;
+					}
+
+					// 获得并保存进程的名字
+					if(nReturnType&PDR_ENUM_PROCS_FULLPATH)
+					{
+						char szName[MAX_PATH] ;
+						GetModuleFileNameEx(hProcess, hModule, szName, sizeof(szName));
+						add_assoc_string(pzvProc,"path",szName,1) ;
+					}
+					
+					// 获得并保存进程的名字
+					/*if(nReturnType&PDR_ENUM_PROCS_CL)
+					{
+						char szCl[MAX_PATH] ;
+						GetCmdLine(hProcess,szCl,MAX_PATH) ;
+						add_assoc_string(pzvProc,"cl",szCl,1) ;
+					}*/
+				}
+				else
+				{
+					set_last_error
+				}
+
+				CloseHandle(hProcess);
+			}
+			else
+			{
+				set_last_error
+			}
+		}
+
+		
+		pzvProc->refcount__gc -- ;
+		add_index_zval(pzvRet,i,pzvProc) ;
 	}
 
+	pzvRet->refcount__gc -- ;
 	
 	RETURN_ZVAL(pzvRet,1,0) ;
 }

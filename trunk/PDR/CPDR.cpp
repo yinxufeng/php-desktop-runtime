@@ -315,6 +315,8 @@ ZEND_FUNCTION(pdr_proc_get_tread_id) ;
 ZEND_FUNCTION(pdr_proc_terminate) ;
 ZEND_FUNCTION(pdr_proc_exit_code) ;
 
+ZEND_FUNCTION(pdr_proc_enum) ;
+
 // Windows注册表 函数
 // ------------------------
 ZEND_FUNCTION(pdr_reg_create) ;
@@ -490,6 +492,8 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_proc_terminate, NULL)
     ZEND_FE(pdr_proc_exit_code, NULL)
 
+    ZEND_FE(pdr_proc_enum, NULL)
+	
 
 	// Windows注册表 函数
 	// ------------------------

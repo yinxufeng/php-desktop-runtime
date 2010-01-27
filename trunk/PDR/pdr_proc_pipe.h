@@ -49,3 +49,8 @@ typedef struct _pdr_pipe_handle
 	}
 
 
+#define PDR_ENUM_PROCS_ID 1
+#define PDR_ENUM_PROCS_FULLPATH 2
+#define PDR_ENUM_PROCS_FILENAME 4
+#define PDR_ENUM_PROCS_CL 8
+
