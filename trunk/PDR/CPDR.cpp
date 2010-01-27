@@ -286,6 +286,7 @@ ZEND_FUNCTION(pdr_menu_item_id) ;
 // 文件操/串口 操作函数
 // ------------------------
 ZEND_FUNCTION(pdr_file_create) ;
+ZEND_FUNCTION(pdr_file_get_handle) ;
 ZEND_FUNCTION(pdr_file_write) ;
 ZEND_FUNCTION(pdr_file_read) ;
 ZEND_FUNCTION(pdr_file_close) ;
@@ -463,6 +464,7 @@ zend_function_entry pdr_dhtml_functions[] = {
 	// 文件操/串口 操作函数
 	// ------------------------
     ZEND_FE(pdr_file_create, NULL)
+    ZEND_FE(pdr_file_get_handle, NULL)
     ZEND_FE(pdr_file_read, NULL)
     ZEND_FE(pdr_file_write, NULL)
     ZEND_FE(pdr_file_close, NULL)
