@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CPDR.h"
-#include "Psapi.h"
+#include <Psapi.h>
 #include "FileDialogEx.h"
 #include "FolderDialog.h"
 #include "ModulVer.h"
@@ -48,45 +48,49 @@ ZEND_FUNCTION(pdr_execute)
 }
 
 
-ZEND_FUNCTION(pdr_get_process_filename)
+
+ZEND_FUNCTION(pdr_adjust_token_privileges)
 {
-	DWORD nProcessId = 0 ;
-	bool bPrivilege = false ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|b", &nProcessId, &bPrivilege) == FAILURE )
+	DWORD nPrivilegesId = TOKEN_QUERY|TOKEN_READ|TOKEN_ADJUST_PRIVILEGES ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &nPrivilegesId ) == FAILURE )
 	{
 		RETURN_FALSE
 	}
-
 	
-	// 提升当前进程的权限
-	if(bPrivilege)
+	DWORD dwError ;
+	HANDLE hToken=INVALID_HANDLE_VALUE;
+	TOKEN_PRIVILEGES TokenPrivileges;
+
+	if(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY|TOKEN_READ|TOKEN_ADJUST_PRIVILEGES,&hToken) == 0)
 	{
-		DWORD dwError ;
-		HANDLE hToken=INVALID_HANDLE_VALUE;
-		TOKEN_PRIVILEGES TokenPrivileges;
-
-		if(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY|TOKEN_READ|TOKEN_ADJUST_PRIVILEGES,&hToken) == 0)
-		{
-			set_last_error
-			RETURN_FALSE
-		}
-		TokenPrivileges.PrivilegeCount           = 1;
-		TokenPrivileges.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED ;
-
-		LookupPrivilegeValue(NULL,SE_DEBUG_NAME,&TokenPrivileges.Privileges[0].Luid);
-		dwError = GetLastError() ;
-		AdjustTokenPrivileges(hToken,FALSE,&TokenPrivileges,sizeof(TOKEN_PRIVILEGES),NULL,NULL);
-		dwError = GetLastError() ;
-		CloseHandle(hToken);
-
-		if(GetLastError() != ERROR_SUCCESS)
-		{
-			set_last_error
-			RETURN_FALSE
-		}
+		set_last_error
+		RETURN_FALSE
 	}
+	TokenPrivileges.PrivilegeCount           = 1;
+	TokenPrivileges.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED ;
 
+	LookupPrivilegeValue(NULL,SE_DEBUG_NAME,&TokenPrivileges.Privileges[0].Luid);
+	dwError = GetLastError() ;
+	AdjustTokenPrivileges(hToken,FALSE,&TokenPrivileges,sizeof(TOKEN_PRIVILEGES),NULL,NULL);
+	dwError = GetLastError() ;
+	CloseHandle(hToken);
 
+	if(GetLastError() != ERROR_SUCCESS)
+	{
+		set_last_error
+		RETURN_FALSE
+	}
+		
+	RETURN_TRUE
+}
+
+ZEND_FUNCTION(pdr_get_process_filename)
+{
+	DWORD nProcessId = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nProcessId) == FAILURE )
+	{
+		RETURN_FALSE
+	}
 
 	HANDLE hProcess ;
 	HMODULE hModule ;

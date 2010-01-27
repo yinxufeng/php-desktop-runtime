@@ -5,14 +5,24 @@
 
 ZEND_FUNCTION(pdr_pipe_create)
 {
+	long nReadHandle=0, nWriteHandle=0  ;
 	long nSize = 10240 ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &nSize )==FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|lll", &nReadHandle,&nWriteHandle,&nSize )==FAILURE )
 	{
 		RETURN_FALSE
 	}
 
 	pdr_pipe_handle * pPipe = new pdr_pipe_handle() ;
+	if(!nReadHandle)
+	{
+		pPipe->hRead = (HANDLE)nReadHandle ;
+	}
+	if(!nWriteHandle)
+	{
+		pPipe->hWrite = (HANDLE)nWriteHandle ;
+	}
 	pPipe->nSize = nSize ;
+
 
 	SECURITY_ATTRIBUTES saAttr;
 	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
