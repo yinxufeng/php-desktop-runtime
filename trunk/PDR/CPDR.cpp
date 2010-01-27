@@ -175,6 +175,7 @@ ZEND_MSHUTDOWN_FUNCTION(pdr_shutdown)
 // ------------------------
 ZEND_FUNCTION(pdr_get_last_error);
 ZEND_FUNCTION(pdr_execute);
+ZEND_FUNCTION(pdr_adjust_token_privileges) ;
 ZEND_FUNCTION(pdr_get_process_filename);
 ZEND_FUNCTION(pdr_pump_msg);
 ZEND_FUNCTION(pdr_peek_msg);
@@ -348,6 +349,7 @@ zend_function_entry pdr_dhtml_functions[] = {
 	// ------------------------
     ZEND_FE(pdr_get_last_error, NULL)
     ZEND_FE(pdr_execute, NULL)
+    ZEND_FE(pdr_adjust_token_privileges, NULL)
     ZEND_FE(pdr_get_process_filename, NULL)
     ZEND_FE(pdr_pump_msg, NULL)
     ZEND_FE(pdr_peek_msg, NULL)
