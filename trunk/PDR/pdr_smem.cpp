@@ -219,24 +219,15 @@ bool _pdr_smem_handle::Read(char * pData,unsigned long nDataLen,unsigned long nS
 }
 void _pdr_smem_handle::Release(bool bForceRelease)
 {
-	/*if( pAccessPtr )
-	{
-		if( ::UnmapViewOfFile(pAccessPtr) )
-		{
-			pAccessPtr = NULL ;
-		}
-		else
-		{
-			set_last_error ;
-		}
-	}*/
-
 	if( hMappingFile && (bForceRelease||bAutoRelease) )
 	{
 		::CloseHandle(hMappingFile) ;
 		hMappingFile = NULL ;
 	}
 }
+
+
+//////////////////////////////////////////////////////////////////// 
 
 ZEND_FUNCTION(pdr_smem_create)
 {
@@ -249,8 +240,6 @@ ZEND_FUNCTION(pdr_smem_create)
 	{
 		RETURN_FALSE
 	}
-
-	///////////////////////////////////////////////////////////////////// 
 
 	nSize+= 4 ;
 
@@ -292,7 +281,8 @@ ZEND_FUNCTION(pdr_smem_open)
 
 	HANDLE hMapFile = OpenFileMapping(nProtect,true,szName) ;
 	if ( !hMapFile )
-	{
+	{	DWORD dwErr = ::GetLastError() ;
+
 		set_last_error ;
 		RETURN_FALSE ;
 	}
@@ -333,6 +323,15 @@ ZEND_FUNCTION(pdr_smem_write)
 	}
 
 	pSMemResrc->Write(szData,nWriteLen,nSeek) ;
+}
+
+ZEND_FUNCTION(pdr_smem_clear)
+{
+	long nReadLen=0 ;
+	long nSeek=0 ;
+
+	PDR_GetShareMemoryHandleFromResrc("r",) ;
+	pSMemResrc->WriteMemSize(0) ;
 }
 
 ZEND_FUNCTION(pdr_smem_read)
