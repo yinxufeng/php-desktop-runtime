@@ -7,7 +7,7 @@ typedef struct _pdr_file_handle
 } pdr_file_handle ;
 
 
-// 取得已经打开的 COM句柄 资源
+// 取得已经打开的 file 句柄 资源
 #define PDR_GetWin32FileHandleFromResrc(type_spec,other_param) zval * zvalResrc ;\
 	pdr_file_handle * pFileHandle = NULL ;\
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, type_spec, &zvalResrc other_param ) == FAILURE )\

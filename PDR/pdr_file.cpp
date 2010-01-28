@@ -6,13 +6,14 @@ ZEND_FUNCTION(pdr_file_create)
 {
 	char * psFilename ;
 	int nFilenameLen=0 ;
-	long nDesiredAccess=GENERIC_READ|GENERIC_WRITE ;
+	long nDesiredAccess=GENERIC_READ|GENERIC_WRITE|FILE_ADD_FILE|FILE_ADD_SUBDIRECTORY ;
 	long nCreationDisposition=OPEN_EXISTING ;
 	long nShareMode=0 ;
 	long nFlagsAndAttributes=0 ;
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|llll", &psFilename, &nFilenameLen
 			, &nDesiredAccess, &nCreationDisposition, &nShareMode, &nFlagsAndAttributes )==FAILURE )
 	{
+		set_last_error
 		RETURN_FALSE
 	}
 
@@ -30,6 +31,7 @@ ZEND_FUNCTION(pdr_file_create)
 	if(pFileHandle->hFile==(HANDLE)-1)
 	{
 		delete pFileHandle ;
+		set_last_error
 		RETURN_FALSE
 	}
 	else

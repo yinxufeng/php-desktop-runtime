@@ -138,7 +138,8 @@ ZEND_FUNCTION(pdr_pipe_set_std)
 		RETURN_FALSE
 	}
 
-	RETURN_BOOL(::SetStdHandle(nHanleType,(HANDLE)nHanle))
+	BOOL bRes = ::SetStdHandle(nHanleType,(HANDLE)nHanle) ;
+	RETURN_BOOL(bRes)
 }
 
 // process //////////////////////////////////////////////
@@ -257,61 +258,6 @@ ZEND_FUNCTION(pdr_proc_exit_code)
 	{
 		RETURN_FALSE
 	}
-}
-
-
-DWORD GetCmdLine(HANDLE hProc,TCHAR* pCmdLine,DWORD dwBufLen) 
-{
-	#define BUFFER_LEN    512        //reading buffer for the commandline
-     
-    DWORD dwRet = -1; 
-    DWORD dwAddr = *(DWORD*)((DWORD)GetCommandLine + 1);//第2个字节开始才是我们要读的地址
-    TCHAR tcBuf[BUFFER_LEN] = {0}; 
-    DWORD dwRead = 0; 
-     
-    //判断平台
-    DWORD dwVer = GetVersion(); 
-    try
-    { 
-        if(dwVer < 0x80000000)        // Windows NT/2000/XP
-        { 
-            if(ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) 
-            { 
-                if(ReadProcessMemory(hProc,(LPVOID)dwAddr,tcBuf,BUFFER_LEN,&dwRead)) 
-                { 
-                    _tcsncpy(pCmdLine,tcBuf,dwBufLen);    //最好检查一下dwRead和dwBufLen的大小，使用较小的那个
-                    dwRet = 0; 
-                }
-            }
-        }
-        else                        // Windows 95/98/Me    and Win32s
-        {
-            while(true)                //使用while是为了出错时方便跳出循环
-            {
-                if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) break; 
-                if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,&dwAddr,4,&dwRead)) break; 
-
-                if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0xC0),tcBuf,BUFFER_LEN,&dwRead)) break; 
-                if(*tcBuf == 0) 
-                { 
-                    if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0x40),&dwAddr,4,&dwRead)) break; 
-                    if(!ReadProcessMemory(hProc,(LPVOID)(dwAddr + 0x8),&dwAddr,4,&dwRead)) break; 
-                    if(!ReadProcessMemory(hProc,(LPVOID)dwAddr,tcBuf,BUFFER_LEN,&dwRead)) break; 
-                } 
-                 
-                _tcsncpy(pCmdLine,tcBuf,dwBufLen);    //最好检查一下dwRead和dwBufLen的大小，使用较小的那个
-                dwRet = 0; 
-                break; 
-            } 
-        } 
-    } 
-    catch(...) 
-    { 
-        dwRet = ERROR_INVALID_ACCESS;    //exception
-    }
-     
-	DWORD dwErr = ::GetLastError() ;
-    return dwRet; 
 }
 
 ZEND_FUNCTION(pdr_proc_enum)

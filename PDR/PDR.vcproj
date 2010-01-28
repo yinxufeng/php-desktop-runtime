@@ -240,6 +240,7 @@
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)../php-5.3.1-Win32/dev&quot;"
+				UACExecutionLevel="0"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -510,6 +511,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_smem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_system.cpp"
 				>
 			</File>
@@ -633,6 +638,10 @@
 			</File>
 			<File
 				RelativePath=".\pdr_proc_pipe.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pdr_smem.h"
 				>
 			</File>
 			<File
