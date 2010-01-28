@@ -55,6 +55,10 @@ int _pdr_get_resrc_proc() ;
 static int resrc_pdr_pipe ;
 int _pdr_get_resrc_pipe() ;
 
+#define resrc_name_pdr_smem "PDR Share Memory"
+static int resrc_pdr_smem ;
+int _pdr_get_resrc_smem() ;
+
 
 
 static DWORD pdr_global_last_error ;

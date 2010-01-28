@@ -5,6 +5,7 @@
 #include "CDHtmlDlg.h"
 #include "pdr_thread.h"
 #include "pdr_file.h"
+#include "pdr_smem.h"
 #include "pdr_proc_pipe.h"
 // #include "pdr_encode.h"			// 仅仅实现了 HOOK PHP
 #include <Winuser.h>
@@ -37,6 +38,9 @@ int _pdr_get_resrc_proc()
 int _pdr_get_resrc_pipe()
 { return resrc_pdr_pipe ; }
 
+int _pdr_get_resrc_smem()
+{ return resrc_pdr_smem ; }
+
 
 void _pdr_set_global_last_error(DWORD nError)
 { pdr_global_last_error = nError ; }
@@ -56,24 +60,7 @@ void _php_pdr_dhtml_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	// efree(pDlg) ;
 }
 void _php_pdr_thread_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
-{
-	/*pdr_window_thread *pThreadRc = (pdr_window_thread *) rsrc->ptr ;
-	
-	if( pThreadRc->pThread && pThreadRc->pThread->m_hThread )
-	{
-		::TerminateThread(pThreadRc->pThread->m_hThread,0) ;
-	}
-
-	delete pThreadRc->pThread ;
-	pThreadRc->pThread = NULL ;
-
-	delete pThreadRc->pInitHandle ;
-	pThreadRc->pInitHandle = NULL ;
-	delete pThreadRc->pExitHandle ;
-	pThreadRc->pInitHandle = NULL ;
-
-	efree(pThreadRc);*/
-}
+{}
 void _php_pdr_menu_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
 	CMenu *pMenu= (CMenu *) rsrc->ptr ;
@@ -127,6 +114,13 @@ void _php_pdr_pipe_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 
 	delete pPipe ;
 }
+void _php_pdr_smem_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+{
+	pdr_smem_handle *pSMem= (pdr_smem_handle *) rsrc->ptr;
+
+	pSMem->Release(false) ;
+	delete pSMem ;
+}
 
 // 初始化函数
 ZEND_MINIT_FUNCTION(pdr_init)
@@ -140,6 +134,7 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	resrc_pdr_file = zend_register_list_destructors_ex(_php_pdr_file_destruction_handler, NULL, resrc_name_pdr_file, module_number);
 	resrc_pdr_proc = zend_register_list_destructors_ex(_php_pdr_proc_destruction_handler, NULL, resrc_name_pdr_proc, module_number);
 	resrc_pdr_pipe = zend_register_list_destructors_ex(_php_pdr_pipe_destruction_handler, NULL, resrc_name_pdr_pipe, module_number);
+	resrc_pdr_smem = zend_register_list_destructors_ex(_php_pdr_smem_destruction_handler, NULL, resrc_name_pdr_smem, module_number);
 
 	// 定义常量
 	// ----------------------------------
@@ -343,6 +338,15 @@ ZEND_FUNCTION(pdr_rc_read) ;
 ZEND_FUNCTION(pdr_rc_filetype_icon) ;
 ZEND_FUNCTION(pdr_rc_save_icon) ;
 
+// 共享内存
+// ------------------------
+ZEND_FUNCTION(pdr_smem_create) ;
+ZEND_FUNCTION(pdr_smem_open) ;
+ZEND_FUNCTION(pdr_smem_get_size) ;
+ZEND_FUNCTION(pdr_smem_release) ;
+ZEND_FUNCTION(pdr_smem_write) ;
+ZEND_FUNCTION(pdr_smem_read) ;
+
 
 
 /* compiled function list so Zend knows what's in this module */
@@ -521,6 +525,16 @@ zend_function_entry pdr_dhtml_functions[] = {
 
     ZEND_FE(pdr_rc_filetype_icon, NULL)
     ZEND_FE(pdr_rc_save_icon, NULL)
+
+	// Win32资源 函数
+	// ------------------------
+    ZEND_FE(pdr_smem_create, NULL)
+    ZEND_FE(pdr_smem_open, NULL)
+    ZEND_FE(pdr_smem_get_size, NULL)
+    ZEND_FE(pdr_smem_release, NULL)
+    ZEND_FE(pdr_smem_write, NULL)
+    ZEND_FE(pdr_smem_read, NULL)
+
 
 
     {NULL, NULL, NULL}
