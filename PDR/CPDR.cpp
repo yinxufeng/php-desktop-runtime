@@ -346,6 +346,7 @@ ZEND_FUNCTION(pdr_smem_get_size) ;
 ZEND_FUNCTION(pdr_smem_release) ;
 ZEND_FUNCTION(pdr_smem_write) ;
 ZEND_FUNCTION(pdr_smem_read) ;
+ZEND_FUNCTION(pdr_smem_clear) ;
 
 
 
@@ -534,6 +535,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_smem_release, NULL)
     ZEND_FE(pdr_smem_write, NULL)
     ZEND_FE(pdr_smem_read, NULL)
+    ZEND_FE(pdr_smem_clear, NULL)
 
 
 
