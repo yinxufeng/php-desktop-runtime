@@ -2,15 +2,16 @@
 typedef struct _pdr_smem_handle
 {
 	HANDLE hMappingFile ;
-	char * pAccessPtr ;
+	//char * pAccessPtr ;
 	bool bAutoRelease ;
+	unsigned long nMemSize ;
 
-	bool Open(HANDLE hMemFile,unsigned long nSize) ;
+	//bool Open(HANDLE hMemFile,unsigned long nSize) ;
 	void Release(bool bForceRelease=true) ;
-	void Write(char * pData,unsigned long nDataLen,unsigned long nSeek=0) ;
-	void Read(char * pData,unsigned long nDataLen,unsigned long nSeek=0) ;
-	void WriteMemSize(unsigned long nSize) ;
-	unsigned long ReadMemSize() ;
+	bool Write(char * pData,unsigned long nDataLen,unsigned long nSeek=0) ;
+	bool Read(char * pData,unsigned long nDataLen,unsigned long nSeek=0) ;
+	void WriteMemSize(unsigned long nSize,char * pInAccessPtr=NULL) ;
+	unsigned long ReadMemSize(char * pInAccessPtr=NULL) ;
 
 } pdr_smem_handle ;
 
