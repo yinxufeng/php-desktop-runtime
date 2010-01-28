@@ -153,45 +153,73 @@ class   CShareRestrictedSD
   }   
 
 
-void _pdr_smem_handle::WriteMemSize(unsigned long nSize)
+void _pdr_smem_handle::WriteMemSize(unsigned long nSize,char * pInAccessPtr)
 {
+	char * pAccessPtr = pInAccessPtr? pInAccessPtr: (char *)MapViewOfFile(hMappingFile,FILE_MAP_WRITE,0,0,nSize) ;
+
 	char szMemData[4] ;
 	szMemData[0] = (nSize>>24) & 255 ;
 	szMemData[1] = (nSize>>16) & 255 ;
 	szMemData[2] = (nSize>>8) & 255 ;
 	szMemData[3] = (nSize>>0) & 255 ;
 	memcpy( pAccessPtr, szMemData, 4 ) ;
+
+	if(!pInAccessPtr)
+	{
+		UnmapViewOfFile(pAccessPtr) ;
+	}
 }
-unsigned long _pdr_smem_handle::ReadMemSize()
+unsigned long _pdr_smem_handle::ReadMemSize(char * pInAccessPtr)
 {
+	char * pAccessPtr = pInAccessPtr? pInAccessPtr: (char *)MapViewOfFile(hMappingFile,FILE_MAP_READ,0,0,nMemSize) ;
+
 	char szMemDataLen[4] ;
 	memcpy( szMemDataLen, pAccessPtr, 4 ) ;
-	return (szMemDataLen[0]<<24)
+	unsigned long nRet = (szMemDataLen[0]<<24)
 			|(szMemDataLen[1]<<16)
 			|(szMemDataLen[2]<<8)
 			|(szMemDataLen[3]<<0) ;
+
+
+	if(!pInAccessPtr)
+	{
+		UnmapViewOfFile(pAccessPtr) ;
+	}
+	return nRet ;
 }
-void _pdr_smem_handle::Write(char * pData,unsigned long nDataLen,unsigned long nSeek)
+bool _pdr_smem_handle::Write(char * pData,unsigned long nDataLen,unsigned long nSeek)
 {
+	char * pAccessPtr = (char *)MapViewOfFile(hMappingFile,FILE_MAP_WRITE,0,0,nMemSize) ;
+	if(!pAccessPtr)
+	{
+		return false ;
+	}
+
 	char* pWriteAt = pAccessPtr + nSeek + 4 ;
 	memcpy( pWriteAt, pData, nDataLen ) ;
 
-	WriteMemSize(nDataLen+nSeek) ;
+	WriteMemSize(nDataLen+nSeek,pAccessPtr) ;
+
+	UnmapViewOfFile(pAccessPtr) ;
+	return true ;
 }
-void _pdr_smem_handle::Read(char * pData,unsigned long nDataLen,unsigned long nSeek)
+bool _pdr_smem_handle::Read(char * pData,unsigned long nDataLen,unsigned long nSeek)
 {
+	char * pAccessPtr = (char *)MapViewOfFile(hMappingFile,FILE_MAP_READ,0,0,nMemSize) ;
+	if(!pAccessPtr)
+	{
+		return false ;
+	}
+
 	char* pReadAt = pAccessPtr + nSeek + 4 ;
-	memcpy( pAccessPtr, pReadAt, nDataLen ) ;
-}
-bool _pdr_smem_handle::Open(HANDLE hMemFile,unsigned long nSize)
-{
-	hMappingFile = hMemFile ;
-	pAccessPtr = (char *)MapViewOfFile(hMemFile,FILE_MAP_ALL_ACCESS,0,0,nSize) ;
-	return pAccessPtr!=NULL ;
+	memcpy( pData, pReadAt, nDataLen ) ;
+	
+	UnmapViewOfFile(pAccessPtr) ;
+	return true ;
 }
 void _pdr_smem_handle::Release(bool bForceRelease)
 {
-	if( pAccessPtr )
+	/*if( pAccessPtr )
 	{
 		if( ::UnmapViewOfFile(pAccessPtr) )
 		{
@@ -201,7 +229,7 @@ void _pdr_smem_handle::Release(bool bForceRelease)
 		{
 			set_last_error ;
 		}
-	}
+	}*/
 
 	if( hMappingFile && (bForceRelease||bAutoRelease) )
 	{
@@ -239,15 +267,8 @@ ZEND_FUNCTION(pdr_smem_create)
 	}
 
 	pdr_smem_handle * pSMem = new pdr_smem_handle() ;
-	if( !pSMem->Open(hMapFile,nSize) )
-	{
-		pSMem->Release() ;
-		delete pSMem ;
-
-		set_last_error ;
-		RETURN_FALSE ;
-	}
-
+	pSMem->hMappingFile = hMapFile ;
+	pSMem->nMemSize = nSize ;
 	pSMem->bAutoRelease = bAutoRelease ;
 	pSMem->WriteMemSize(0) ;
 	
@@ -277,15 +298,8 @@ ZEND_FUNCTION(pdr_smem_open)
 	}
 
 	pdr_smem_handle * pSMem = new pdr_smem_handle() ;
-	if( !pSMem->Open(hMapFile,nSize) )
-	{
-		pSMem->Release() ;
-		delete pSMem ;
-
-		set_last_error ;
-		RETURN_FALSE ;
-	}
-
+	pSMem->hMappingFile = hMapFile ;
+	pSMem->nMemSize = nSize ;
 	pSMem->bAutoRelease = true ;
 
 	int nResrc = _pdr_get_resrc_smem() ;
@@ -336,12 +350,17 @@ ZEND_FUNCTION(pdr_smem_read)
 
 	if( nReadLen+nSeek > nMemSize )
 	{
+		zend_error(E_WARNING, "PDR Share Memory: read required length is bigger than memory size ." );
 		RETURN_FALSE ;
 	}
 
 	char * pReadBuf = new char[nReadLen+1] ;
 
-	pSMemResrc->Read(pReadBuf,nReadLen,nSeek) ;
+	if( !pSMemResrc->Read(pReadBuf,nReadLen,nSeek) )
+	{
+		set_last_error
+		RETURN_FALSE ;
+	}
 	pReadBuf[nReadLen] = '\0' ;
 
 	// ÒÔ×Ö·û´®·µ»Ø
