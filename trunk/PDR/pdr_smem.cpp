@@ -344,7 +344,7 @@ ZEND_FUNCTION(pdr_smem_read)
 	unsigned long nMemSize = pSMemResrc->ReadMemSize() ;
 	if(!nReadLen)
 	{
-		nReadLen = nMemSize ;
+		nReadLen = nMemSize - nSeek ;
 	}
 
 	if( nReadLen+nSeek > nMemSize )
