@@ -167,13 +167,8 @@ ZEND_FUNCTION(pdr_reg_get)
 		}
 
 		psData[nDataLen] = '\0' ;
-
-		zval * pzvRet ;
-		MAKE_STD_ZVAL(pzvRet)
-		ZVAL_STRING(pzvRet,psData,1)
+		ZVAL_STRING(return_value,psData,1)
 		delete [] psData ;
-
-		RETURN_ZVAL(pzvRet,0,0)
 	}
 
 
