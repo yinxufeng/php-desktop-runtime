@@ -713,3 +713,9 @@ ZEND_FUNCTION(pdr_exe_version_info)
 	
 	RETURN_STRING((char *)(LPCTSTR)strValue,1)
 }
+
+ZEND_FUNCTION(pdr_get_os_version)
+{
+	RETURN_LONG((unsigned long)::GetVersion()) ;
+}
+
