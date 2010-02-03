@@ -13,11 +13,20 @@
 #include "define_const_vkey.h"
 #include "define_const_locale.h"
 #include "define_const_file.h"
+#include <afxdll_.h>
 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+
+// 初始化 mfc
+// ----------------------------------
+CWinApp theApp ;
+
+
 
 
 int _pdr_get_resrc_dhtml_dlg()
@@ -122,6 +131,9 @@ void _php_pdr_smem_destruction_handler(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 	delete pSMem ;
 }
 
+
+static AFX_EXTENSION_MODULE afx_ext_dll_pdr = { NULL, NULL } ;
+
 // 初始化函数
 ZEND_MINIT_FUNCTION(pdr_init)
 {
@@ -142,6 +154,14 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	_pdr_define_const_vkey
 	_pdr_define_const_locale
 	_pdr_define_const_file
+
+
+	// 初始化 mfc
+	// ----------------------------------
+	//BOOL b = AfxWinInit(::GetModuleHandle(NULL), NULL, NULL, 0) ;
+
+	CoInitialize(NULL);
+	AfxEnableControlContainer();
 
 
 #ifdef pdr_encode

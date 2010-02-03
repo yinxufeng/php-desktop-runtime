@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <afxctl.h>
 #include "CPDR.h"
 #include "pdr_dhtml.h"
 
@@ -6,17 +7,6 @@ static bool bInitMfc = false ;
 
 ZEND_FUNCTION(pdr_dhtml_new)
 {
-	// 初始化 mfc
-	// ----------------------------------
-	if(!bInitMfc)
-	{
-		AfxEnableControlContainer();
-		CoInitialize(NULL);
-		
-		bInitMfc = true ;
-	}
-
-
 	bool bWindowDecorator = true ;
 	zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|b", &bWindowDecorator ) ;
 
@@ -54,6 +44,10 @@ ZEND_FUNCTION(pdr_dhtml_create)
 	}
 
 	// 创建
+	AfxSetResourceHandle(AfxGetInstanceHandle()) ;
+	CWinApp * p = AfxGetApp() ;
+	p->IsKindOf( RUNTIME_CLASS( COleControlModule ) ) ;
+
 	if( pDlg->Create( pDlg->GetDialogTemplate() ) )
 	{
 		if(nWindowShow)
