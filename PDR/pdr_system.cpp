@@ -213,6 +213,7 @@ ZEND_FUNCTION(pdr_peek_msg)
 	}
 
 	_make_msg_object(msg)
+
 	RETURN_ZVAL(pZvalMsg,0,0) ;
 	
 }

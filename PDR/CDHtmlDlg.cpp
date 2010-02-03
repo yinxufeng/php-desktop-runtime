@@ -354,8 +354,6 @@ void CDHtmlDlg::OnClose()
 	if( m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONCLOSE))!=S_FALSE )
 	{
 		CDialog::OnClose() ;
-
-		OleUninitialize() ;
 	}
 }
 
