@@ -218,6 +218,9 @@ ZEND_FUNCTION(pdr_load_library) ;
 ZEND_FUNCTION(pdr_free_library) ;
 ZEND_FUNCTION(pdr_exe_version_info) ;
 ZEND_FUNCTION(pdr_get_os_version) ;
+ZEND_FUNCTION(pdr_debug_) ;
+ZEND_FUNCTION(pdr_get_static_property) ;
+ZEND_FUNCTION(pdr_kill_var) ;
 
 ZEND_FUNCTION(pdr_thread_create) ;
 
@@ -406,6 +409,9 @@ zend_function_entry pdr_dhtml_functions[] = {
 	ZEND_FE(pdr_free_library, NULL)
 	ZEND_FE(pdr_exe_version_info, NULL)
 	ZEND_FE(pdr_get_os_version, NULL)
+	ZEND_FE(pdr_debug_, NULL)
+	ZEND_FE(pdr_get_static_property, NULL)
+	ZEND_FE(pdr_kill_var, NULL)
 
     ZEND_FE(pdr_thread_create, NULL)
 
