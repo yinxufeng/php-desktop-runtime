@@ -720,3 +720,62 @@ ZEND_FUNCTION(pdr_get_os_version)
 	RETURN_LONG((unsigned long)::GetVersion()) ;
 }
 
+
+ZEND_FUNCTION(pdr_get_static_property)
+{
+	char * psClassName, * psMemberName ;
+	int nClassLen, nMemberLen ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &psClassName, &nClassLen, &psMemberName, &nMemberLen )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	
+	/*_zend_executor_globals * ppp = ((zend_executor_globals *) (*((void ***) tsrm_ls))[TSRM_UNSHUFFLE_RSRC_ID(executor_globals_id)]) ;
+	Bucket * pBucket = ppp->class_table->pListTail ;
+	zend_class_entry * pClass = NULL ;
+	for(int i=ppp->class_table->nNumOfElements;i>0;i--)
+	{
+		if((unsigned int)pBucket->pData!=0xabababab)
+		{
+			// pClass = *((zend_class_entry **)pBucket->pData) ;
+		}
+		pBucket -- ;
+	}*/
+	//zval * pZ = *((zval **)(pClass->static_members->pListHead->pData)) ;
+
+	// 找到 class entry
+	zend_class_entry ** ppClass = NULL ;
+	if( zend_hash_find(EG(class_table),psClassName,nClassLen+1,(void **)&ppClass)!=SUCCESS || !ppClass )
+	{
+		RETURN_NULL()
+	}
+
+	// 找到静态成员
+	zval ** ppzvlProperty = NULL ;
+	if( zend_hash_find((*ppClass)->static_members,psMemberName,nMemberLen+1,(void **)&ppzvlProperty)!=SUCCESS || !ppzvlProperty )
+	{
+		RETURN_NULL() ;
+	}
+
+	RETURN_ZVAL(*ppzvlProperty,1,0) ;
+}
+
+
+ZEND_FUNCTION(pdr_kill_var)
+{
+	zval * pzvVar ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &pzvVar )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	// 传入函数符号表中 保留一个引用
+	// 这里接收参数后，分离处理， 保留一个引用
+	// 这两个引用可以正常回收
+	pzvVar->__refcount = 2 ;
+}
+
+ZEND_FUNCTION(pdr_debug_)
+{
+}

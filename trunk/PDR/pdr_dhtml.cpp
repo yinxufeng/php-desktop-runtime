@@ -216,24 +216,37 @@ HRESULT __pdr_dhtml_onevent(pdr_callback_handle * pHandle,zval * pEventParam)
 
 	delete [] pppArgs ;
 
+
+	HRESULT nRes = S_OK ;
+
 	if( retval_ptr )
 	{
 		switch( Z_TYPE_P(retval_ptr) )
 		{
 			case IS_LONG :
-				return (HRESULT)Z_LVAL_P(retval_ptr) ;
+				nRes = (HRESULT)Z_LVAL_P(retval_ptr) ;
+				break ;
+
 			case IS_NULL :
-				return S_OK ;
+				nRes = S_OK ;
+				break ;
+
 			default :
 				zend_error(E_WARNING, "PDR DHTML: the dhtml event handle function(method) must return a int value." );
-				return S_OK ;
+				nRes = S_OK ;
+				break ;
 		}
+		
+		retval_ptr->refcount__gc -- ;
 	}
 
 	else
 	{
-		return S_OK ;
+		nRes = S_OK ;
 	}
+	
+	return nRes ;
+
 }
 
 

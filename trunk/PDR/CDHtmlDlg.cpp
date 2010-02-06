@@ -201,7 +201,7 @@ BSTR CDHtmlDlg::CallPHPFunction(CString strFuncName,CString strArgsJson)
 		char * psRet = Z_STRVAL_P(pRetVal) ;
 		ascii2wbs(psRet,bsRet)
 
-		efree(pRetVal) ;
+		pRetVal->refcount__gc -- ;
 	}
 
 	else
@@ -261,7 +261,16 @@ void CDHtmlDlg::OnBeforeNavigate(LPDISPATCH pDisp, LPCTSTR szUrl)
 
 void CDHtmlDlg::OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 {
+
+#ifdef _DEBUG
+	if(!m_spHtmlDoc)
+	{
+		CDHtmlDialog::OnNavigateComplete(pDisp, szUrl);
+	}
+
+#else
 	CDHtmlDialog::OnNavigateComplete(pDisp, szUrl);
+#endif
 
 	CreatePHPObject
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
