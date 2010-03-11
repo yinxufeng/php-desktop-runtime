@@ -433,6 +433,9 @@ BOOL CDHtmlDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 		aMsg.message = message ;
 		aMsg.wParam = wParam ;
 		aMsg.lParam = lParam ;
+		aMsg.time = 0 ;
+		aMsg.pt.x = 0 ;
+		aMsg.pt.y = 0 ;
 
 		TSRMLS_FETCH() ;
 		_make_msg_object_p(&aMsg) ;
