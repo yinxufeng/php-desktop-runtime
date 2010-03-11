@@ -13,6 +13,7 @@
 #include "define_const_vkey.h"
 #include "define_const_locale.h"
 #include "define_const_file.h"
+#include "define_const_window_msg.h"
 #include <afxdll_.h>
 
 
@@ -154,6 +155,7 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	_pdr_define_const_vkey
 	_pdr_define_const_locale
 	_pdr_define_const_file
+	_pdr_define_const_window_msg
 
 
 	// ≥ı ºªØ mfc
