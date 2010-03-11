@@ -442,7 +442,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(OutDir)\php_pdr_5.3.x_nts_vc8.dll&quot;  &quot;$(SolutionDir)..\..\php-5.3.0-nts\ext\jecat_php_encode_5.3.x_nts_vc8.dll&quot;"
+				CommandLine="copy &quot;$(OutDir)\php_pdr_5.3.x_nts_vc8.dll&quot;  &quot;$(SolutionDir)..\..\php-5.3.0-nts\ext\php_pdr_5.3.x_nts_vc8.dll&quot;"
 			/>
 		</Configuration>
 	</Configurations>

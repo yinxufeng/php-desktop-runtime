@@ -423,6 +423,25 @@ void CDHtmlDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	CDHtmlDialog::OnSysCommand(nID, lParam);
 }
 
+BOOL CDHtmlDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+	// 用户消息
+	if(message>=WM_USER)
+	{
+		TSRMLS_FETCH() ;
+		_make_msg_object_p(pMsg) ;
+		LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONWMUSER), pZvalMsg ) ;
+		efree(pZvalMsg) ;
+
+		if( S_OK!=nRet  )
+		{
+			return true ;
+		}
+	}
+
+	return CDHtmlDialog::OnWndMsg(message, wParam, lParam, pResult) ;
+}
+
 
 
 
@@ -503,6 +522,7 @@ CString GetDHtmlEventName(long nType)
 		case DLG_EVENT_ONDOCUMENTCOMPLETE: return CString("documentcomplete") ;
 		case DLG_EVENT_ONCOMMAND: return CString("command") ;
 		case DLG_EVENT_ONCLOSE: return CString("close") ;
+		case DLG_EVENT_ONWMUSER: return CString("wmuser") ;
 
 		case DLG_EVENT_PRETRANSLATEMSG: return CString("pretranslatemsg") ;
 		case DLG_EVENT_WINDOWPROC: return CString("windowproc") ;
