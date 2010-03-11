@@ -613,6 +613,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\define_const_window_msg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileDialogEx.h"
 				>
 			</File>
