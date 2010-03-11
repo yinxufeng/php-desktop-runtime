@@ -428,8 +428,14 @@ BOOL CDHtmlDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 	// 用户消息
 	if(message>=WM_USER)
 	{
+		MSG aMsg ;
+		aMsg.hwnd = this->GetSafeHwnd() ;
+		aMsg.message = message ;
+		aMsg.wParam = wParam ;
+		aMsg.lParam = lParam ;
+
 		TSRMLS_FETCH() ;
-		_make_msg_object_p(pMsg) ;
+		_make_msg_object_p(&aMsg) ;
 		LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONWMUSER), pZvalMsg ) ;
 		efree(pZvalMsg) ;
 
