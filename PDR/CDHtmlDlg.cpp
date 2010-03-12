@@ -247,6 +247,7 @@ BSTR CDHtmlDlg::ExecPHP(CString strPHPCode)
 
 void CDHtmlDlg::OnBeforeNavigate(LPDISPATCH pDisp, LPCTSTR szUrl)
 {
+	TSRMLS_FETCH() ;
 	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
 	this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONBEFORENAVIGATE), pEventParam ) ;
@@ -267,6 +268,8 @@ void CDHtmlDlg::OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 #else
 	CDHtmlDialog::OnNavigateComplete(pDisp, szUrl);
 #endif
+
+	TSRMLS_FETCH() ;
 
 	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
@@ -296,6 +299,8 @@ void CDHtmlDlg::OnBeforeNavigate2(LPDISPATCH pDisp, VARIANT FAR* URL, VARIANT FA
 
 
 	zval * pEventParam = CreatePHPObject() ;
+
+	TSRMLS_FETCH() ;
 	add_property_string(pEventParam, "url", (char *)(LPCTSTR)strURL, 1) ;
 	add_property_string(pEventParam, "headers", (char *)(LPCTSTR)strHeaders, 1) ;
 	add_property_string(pEventParam, "targetName", (char *)(LPCTSTR)strTargetFrameName, 1) ;
@@ -314,6 +319,8 @@ void CDHtmlDlg::OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 	CDHtmlDialog::OnDocumentComplete(pDisp, szUrl);
 
 	zval * pEventParam = CreatePHPObject() ;
+
+	TSRMLS_FETCH() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
 	this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONDOCUMENTCOMPLETE), pEventParam ) ;
 	efree(pEventParam) ;
@@ -324,6 +331,8 @@ LRESULT CDHtmlDlg::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 	CString strMsg = GetDHtmlEventName(lParam) ;
 
 	zval * pEventParam = CreatePHPObject() ;
+
+	TSRMLS_FETCH() ;
 	add_property_long(pEventParam,"id",wParam) ;
 	add_property_long(pEventParam,"message",lParam) ;
 	add_property_long(pEventParam, "wParam", wParam) ;
@@ -342,6 +351,8 @@ BOOL CDHtmlDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 	CString strEventName = GetDHtmlEventName(DLG_EVENT_ONCOMMAND) ;
 
 	zval * pEventParam = CreatePHPObject() ;
+
+	TSRMLS_FETCH() ;
 	add_property_long(pEventParam, "id", wParam) ;
 	add_property_long(pEventParam, "wParam", wParam) ;
 	add_property_long(pEventParam, "lParam", lParam) ;
@@ -388,6 +399,7 @@ LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	zval * pEventParam = CreatePHPObject() ;
 	if(pEventParam)
 	{
+		TSRMLS_FETCH() ;
 		add_property_long(pEventParam, "message", (long)message) ;
 		add_property_long(pEventParam, "wParam", (long)wParam) ;
 		add_property_long(pEventParam, "lParam", (long)lParam) ;
