@@ -10,6 +10,7 @@ Global
 		Debug|Win32 = Debug|Win32
 		Debug-5.2.11|Win32 = Debug-5.2.11|Win32
 		Debug-5.3.1|Win32 = Debug-5.3.1|Win32
+		Debug-5.3.1-nts|Win32 = Debug-5.3.1-nts|Win32
 		EXE.Debug-5.3.1|Win32 = EXE.Debug-5.3.1|Win32
 		EXE.Release-5.3.1|Win32 = EXE.Release-5.3.1|Win32
 		Release|Win32 = Release|Win32
@@ -24,6 +25,8 @@ Global
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.Debug-5.2.11|Win32.Build.0 = Debug-5.2.11|Win32
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.Debug-5.3.1|Win32.ActiveCfg = Debug-5.3.1|Win32
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.Debug-5.3.1|Win32.Build.0 = Debug-5.3.1|Win32
+		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.Debug-5.3.1-nts|Win32.ActiveCfg = Debug-5.3.1-nts|Win32
+		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.Debug-5.3.1-nts|Win32.Build.0 = Debug-5.3.1-nts|Win32
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.EXE.Debug-5.3.1|Win32.ActiveCfg = Debug-5.3.1|Win32
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.EXE.Debug-5.3.1|Win32.Build.0 = Debug-5.3.1|Win32
 		{6CDA3E52-3E78-481F-8427-88234C3A2B9B}.EXE.Release-5.3.1|Win32.ActiveCfg = Relese-5.3.1-nts|Win32
@@ -42,6 +45,8 @@ Global
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.Debug-5.2.11|Win32.Build.0 = EXE.Release-5.3.1|Win32
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.Debug-5.3.1|Win32.ActiveCfg = EXE.Debug-5.3.1|Win32
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.Debug-5.3.1|Win32.Build.0 = EXE.Debug-5.3.1|Win32
+		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.Debug-5.3.1-nts|Win32.ActiveCfg = Debug-5.3.1-nts|Win32
+		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.Debug-5.3.1-nts|Win32.Build.0 = Debug-5.3.1-nts|Win32
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.EXE.Debug-5.3.1|Win32.ActiveCfg = EXE.Debug-5.3.1|Win32
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.EXE.Debug-5.3.1|Win32.Build.0 = EXE.Debug-5.3.1|Win32
 		{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}.EXE.Release-5.3.1|Win32.ActiveCfg = EXE.Release-5.3.1|Win32

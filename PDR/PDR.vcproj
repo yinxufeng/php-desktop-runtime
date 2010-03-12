@@ -414,7 +414,7 @@
 				OutputFile="$(OutDir)\php_pdr_5.3.x_nts_vc8.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.3.1-nts-Win32\dev&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -427,6 +427,94 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\php_pdr_5.3.x_nts_vc8.dll&quot;  &quot;$(SolutionDir)..\..\php-5.3.0-nts\ext\php_pdr_5.3.x_nts_vc8.dll&quot;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug-5.3.1-nts|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="1"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine="&quot;%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe&quot; $(SolutionDir)  $(ProjectDir)define_const.tsvn_template.h  $(ProjectDir)define_const.h"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\php-5.3.1\main&quot;;&quot;$(SolutionDir)..\php-5.3.1\Zend&quot;;&quot;$(SolutionDir)..\php-5.3.1\TSRM&quot;;&quot;$(SolutionDir)..\php-5.3.1\regex&quot;;&quot;$(SolutionDir)..\php-5.3.1\sapi\embed&quot;;&quot;$(SolutionDir)..\php-5.3.1&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PDR_EXPORTS;ZEND_DEBUG=0;ZEND_WIN32;PHP_WIN32;PHP53;PHP_COMPILER_VC8"
+				GeneratePreprocessedFile="0"
+				StringPooling="true"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="0"
+				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="true"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="php5.lib&#x0D;&#x0A;Psapi.lib&#x0D;&#x0A;Version.lib"
+				OutputFile="$(OutDir)\$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\php-5.3.1-nts-Win32\dev&quot;"
+				UACExecutionLevel="0"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+				AllowIsolation="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				UseFAT32Workaround="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -567,6 +655,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Relese-5.3.1-nts|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug-5.3.1-nts|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
