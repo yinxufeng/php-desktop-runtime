@@ -98,3 +98,5 @@ typedef struct _pdr_callback_handle
 
 zval * make_msg_object(MSG * pMsg) ;
 void make_msg_from_object(zval * pzvObject,MSG * pMsg) ;
+
+zval * CreatePHPObject() ;

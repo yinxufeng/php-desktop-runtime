@@ -608,27 +608,44 @@ ZEND_GET_MODULE(pdr)
 
 zval * make_msg_object(MSG * pMsg)
 {
-	zval * pZvalMsgPoint = NULL ; 
-	MAKE_STD_ZVAL(pZvalMsgPoint) ;
-	array_init(pZvalMsgPoint);
-	pZvalMsgPoint->refcount__gc = 0 ;
-	add_index_long(pZvalMsgPoint,0,pMsg->pt.x) ;
-	add_index_long(pZvalMsgPoint,1,pMsg->pt.y) ;
+	if( !pMsg || ((long)pMsg)==1 )
+	{
+		return NULL ;
+	}
 
 	zval * pZvalMsg = NULL ;
 	MAKE_STD_ZVAL(pZvalMsg) ;
 	object_init(pZvalMsg);
-	pZvalMsg->refcount__gc = 0 ; 
+	pZvalMsg->refcount__gc = 1 ; 
+
 	add_property_long(pZvalMsg, "hwnd", (long)pMsg->hwnd) ;
 	add_property_long(pZvalMsg, "message", (long)pMsg->message) ;
 	add_property_long(pZvalMsg, "wParam", (long)pMsg->wParam) ;
 	add_property_long(pZvalMsg, "lParam", (long)pMsg->lParam) ;
 	add_property_long(pZvalMsg, "time", (long)pMsg->time) ;
+	
+
+	zval * pZvalMsgPoint = NULL ; 
+	MAKE_STD_ZVAL(pZvalMsgPoint) ;
+	array_init(pZvalMsgPoint);
+	pZvalMsgPoint->refcount__gc = 1 ;
+	add_index_long(pZvalMsgPoint,0,pMsg->pt.x) ;
+	add_index_long(pZvalMsgPoint,1,pMsg->pt.y) ;
+
 	add_property_zval(pZvalMsg, "pt", pZvalMsgPoint) ;
 
 	return pZvalMsg ;
 }
 
+zval * CreatePHPObject()
+{
+	TSRMLS_FETCH() ;
+	zval * pPHPObject = NULL ;
+	MAKE_STD_ZVAL(pPHPObject) ;
+	object_init(pPHPObject);
+
+	return pPHPObject ;
+}
 
 void make_msg_from_object(zval * pzvObject,MSG * pMsg)
 {

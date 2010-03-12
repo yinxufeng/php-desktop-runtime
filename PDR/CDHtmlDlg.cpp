@@ -243,15 +243,11 @@ BSTR CDHtmlDlg::ExecPHP(CString strPHPCode)
 
 
 ////////////////////////////////////////////////////////////////////////////
-#define CreatePHPObject TSRMLS_FETCH() ;\
-		zval * pEventParam = NULL ;\
-		/*zval * pEventParam = new zval() ;*/\
-		MAKE_STD_ZVAL(pEventParam) ;\
-		object_init(pEventParam);\
+
 
 void CDHtmlDlg::OnBeforeNavigate(LPDISPATCH pDisp, LPCTSTR szUrl)
 {
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
 	this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONBEFORENAVIGATE), pEventParam ) ;
 	efree(pEventParam) ;
@@ -272,7 +268,7 @@ void CDHtmlDlg::OnNavigateComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 	CDHtmlDialog::OnNavigateComplete(pDisp, szUrl);
 #endif
 
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
 	this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONNAVIGATECOMPLETE), pEventParam ) ;
 	efree(pEventParam) ;
@@ -299,7 +295,7 @@ void CDHtmlDlg::OnBeforeNavigate2(LPDISPATCH pDisp, VARIANT FAR* URL, VARIANT FA
 	BOOL bCancel = FALSE;
 
 
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)(LPCTSTR)strURL, 1) ;
 	add_property_string(pEventParam, "headers", (char *)(LPCTSTR)strHeaders, 1) ;
 	add_property_string(pEventParam, "targetName", (char *)(LPCTSTR)strTargetFrameName, 1) ;
@@ -317,7 +313,7 @@ void CDHtmlDlg::OnDocumentComplete(LPDISPATCH pDisp, LPCTSTR szUrl)
 {
 	CDHtmlDialog::OnDocumentComplete(pDisp, szUrl);
 
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_string(pEventParam, "url", (char *)szUrl, 1) ;
 	this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG,GetDHtmlEventName(DLG_EVENT_ONDOCUMENTCOMPLETE), pEventParam ) ;
 	efree(pEventParam) ;
@@ -327,7 +323,7 @@ LRESULT CDHtmlDlg::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 {
 	CString strMsg = GetDHtmlEventName(lParam) ;
 
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_long(pEventParam,"id",wParam) ;
 	add_property_long(pEventParam,"message",lParam) ;
 	add_property_long(pEventParam, "wParam", wParam) ;
@@ -345,7 +341,7 @@ BOOL CDHtmlDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	CString strEventName = GetDHtmlEventName(DLG_EVENT_ONCOMMAND) ;
 
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
 	add_property_long(pEventParam, "id", wParam) ;
 	add_property_long(pEventParam, "wParam", wParam) ;
 	add_property_long(pEventParam, "lParam", lParam) ;
@@ -389,26 +385,34 @@ BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 
 LRESULT CDHtmlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	CreatePHPObject
+	zval * pEventParam = CreatePHPObject() ;
+	if(pEventParam)
+	{
+		add_property_long(pEventParam, "message", (long)message) ;
+		add_property_long(pEventParam, "wParam", (long)wParam) ;
+		add_property_long(pEventParam, "lParam", (long)lParam) ;
+		add_property_long(pEventParam, "hwnd", (long)GetSafeHwnd()) ;
 
-	add_property_long(pEventParam, "hwnd", (long)GetSafeHwnd()) ;
-	add_property_long(pEventParam, "message", (long)message) ;
-	add_property_long(pEventParam, "wParam", (long)wParam) ;
-	add_property_long(pEventParam, "lParam", (long)lParam) ;
+		LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_WINDOWPROC), pEventParam ) ;
+		efree(pEventParam) ;
 
-	LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_WINDOWPROC), pEventParam ) ;
-	efree(pEventParam) ;
+		if( S_OK == nRet )
+		{
+			return CDialog::WindowProc(message, wParam, lParam);
+		}
 
-	if( S_OK == nRet )
+		// 消息已经被处理，不再继续处理
+		else
+		{
+			return nRet ;
+		}
+	}
+
+	else
 	{
 		return CDialog::WindowProc(message, wParam, lParam);
 	}
 
-	// 消息已经被处理，不再继续处理
-	else
-	{
-		return nRet ;
-	}
 
 }
 
@@ -429,7 +433,8 @@ BOOL CDHtmlDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 	// 用户消息
 	if(message>=WM_USER)
 	{
-		MSG aMsg ;
+		//alert("UserMsg: %d",message) ;
+		MSG aMsg;
 		aMsg.hwnd = this->GetSafeHwnd() ;
 		aMsg.message = message ;
 		aMsg.wParam = wParam ;
