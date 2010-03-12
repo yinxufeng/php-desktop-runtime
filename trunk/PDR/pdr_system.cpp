@@ -212,7 +212,7 @@ ZEND_FUNCTION(pdr_peek_msg)
 		RETURN_NULL()
 	}
 
-	_make_msg_object(msg)
+	zval * pZvalMsg = make_msg_object(&msg) ;
 
 	RETURN_ZVAL(pZvalMsg,0,0) ;
 	
@@ -244,7 +244,7 @@ ZEND_FUNCTION(pdr_get_msg)
 		RETURN_NULL()
 	}
 
-	_make_msg_object(msg)
+	zval * pZvalMsg = make_msg_object(&msg) ;
 	RETURN_ZVAL(pZvalMsg,0,0) ;
 }
 
@@ -258,7 +258,8 @@ ZEND_FUNCTION(pdr_dispatch_msg)
 		RETURN_FALSE
 	}
 
-	_make_msg_from_object(pZvalMsg) ;
+	MSG msg ;
+	make_msg_from_object(pZvalMsg,&msg) ;
 
 	RETURN_LONG((long)::DispatchMessage(&msg)) ;
 }
@@ -272,7 +273,8 @@ ZEND_FUNCTION(pdr_translate_msg)
 		RETURN_FALSE
 	}
 
-	_make_msg_from_object(pZvalMsg) ;
+	MSG msg ;
+	make_msg_from_object(pZvalMsg,&msg) ;
 
 	RETURN_BOOL(::TranslateMessage(&msg)) ;
 }

@@ -370,7 +370,8 @@ void CDHtmlDlg::OnClose()
 BOOL CDHtmlDlg::PreTranslateMessage(MSG* pMsg)
 {
 	TSRMLS_FETCH() ;
-	_make_msg_object_p(pMsg) ;
+	zval * pZvalMsg = make_msg_object(pMsg) ;
+
 	LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_PRETRANSLATEMSG), pZvalMsg ) ;
 	efree(pZvalMsg) ;
 
@@ -438,7 +439,7 @@ BOOL CDHtmlDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 		aMsg.pt.y = 0 ;
 
 		TSRMLS_FETCH() ;
-		_make_msg_object_p(&aMsg) ;
+		zval * pZvalMsg = make_msg_object(&aMsg) ;
 		LRESULT nRet = this->m_dynMap.OnEvent( ELEMENT_ID_DIALOG, GetDHtmlEventName(DLG_EVENT_ONWMUSER), pZvalMsg ) ;
 		efree(pZvalMsg) ;
 

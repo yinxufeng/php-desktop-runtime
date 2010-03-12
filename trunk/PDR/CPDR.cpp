@@ -603,3 +603,59 @@ zend_module_entry pdr_module_entry = {
 /* implement standard "stub" routine to introduce ourselves to Zend */
 ZEND_GET_MODULE(pdr)
 
+
+
+
+zval * make_msg_object(MSG * pMsg)
+{
+	zval * pZvalMsgPoint = NULL ; 
+	MAKE_STD_ZVAL(pZvalMsgPoint) ;
+	array_init(pZvalMsgPoint);
+	pZvalMsgPoint->refcount__gc = 0 ;
+	add_index_long(pZvalMsgPoint,0,pMsg->pt.x) ;
+	add_index_long(pZvalMsgPoint,1,pMsg->pt.y) ;
+
+	zval * pZvalMsg = NULL ;
+	MAKE_STD_ZVAL(pZvalMsg) ;
+	object_init(pZvalMsg);
+	pZvalMsg->refcount__gc = 0 ; 
+	add_property_long(pZvalMsg, "hwnd", (long)pMsg->hwnd) ;
+	add_property_long(pZvalMsg, "message", (long)pMsg->message) ;
+	add_property_long(pZvalMsg, "wParam", (long)pMsg->wParam) ;
+	add_property_long(pZvalMsg, "lParam", (long)pMsg->lParam) ;
+	add_property_long(pZvalMsg, "time", (long)pMsg->time) ;
+	add_property_zval(pZvalMsg, "pt", pZvalMsgPoint) ;
+
+	return pZvalMsg ;
+}
+
+
+void make_msg_from_object(zval * pzvObject,MSG * pMsg)
+{
+	zval * pZvalHwnd = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"hwnd",4,0 TSRMLS_CC) ; 
+	zval * pZvalMessage = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"message",7,0 TSRMLS_CC) ; 
+	zval * pZvalWParam = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"wParam",6,0 TSRMLS_CC) ; 
+	zval * pZvalLParam = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"lParam",6,0 TSRMLS_CC) ; 
+	zval * pZvalTime = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"time",4,0 TSRMLS_CC) ; 
+	zval * pZvalPT = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"pt",2,0 TSRMLS_CC) ; 
+	zval ** ppZvalPTX ; 
+	zval ** ppZvalPTY ; 
+	if( pZvalPT && Z_ARRVAL_P(pZvalPT) ) 
+	{ 
+		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 0, (void**)&ppZvalPTX) ; 
+		zend_hash_index_find(Z_ARRVAL_P(pZvalPT), 1, (void**)&ppZvalPTY) ; 
+	} 
+	else 
+	{ 
+		ppZvalPTX = NULL ; 
+		ppZvalPTY = NULL ; 
+	} 
+ 
+	pMsg->hwnd = (HWND)Z_LVAL_P(pZvalHwnd) ; 
+	pMsg->message = (UINT)Z_LVAL_P(pZvalMessage) ; 
+	pMsg->wParam = (WPARAM)Z_LVAL_P(pZvalWParam) ; 
+	pMsg->lParam = (LPARAM)Z_LVAL_P(pZvalLParam) ; 
+	pMsg->time = (DWORD)Z_LVAL_P(pZvalTime) ; 
+	pMsg->pt.x = ppZvalPTX? Z_LVAL_PP(ppZvalPTX): 0 ; 
+	pMsg->pt.y = ppZvalPTY? Z_LVAL_PP(ppZvalPTY): 0 ; 
+}
