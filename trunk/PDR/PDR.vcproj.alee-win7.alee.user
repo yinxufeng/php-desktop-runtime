@@ -149,9 +149,9 @@
 			Name="Debug-5.3.1-nts|Win32"
 			>
 			<DebugSettings
-				Command=""
-				WorkingDirectory=""
-				CommandArguments=""
+				Command="$(SolutionDir)..\..\php-5.3.0-nts\php.exe"
+				WorkingDirectory="$(ProjectDir)\TestScript"
+				CommandArguments="-f test.php"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
@@ -162,7 +162,7 @@
 				SQLDebugging=""
 				Environment=""
 				EnvironmentMerge="true"
-				DebuggerFlavor=""
+				DebuggerFlavor="0"
 				MPIRunCommand=""
 				MPIRunArguments=""
 				MPIRunWorkingDirectory=""
