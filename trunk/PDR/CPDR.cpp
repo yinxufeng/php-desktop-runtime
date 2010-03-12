@@ -613,6 +613,7 @@ zval * make_msg_object(MSG * pMsg)
 		return NULL ;
 	}
 
+	TSRMLS_FETCH() ;
 	zval * pZvalMsg = NULL ;
 	MAKE_STD_ZVAL(pZvalMsg) ;
 	object_init(pZvalMsg);
@@ -649,6 +650,8 @@ zval * CreatePHPObject()
 
 void make_msg_from_object(zval * pzvObject,MSG * pMsg)
 {
+	TSRMLS_FETCH() ;
+
 	zval * pZvalHwnd = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"hwnd",4,0 TSRMLS_CC) ; 
 	zval * pZvalMessage = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"message",7,0 TSRMLS_CC) ; 
 	zval * pZvalWParam = zend_read_property(Z_OBJCE_P(pzvObject), pzvObject,"wParam",6,0 TSRMLS_CC) ; 
