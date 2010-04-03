@@ -256,6 +256,7 @@ ZEND_FUNCTION(pdr_proc_exit_code)
 
 	else
 	{
+		set_last_error ;
 		RETURN_FALSE
 	}
 }
