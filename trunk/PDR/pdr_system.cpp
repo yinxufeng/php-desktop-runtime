@@ -587,27 +587,6 @@ ZEND_FUNCTION(pdr_get_php_path)
 	RETURN_STRING(psPHPPath,1) ;
 }
 
-ZEND_FUNCTION(pdr_get_cursor_pos)
-{
-	zval * pzvRet ;
-	MAKE_STD_ZVAL(pzvRet) ;
-	array_init(pzvRet) ;
-
-	POINT point ;
-	if( !::GetCursorPos(&point) )
-	{
-		add_index_long(pzvRet,0,-1) ;
-		add_index_long(pzvRet,1,-1) ;
-	}
-
-	else
-	{
-		add_index_long(pzvRet,0,point.x) ;
-		add_index_long(pzvRet,1,point.y) ;
-	}
-
-	RETURN_ZVAL(pzvRet,0,0) ;
-}
 
 ZEND_FUNCTION(pdr_msgbox)
 {
@@ -800,4 +779,24 @@ ZEND_FUNCTION(pdr_set_cursor_pos)
 		RETURN_FALSE ;
 	}
 }
+ZEND_FUNCTION(pdr_get_cursor_pos)
+{
+	zval * pzvRet ;
+	MAKE_STD_ZVAL(pzvRet) ;
+	array_init(pzvRet) ;
 
+	POINT point ;
+	if( !::GetCursorPos(&point) )
+	{
+		set_last_error ;
+		RETURN_FALSE ;
+	}
+
+	else
+	{
+		add_index_long(pzvRet,0,point.x) ;
+		add_index_long(pzvRet,1,point.y) ;
+	}
+
+	RETURN_ZVAL(pzvRet,1,0) ;
+}
