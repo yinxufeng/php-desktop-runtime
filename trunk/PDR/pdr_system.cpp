@@ -781,3 +781,23 @@ ZEND_FUNCTION(pdr_kill_var)
 ZEND_FUNCTION(pdr_debug_)
 {
 }
+
+ZEND_FUNCTION(pdr_set_cursor_pos)
+{
+	long nX, nY ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &nX, &nY )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	if(::SetCursorPos(nX,nY))
+	{
+		RETURN_TRUE ;
+	}
+	else
+	{
+		set_last_error ;
+		RETURN_FALSE ;
+	}
+}
+
