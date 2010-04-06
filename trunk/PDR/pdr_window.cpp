@@ -561,3 +561,20 @@ ZEND_FUNCTION(pdr_window_lock_update)
 		RETURN_BOOL(LockWindowUpdate(hWnd))
 	}
 }
+
+ZEND_FUNCTION(pdr_window_set_capture)
+{
+	long nWnd = 0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nWnd )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	HWND hWnd = (HWND)nWnd ;
+	if( !::IsWindow(hWnd) )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_LONG( (long)::SetCapture(hWnd) ) ;
+}

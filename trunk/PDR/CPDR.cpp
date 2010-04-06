@@ -254,6 +254,7 @@ ZEND_FUNCTION(pdr_window_send_msg) ;
 ZEND_FUNCTION(pdr_window_post_msg) ;
 ZEND_FUNCTION(pdr_window_set_transparency) ;
 ZEND_FUNCTION(pdr_window_lock_update) ;
+ZEND_FUNCTION(pdr_window_set_capture) ;
 
 // DHTML º¯Êý
 // ------------------------
@@ -446,6 +447,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_window_post_msg, NULL)
     ZEND_FE(pdr_window_set_transparency, NULL)
     ZEND_FE(pdr_window_lock_update, NULL)
+    ZEND_FE(pdr_window_set_capture, NULL)
 
 	// DHTML º¯Êý
 	// ------------------------
