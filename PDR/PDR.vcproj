@@ -567,6 +567,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pdr_cb.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\pdr_com.cpp"
 				>
 			</File>
@@ -694,6 +698,10 @@
 			</File>
 			<File
 				RelativePath=".\define_const.tsvn_template.h"
+				>
+			</File>
+			<File
+				RelativePath=".\define_const_cb.h"
 				>
 			</File>
 			<File
