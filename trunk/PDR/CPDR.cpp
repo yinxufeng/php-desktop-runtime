@@ -14,6 +14,7 @@
 #include "define_const_locale.h"
 #include "define_const_file.h"
 #include "define_const_window_msg.h"
+#include "define_const_cb.h"
 #include <afxdll_.h>
 
 
@@ -156,6 +157,7 @@ ZEND_MINIT_FUNCTION(pdr_init)
 	_pdr_define_const_locale
 	_pdr_define_const_file
 	_pdr_define_const_window_msg
+	_pdr_define_const_cb
 
 
 	// 初始化 mfc
@@ -226,6 +228,22 @@ ZEND_FUNCTION(pdr_kill_var) ;
 ZEND_FUNCTION(pdr_set_cursor_pos) ;
 
 ZEND_FUNCTION(pdr_thread_create) ;
+
+
+// 剪切板 函数
+// ------------------------
+ZEND_FUNCTION(pdr_cb_open) ;
+ZEND_FUNCTION(pdr_cb_close) ;
+ZEND_FUNCTION(pdr_cb_empty) ;
+ZEND_FUNCTION(pdr_cb_set) ;
+ZEND_FUNCTION(pdr_cb_get) ;
+// 存目：
+//ZEND_FUNCTION(pdr_cb_register_format) ;			RegisterClipboardFormat
+//ZEND_FUNCTION(pdr_cb_enum_formats) ;				EnumClipboardFormats
+//ZEND_FUNCTION(pdr_cb_is_available_format) ;		IsClipBoardFormatAvailable
+//ZEND_FUNCTION(pdr_cb_get_format_name) ;			GetClipboardFormatName
+
+
 
 // Window 函数
 // ------------------------
@@ -420,6 +438,16 @@ zend_function_entry pdr_dhtml_functions[] = {
 
     ZEND_FE(pdr_thread_create, NULL)
 
+
+	// 剪切板 函数
+	// ------------------------
+	ZEND_FE(pdr_cb_open, NULL)
+	ZEND_FE(pdr_cb_close, NULL)
+	ZEND_FE(pdr_cb_empty, NULL)
+	ZEND_FE(pdr_cb_set, NULL)
+	ZEND_FE(pdr_cb_get, NULL)
+
+
 	// Window 函数
 	// ------------------------
     ZEND_FE(pdr_window_set_text, NULL)
@@ -561,7 +589,7 @@ zend_function_entry pdr_dhtml_functions[] = {
     ZEND_FE(pdr_rc_filetype_icon, NULL)
     ZEND_FE(pdr_rc_save_icon, NULL)
 
-	// Win32资源 函数
+	// 共享内存 函数
 	// ------------------------
     ZEND_FE(pdr_smem_create, NULL)
     ZEND_FE(pdr_smem_open, NULL)
