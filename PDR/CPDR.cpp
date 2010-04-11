@@ -56,7 +56,7 @@ int _pdr_get_resrc_smem()
 void _pdr_set_global_last_error(DWORD nError)
 { pdr_global_last_error = nError ; }
 DWORD _pdr_get_global_last_error()
- { return pdr_global_last_error ; }
+{ return pdr_global_last_error ; }
 
 
 
@@ -238,6 +238,7 @@ ZEND_FUNCTION(pdr_cb_empty) ;
 ZEND_FUNCTION(pdr_cb_set) ;
 ZEND_FUNCTION(pdr_cb_get) ;
 // ´æÄ¿£º
+//ZEND_FUNCTION(pdr_cb_owner) ;						GetClipboardOwner
 //ZEND_FUNCTION(pdr_cb_register_format) ;			RegisterClipboardFormat
 //ZEND_FUNCTION(pdr_cb_enum_formats) ;				EnumClipboardFormats
 //ZEND_FUNCTION(pdr_cb_is_available_format) ;		IsClipBoardFormatAvailable

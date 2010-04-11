@@ -37,6 +37,7 @@ ZEND_FUNCTION(pdr_cb_close)
 
 ZEND_FUNCTION(pdr_cb_empty)
 {
+
 	if( ::EmptyClipboard () )
 	{
 		RETURN_TRUE ;
@@ -52,14 +53,19 @@ ZEND_FUNCTION(pdr_cb_empty)
 ZEND_FUNCTION(pdr_cb_set)
 {
 	char * psData ;
-	int nFormat=CF_UNICODETEXT, nDataLen=0 ;
+	int nFormat=CF_TEXT, nDataLen=0 ;
 
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &psData, &nDataLen, &nFormat ) == FAILURE )
 	{
 		RETURN_FALSE
 	}
 
-    HANDLE hClip = GlobalAlloc(GMEM_MOVEABLE,nDataLen) ;
+	if(nFormat==CF_UNICODETEXT || nFormat==CF_TEXT)
+	{
+		nDataLen ++ ;
+	}
+
+	HANDLE hClip = ::GlobalAlloc(GMEM_MOVEABLE,nDataLen) ;
 	if(!hClip)
 	{
 		set_last_error ;
@@ -73,14 +79,24 @@ ZEND_FUNCTION(pdr_cb_set)
 	}
 
     memcpy(pBuf,psData,nDataLen) ;
-
     GlobalUnlock(hClip) ;
-    SetClipboardData(nFormat,hClip) ;
+
+	HANDLE bRes = ::SetClipboardData(nFormat,hClip) ;
+
+	if(bRes)
+	{
+		RETURN_TRUE ;
+	}
+	else
+	{
+		set_last_error ;
+		RETURN_FALSE ;
+	}
 }
 
 ZEND_FUNCTION(pdr_cb_get)
 {
-	int nFormat=CF_UNICODETEXT ;
+	int nFormat=CF_TEXT ;
 
 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &nFormat ) == FAILURE )
 	{
