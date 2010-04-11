@@ -149,7 +149,7 @@
 			Name="Debug-5.3.1-nts|Win32"
 			>
 			<DebugSettings
-				Command="$(SolutionDir)..\..\php-5.3.0-nts\php.exe"
+				Command="G:\Project\php-5.3.0-nts\php.exe"
 				WorkingDirectory="$(ProjectDir)\TestScript"
 				CommandArguments="-f test.php"
 				Attach="false"

@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PDR", "PDR\PDR.vcproj", "{6CDA3E52-3E78-481F-8427-88234C3A2B9B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PDR.Exe", "PDR.Exe\PDR.Exe.vcproj", "{C45BC8FF-F2D9-4169-8FD2-8E753768AF9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6CDA3E52-3E78-481F-8427-88234C3A2B9B} = {6CDA3E52-3E78-481F-8427-88234C3A2B9B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
