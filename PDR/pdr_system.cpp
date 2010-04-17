@@ -800,3 +800,26 @@ ZEND_FUNCTION(pdr_get_cursor_pos)
 
 	RETURN_ZVAL(pzvRet,1,0) ;
 }
+
+
+ZEND_FUNCTION(pdr_keybd_event)
+{
+	long nKey, nScan=0, nFlags=0, nExtraInfo=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|lll", &nKey, &nScan, &nFlags, &nExtraInfo )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	::keybd_event( (BYTE)nKey, (BYTE)nScan, (DWORD)nFlags, (ULONG_PTR)nExtraInfo ) ;
+}
+
+ZEND_FUNCTION(pdr_mouse_event)
+{
+	long nX, nY, nFlags, nData, nExtraInfo=0 ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lll|ll", &nFlags, &nX, &nY, &nData, &nExtraInfo )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	::mouse_event( (DWORD)nFlags, (DWORD)nX, (DWORD)nY, (DWORD)nScan, (DWORD)nData, (ULONG_PTR)nExtraInfo ) ;
+}
