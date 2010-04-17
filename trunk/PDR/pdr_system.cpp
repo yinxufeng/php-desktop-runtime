@@ -821,5 +821,5 @@ ZEND_FUNCTION(pdr_mouse_event)
 		RETURN_FALSE
 	}
 
-	::mouse_event( (DWORD)nFlags, (DWORD)nX, (DWORD)nY, (DWORD)nScan, (DWORD)nData, (ULONG_PTR)nExtraInfo ) ;
+	::mouse_event( (DWORD)nFlags, (DWORD)nX, (DWORD)nY, (DWORD)nData, (ULONG_PTR)nExtraInfo ) ;
 }
