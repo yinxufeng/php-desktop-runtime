@@ -335,7 +335,7 @@ ZEND_FUNCTION(pdr_window_foreground)
 {
 	long nWnd=0 ;
 	bool bRestore = true ;
-	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|b", &nWnd ) == FAILURE )
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|b", &nWnd, &bRestore ) == FAILURE )
 	{
 		RETURN_FALSE
 	}
