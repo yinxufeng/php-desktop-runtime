@@ -6,6 +6,7 @@
 #pragma once
 
 #define FOR_PHP 1
+#define PHP_EXTENSION 1
 
 
 #if !defined(AFX_STDAFX_H__55937AE3_B9B9_4D38_BAA8_350400484E1E__INCLUDED_)
