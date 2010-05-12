@@ -303,7 +303,7 @@
 				Optimization="2"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\php-5.3.1\main&quot;;&quot;$(SolutionDir)..\php-5.3.1\Zend&quot;;&quot;$(SolutionDir)..\php-5.3.1\TSRM&quot;;&quot;$(SolutionDir)..\php-5.3.1\regex&quot;;&quot;$(SolutionDir)..\php-5.3.1&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PDR_EXPORTS;ZEND_DEBUG=0;ZTS=1;ZEND_WIN32;PHP_WIN32;PHP53;_BIND_TO_CURRENT_VCLIBS_VERSION;PHP_EXTENSION"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PDR_EXPORTS;ZEND_DEBUG=0;ZTS=1;ZEND_WIN32;PHP_WIN32;PHP53;_BIND_TO_CURRENT_VCLIBS_VERSION"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"

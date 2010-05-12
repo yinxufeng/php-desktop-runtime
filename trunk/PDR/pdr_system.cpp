@@ -823,3 +823,14 @@ ZEND_FUNCTION(pdr_mouse_event)
 
 	::mouse_event( (DWORD)nFlags, (DWORD)nX, (DWORD)nY, (DWORD)nData, (ULONG_PTR)nExtraInfo ) ;
 }
+
+ZEND_FUNCTION(pdr_block_input)
+{
+	bool bBlock = true ;
+	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|b", &bBlock )==FAILURE )
+	{
+		RETURN_FALSE
+	}
+
+	RETURN_BOOL((bool)::BlockInput((BOOL)bBlock)) ;
+}

@@ -228,6 +228,7 @@ ZEND_FUNCTION(pdr_kill_var) ;
 ZEND_FUNCTION(pdr_set_cursor_pos) ;
 ZEND_FUNCTION(pdr_keybd_event) ;
 ZEND_FUNCTION(pdr_mouse_event) ;
+ZEND_FUNCTION(pdr_block_input) ;
 
 
 ZEND_FUNCTION(pdr_thread_create) ;
@@ -440,6 +441,7 @@ zend_function_entry pdr_dhtml_functions[] = {
 	ZEND_FE(pdr_set_cursor_pos, NULL)
 	ZEND_FE(pdr_keybd_event, NULL)
 	ZEND_FE(pdr_mouse_event, NULL)
+	ZEND_FE(pdr_block_input, NULL)
 
     ZEND_FE(pdr_thread_create, NULL)
 
